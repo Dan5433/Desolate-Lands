@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -15,7 +14,7 @@ public class SaveTerrain : MonoBehaviour
         main = GetComponent<GenerateTerrain>();
     }
 
-    public void SaveTiles(Tilemap tilemap, Vector2Int startPos, string saveName)
+    public async void SaveTilesAsync(Tilemap tilemap, Vector2Int startPos, string saveName)
     {
         Vector2Int endPos = startPos + main.ChunkSize;
         TerrainSaveData data = new();
@@ -29,20 +28,19 @@ public class SaveTerrain : MonoBehaviour
 
                 int id = Array.FindIndex(main.MasterTiles, t => t == tile);
 
-                data.indexes.AddLast(id);
-                data.positions.AddLast(new Vector3Int(x, y));
+                data.indexes.Add(id);
+                data.positions.Add(new Vector3Int(x, y));
             }
         }
 
-        string dirPath = Path.Combine(Application.persistentDataPath, "Saves", GameManager.Instance.WorldName, "Terrain");
-
-        JSONFileDataHandler handler = new(dirPath, saveName + startPos);
-        handler.SaveData(data);
+        JsonFileDataHandler handler = new(main.DataDirPath, saveName + startPos);
+        await handler.SaveDataAsync(data);
     }
 }
 
 [Serializable]
-public struct TerrainSaveData
+public class TerrainSaveData
 {
-    public Dictionary<int, Vector3Int> tiles;
+    public List<int> indexes = new();
+    public List<Vector3Int> positions = new();
 }

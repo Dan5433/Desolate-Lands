@@ -1,31 +1,36 @@
-using CustomExtensions;
 using System;
 using System.IO;
-using System.Net.Http.Headers;
-using Unity.Burst;
-using Unity.Collections;
-using Unity.Jobs;
+using System.Text;
 using UnityEngine;
+using System.Threading.Tasks;
 
-
-public class JSONFileDataHandler
+public class JsonFileDataHandler
 {
-    string dataDirPath = "";
-    string dataFilePath = "";
-    static string seed = "";
+    readonly string encyptionString;
+    readonly string dataDirPath;
+    readonly string dataFilePath;
 
-    public JSONFileDataHandler(string dataDirPath, string dataFilePath)
+    public JsonFileDataHandler(string dataDirPath, string dataFilePath) 
     {
         this.dataDirPath = dataDirPath;
         this.dataFilePath = dataFilePath;
 
-        seed = PlayerPrefs.GetInt(GameManager.Instance.WorldName).ToString();
+        encyptionString = PlayerPrefs.GetInt(GameManager.Instance.WorldName).ToString();
     }
 
-    public T LoadData<T>()
+    public JsonFileDataHandler(string dataDirPath, string dataFilePath, string encyptionString)
+    {
+        this.dataDirPath = dataDirPath;
+        this.dataFilePath = dataFilePath;
+
+        this.encyptionString = encyptionString;
+    }
+
+
+    public async Task<T> LoadDataAsync<T>() where T : class
     {
         string fullPath = Path.Combine(dataDirPath, dataFilePath);
-        T deserializedData = default;
+        T deserializedData = null;
 
         if (File.Exists(fullPath))
         {
@@ -34,13 +39,13 @@ public class JSONFileDataHandler
                 string data = "";
                 using (FileStream stream = new(fullPath, FileMode.Open))
                 {
-                    using (StreamReader reader = new StreamReader(stream))
+                    using (StreamReader reader = new(stream))
                     {
-                        data = reader.ReadToEnd();
+                        data = await reader.ReadToEndAsync();
                     }
                 }
 
-                data = EncryptDecrypt(data);
+                data = await EncryptDecrypt(data);
                 deserializedData = JsonUtility.FromJson<T>(data);
             }
             catch (Exception ex)
@@ -52,7 +57,7 @@ public class JSONFileDataHandler
         return deserializedData;
     }
 
-    public void SaveData(object data)
+    public async Task SaveDataAsync(object data)
     {
         string fullPath = Path.Combine(dataDirPath, dataFilePath);
 
@@ -61,11 +66,11 @@ public class JSONFileDataHandler
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
 
             string serializedData = JsonUtility.ToJson(data);
-            serializedData = EncryptDecrypt(serializedData);
+            serializedData = await EncryptDecrypt(serializedData);
 
             using (FileStream stream = new(fullPath, FileMode.Create))
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (StreamWriter writer = new(stream))
                 {
                     writer.Write(serializedData);
                 }
@@ -77,16 +82,21 @@ public class JSONFileDataHandler
         }
     }
 
-    static string EncryptDecrypt(string data)
+    async Task<string> EncryptDecrypt(string data)
     {
-        string encryptedData = "";
+        if(!GameManager.Instance.UseJsonEncryption) return data;
 
-        for (int i = 0; i < data.Length; i++)
+        StringBuilder encryptedData = new();
+
+        await Task.Run(() =>
         {
-            encryptedData += (char)(data[i] ^ seed[i % seed.Length]);
-        }
+            for (int i = 0; i < data.Length; i++)
+            {
+                encryptedData.Append((char)(data[i] ^ encyptionString[i % encyptionString.Length]));
+            }
+        });
 
-        return encryptedData;
+        return encryptedData.ToString();
     }
 
 

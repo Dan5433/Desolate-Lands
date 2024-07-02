@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -18,7 +17,7 @@ public class GenerateTerrain : MonoBehaviour
     [SerializeField] Tilemap top;
     [SerializeField] Tilemap solid;
     [SerializeField] WeightedStructure[] structures;
-    [SerializeField] WeightedTile[] grTiles;
+    [SerializeField] WeightedTileById[] grTiles;
     [SerializeField] TerrainGenTiles[] topTiles;
     [SerializeField] Transform player;
     [SerializeField] Vector2Int worldSize = new(100, 100);
@@ -29,13 +28,17 @@ public class GenerateTerrain : MonoBehaviour
     SaveTerrain saveTerrain;
     readonly Dictionary<Vector2Int, bool> chunks = new();
     Vector2 offsetToMiddle;
+    static string dataDirPath;
 
     public Tile[] MasterTiles { get { return masterTiles; } }
     public Vector2Int ChunkSize { get { return chunkSize; } }
     public Vector2Int WorldSize { get { return worldSize; } }
+    public string DataDirPath { get { return dataDirPath; } }   
 
     void Awake()
     {
+        dataDirPath = Path.Combine(Application.persistentDataPath, "Saves", GameManager.Instance.WorldName, "Terrain");
+
         loadTerrain = GetComponent<LoadTerrain>();
         saveTerrain = GetComponent<SaveTerrain>();
 
@@ -99,17 +102,14 @@ public class GenerateTerrain : MonoBehaviour
 
     void FixedUpdate()
     {
-        string dataDirPath = Path.Combine(Application.persistentDataPath, "Saves", GameManager.Instance.WorldName, "Terrain");
-
         foreach (Vector2Int pos in chunks.Keys.ToList())
         {
             float distance = Vector2.Distance(pos + offsetToMiddle, player.position);
 
             if (distance <= renderDist && !chunks[pos])
             {
-                JSONFileDataHandler handler = new(dataDirPath, "groundchunk" + pos);
-                var save = handler.LoadData<TerrainSaveData>();
-                if (save.indexes != null)
+                string fullPath = Path.Combine(dataDirPath, "groundchunk" + pos);
+                if (File.Exists(fullPath))
                 {
                     loadTerrain.LoadTiles(ground, pos, "groundchunk");
                     loadTerrain.LoadTiles(top, pos, "topchunk");
@@ -151,9 +151,9 @@ public class GenerateTerrain : MonoBehaviour
 
         GenStructures(startPos, solid);
 
-        saveTerrain.SaveTiles(top, startPos, "topchunk");
-        saveTerrain.SaveTiles(solid, startPos, "solidchunk");
-        saveTerrain.SaveTiles(ground, startPos, "groundchunk");
+        saveTerrain.SaveTilesAsync(top, startPos, "topchunk");
+        saveTerrain.SaveTilesAsync(solid, startPos, "solidchunk");
+        saveTerrain.SaveTilesAsync(ground, startPos, "groundchunk");
     }
 
     void GenStructures(Vector2Int startPos, Tilemap tilemap)
@@ -174,7 +174,7 @@ public class GenerateTerrain : MonoBehaviour
         tilemap.SetTilesBlock(bounds, allTiles);
     }
 
-    void GenBoxTiles(Tilemap tilemap, WeightedTile[] tiles, Vector2Int startPos)
+    void GenBoxTiles(Tilemap tilemap, WeightedTileById[] tiles, Vector2Int startPos)
     {
         Vector2Int endPos = startPos + chunkSize;
         Vector3Int[] genCoords = new Vector3Int[chunkSize.x * chunkSize.y];
@@ -197,7 +197,7 @@ public class GenerateTerrain : MonoBehaviour
         tilemap.SetTiles(genCoords, genTiles);
     }
 
-    void GenScatteredTiles(Tilemap tilemap, WeightedTile[] tiles, int distance, Vector2Int startPos)
+    void GenScatteredTiles(Tilemap tilemap, WeightedTileById[] tiles, int distance, Vector2Int startPos)
     {
         Vector2Int endPos = startPos + chunkSize;
         HashSet<Vector2Int> spawns = new();
@@ -239,9 +239,9 @@ public class GenerateTerrain : MonoBehaviour
 [Serializable]
 public struct TerrainGenTiles
 {
-    [SerializeField] WeightedTile[] tiles;
+    [SerializeField] WeightedTileById[] tiles;
     [SerializeField] int genGap;
 
-    public WeightedTile[] Tiles { get { return tiles; } }
+    public WeightedTileById[] Tiles { get { return tiles; } }
     public int GenGap { get { return genGap; } }
 }

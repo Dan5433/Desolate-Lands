@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 namespace CustomClasses
 {
     [Serializable]
-    public class WeightedTile
+    public struct WeightedTileById
     {
         [SerializeField] int weight;
         [SerializeField] int tileId;
@@ -14,7 +14,7 @@ namespace CustomClasses
     }
 
     [Serializable]
-    public class WeightedItem
+    public struct WeightedItem
     {
         [SerializeField] int weight;
         [SerializeField] Item item;
@@ -22,7 +22,7 @@ namespace CustomClasses
         public Item Item { get { return item; } }
     }
     [Serializable]
-    public class WeightedStructure
+    public struct WeightedStructure
     {
         [SerializeField] int weight;
         [SerializeField] Tilemap structure;
@@ -31,11 +31,11 @@ namespace CustomClasses
     }
 
     [Serializable]
-    public class WeightedSprite
+    public struct WeightedBreakableTile
     {
         [SerializeField] int weight;
-        [SerializeField] Sprite sprite;
+        [SerializeField] BreakableTile tile;
         public int Weight { get { return weight; } }
-        public Sprite Sprite { get { return sprite; } }
+        public BreakableTile Tile { get { return tile; } }
     }
 }

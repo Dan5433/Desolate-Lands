@@ -14,6 +14,7 @@ public class Break : MonoBehaviour
     [SerializeField] Tile[] breakEffects;
     [SerializeField] ParticleSystem breakParticles;
     [SerializeField] Tilemap effects;
+    [SerializeField] PlayAudio audioSource;
     [SerializeField] EfficientTool tool;
     [SerializeField] RequiredMaterial material;
     [SerializeField][Tooltip("In Seconds")] float breakTimeReduction;
@@ -33,11 +34,11 @@ public class Break : MonoBehaviour
         tile = breakTile;
         breakCell = cell;
 
-        if (tile.MinMaterial > material)
-        {
-            Debug.LogWarning("Need stronger material!");
-            return;
-        }
+        //if (tile.MinMaterial > material)
+        //{
+        //    Debug.LogWarning("Need stronger material!");
+        //    return;
+        //}
 
         if (!breaking)
         {
@@ -51,6 +52,7 @@ public class Break : MonoBehaviour
         {
             curBreakTime -= Time.deltaTime;
 
+            audioSource.PlayRandomSound(material.ToString());
             UpdateEffect();
         }
 

@@ -4,10 +4,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [SerializeField] bool useJsonEncryption;
     [SerializeField] string worldName;
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
 
+    public bool UseJsonEncryption { get { return useJsonEncryption; } }
     public string WorldName { get { return  worldName; } }
     public GameObject WorldCanvas { get { return worldCanvas; } }
     public GameObject Player { get { return player; } }

@@ -1,4 +1,6 @@
+using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -31,20 +33,19 @@ public class LoadTerrain : MonoBehaviour
         tilemap.SetTiles(genCoords, tiles);
     }
 
-    public void LoadTiles(Tilemap tilemap, Vector2Int startPos, string saveName)
+    public async void LoadTiles(Tilemap tilemap, Vector2Int startPos, string saveName)
     {
-        string dirPath = Path.Combine(Application.persistentDataPath, "Saves", GameManager.Instance.WorldName, "Terrain");
-        JSONFileDataHandler handler = new(dirPath, saveName + startPos);
+        JsonFileDataHandler handler = new(main.DataDirPath, saveName + startPos);
 
-        var data = handler.LoadData<TerrainSaveData>();
+        var data = await handler.LoadDataAsync<TerrainSaveData>();
 
-        Tile[] tiles = new Tile[data.tiles.Count];
+        Tile[] tiles = new Tile[data.indexes.Count];
 
         for (int i = 0; i < tiles.Length; i++)
         {
-            tiles[i] = main.MasterTiles[];
+            tiles[i] = main.MasterTiles[data.indexes[i]];
         }
 
-        tilemap.SetTiles(data.positions, tiles);
+        tilemap.SetTiles(data.positions.ToArray(), tiles);
     }
 }
