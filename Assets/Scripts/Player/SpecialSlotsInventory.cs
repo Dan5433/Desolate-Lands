@@ -1,10 +1,11 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class SpecialSlotsInventory : InventoryBase
 {
-    protected override void LoadInventory()
+    protected override void InitInventory(InventorySaveData data)
     {
-        base.LoadInventory();
+        base.InitInventory(data);
         foreach (var item in inventory) 
         {
             if(item.ItemObj.GetType() == typeof(EquippableItem))

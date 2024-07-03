@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -8,11 +9,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] string worldName;
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
+    string dataDirPath;
 
     public bool UseJsonEncryption { get { return useJsonEncryption; } }
     public string WorldName { get { return  worldName; } }
     public GameObject WorldCanvas { get { return worldCanvas; } }
     public GameObject Player { get { return player; } }
+    public  string DataDirPath { get { return dataDirPath; } }
 
     void Awake()
     {
@@ -22,6 +25,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            dataDirPath = Path.Combine(Application.persistentDataPath, "Saves", worldName);
+
             if (!PlayerPrefs.HasKey(worldName))
             {
                 Debug.Log("Initializing new seed for world: "+worldName);

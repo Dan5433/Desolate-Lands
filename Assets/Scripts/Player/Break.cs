@@ -80,6 +80,11 @@ public class Break : MonoBehaviour
         }
     }
 
+    async void RemoveTileData()
+    {
+
+    }
+
     void OnBreak(Tilemap tilemap)
     {
         PlayerPrefs.DeleteKey(tilemap.name + breakCell);

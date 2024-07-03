@@ -1384,6 +1384,18 @@ PrefabInstance:
       propertyPath: m_text
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 4da92a2565986da40bf8b7ef1070df51, type: 2}
+    - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 5883703097612374614, guid: 4da92a2565986da40bf8b7ef1070df51, type: 2}
+    - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7575904289471626183, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -1562,6 +1574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ef482adf1caa79488039b0a162a41fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useJsonEncryption: 0
   worldName: test2
   worldCanvas: {fileID: 786146380}
   player: {fileID: 2136044628}
@@ -8135,7 +8148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2037556800742507089, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: NaN
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2037556800742507089, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8164,22 +8177,6 @@ PrefabInstance:
     - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
       propertyPath: m_text
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
-      propertyPath: m_margin.w
-      value: NaN
-      objectReference: {fileID: 0}
-    - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
-      propertyPath: m_margin.x
-      value: NaN
-      objectReference: {fileID: 0}
-    - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
-      propertyPath: m_margin.y
-      value: NaN
-      objectReference: {fileID: 0}
-    - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
-      propertyPath: m_margin.z
-      value: NaN
       objectReference: {fileID: 0}
     - target: {fileID: 7575904289471626183, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
       propertyPath: m_Enabled

@@ -7,15 +7,15 @@ public class WeightedUtils
     public static Tile RollTile(WeightedTileById[] tiles, Tile[] masterList)
     {
         int totalWeight = 0;
-        foreach (var tile in tiles) totalWeight += tile.Weight;
+        foreach (var tile in tiles) totalWeight += tile.weight;
 
         int randomWeight = Random.Range(0, totalWeight);
         foreach (var tile in tiles)
         {
-            randomWeight -= tile.Weight;
+            randomWeight -= tile.weight;
             if (randomWeight < 0)
             {
-                return masterList[tile.TileId];
+                return masterList[tile.tileId];
             }
         }
         return null;
@@ -24,15 +24,15 @@ public class WeightedUtils
     public static Tilemap RollStructure(WeightedStructure[] structures)
     {
         int totalWeight = 0;
-        foreach (var structure in structures) totalWeight += structure.Weight;
+        foreach (var structure in structures) totalWeight += structure.weight;
 
         int randomWeight = Random.Range(0, totalWeight);
         foreach (var structure in structures)
         {
-            randomWeight -= structure.Weight;
+            randomWeight -= structure.weight;
             if (randomWeight < 0)
             {
-                return structure.Structure;
+                return structure.structure;
             }
         }
         return null;

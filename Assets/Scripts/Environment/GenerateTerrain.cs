@@ -28,17 +28,13 @@ public class GenerateTerrain : MonoBehaviour
     SaveTerrain saveTerrain;
     readonly Dictionary<Vector2Int, bool> chunks = new();
     Vector2 offsetToMiddle;
-    static string dataDirPath;
 
     public Tile[] MasterTiles { get { return masterTiles; } }
     public Vector2Int ChunkSize { get { return chunkSize; } }
     public Vector2Int WorldSize { get { return worldSize; } }
-    public string DataDirPath { get { return dataDirPath; } }   
 
     void Awake()
     {
-        dataDirPath = Path.Combine(Application.persistentDataPath, "Saves", GameManager.Instance.WorldName, "Terrain");
-
         loadTerrain = GetComponent<LoadTerrain>();
         saveTerrain = GetComponent<SaveTerrain>();
 
@@ -108,7 +104,7 @@ public class GenerateTerrain : MonoBehaviour
 
             if (distance <= renderDist && !chunks[pos])
             {
-                string fullPath = Path.Combine(dataDirPath, "groundchunk" + pos);
+                string fullPath = Path.Combine(GameManager.Instance.DataDirPath,"Terrain", "groundchunk" + pos);
                 if (File.Exists(fullPath))
                 {
                     loadTerrain.LoadTiles(ground, pos, "groundchunk");

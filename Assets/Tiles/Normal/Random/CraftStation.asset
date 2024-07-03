@@ -34,13 +34,19 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  breakingTime: 0
-  drops: []
+  breakingTime: 1.5
+  drops:
+  - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
+    minDropCount: 0
+    maxDropCount: 2
+  - item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
+    minDropCount: 1
+    maxDropCount: 4
   colors:
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  tool: 0
-  minMaterial: 0
+  - {r: 0.38823533, g: 0.24313727, b: 0.039215688, a: 1}
+  - {r: 0.2509804, g: 0.1254902, b: 0.058823533, a: 1}
+  tool: 1
+  minMaterial: 2
   tiles:
   - weight: 1
-    tile: {fileID: 11400000, guid: 8a4ff1f651b1241438e82627e5bca4f2, type: 2}
+    tile: {fileID: 11400000, guid: 04095f74d3843384da7c840bf9d2b575, type: 2}

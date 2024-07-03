@@ -33,7 +33,7 @@ public class SaveTerrain : MonoBehaviour
             }
         }
 
-        JsonFileDataHandler handler = new(main.DataDirPath, saveName + startPos);
+        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), saveName + startPos);
         await handler.SaveDataAsync(data);
     }
 }
