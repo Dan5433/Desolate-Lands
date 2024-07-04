@@ -46,12 +46,18 @@ public class Mine : MonoBehaviour
                                    1 - dist * 1 / (revealDist*revealMultiplier));
         }
     }
-
-    void OnTriggerExit2D(Collider2D collision)
+                    
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.CompareTag("Player"))
         {
             PlayerPrefs.DeleteKey(parent.name + parent.WorldToCell(transform.position));
+            Destroy(gameObject);
+        }
+
+        if (collision.transform.CompareTag("Item"))
+        {
+            Destroy(collision.gameObject);
             Destroy(gameObject);
         }
     }

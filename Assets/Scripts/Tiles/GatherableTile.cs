@@ -7,8 +7,7 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu]
 public class GatherableTile : Tile
 {
-    [SerializeField] GatherableTileSprites sprites;
-    [SerializeField] GatherableTileStates state;
+    [SerializeField] GatherableTileSprite[] sprites;
     [SerializeField] float regenerateTime;
     [SerializeField] DropItem[] drops;
 
@@ -16,36 +15,37 @@ public class GatherableTile : Tile
     {
         if(go == null) return false;
 
-        go.GetComponent<Gatherable>().RegenerateTime = regenerateTime;
+        if (go.TryGetComponent<Gatherable>(out var script))
+        {
+            script.Init(regenerateTime, position);
+        }
+
         return true;
     }
 
-    public override void RefreshTile(Vector3Int position, ITilemap tilemap)
-    {
-        base.RefreshTile(position, tilemap);
-    }
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
         base.GetTileData(position, tilemap, ref tileData);
-        Debug.Log("updated tile");
-        switch (state)
+
+        var attachedTilemap = tilemap.GetComponent<Tilemap>();
+        var instancedGameObject = attachedTilemap.GetInstantiatedObject(position);
+
+        if (instancedGameObject == null) 
         {
-            case GatherableTileStates.Gathered:
-                tileData.sprite = sprites.gathered;
-                break;
-            case GatherableTileStates.HalfReplenished:
-                tileData.sprite = sprites.halfReplenished; 
-                break;
-            case GatherableTileStates.Replenished:
-                tileData.sprite = sprites.replenished;
-                break;
+            tileData.sprite = Array.Find(sprites, spr => spr.state == GatherableTileState.Replenished).sprite;
+            return;
+        }
+
+        if (instancedGameObject.TryGetComponent<Gatherable>(out var script))
+        {
+            tileData.sprite = Array.Find(sprites, spr => spr.state == script.State).sprite;
         }
     }
 }
 
 [Serializable]
-public enum GatherableTileStates
+public enum GatherableTileState
 {
     Gathered,
     HalfReplenished,
@@ -53,9 +53,8 @@ public enum GatherableTileStates
 }
 
 [Serializable]
-public struct GatherableTileSprites
+public struct GatherableTileSprite
 {
-    public Sprite gathered;
-    public Sprite halfReplenished;
-    public Sprite replenished;
+    public GatherableTileState state;
+    public Sprite sprite;
 }

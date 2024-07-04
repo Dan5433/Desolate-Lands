@@ -35,9 +35,11 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   sprites:
-    gathered: {fileID: 21300000, guid: c9029533fee61dd4cb12789de62b1d47, type: 3}
-    halfReplenished: {fileID: 21300000, guid: e53d969edba0cb0438e6ef7087ed69cf, type: 3}
-    replenished: {fileID: 21300000, guid: 79a33962d7ebe9049b49cb691df999a7, type: 3}
-  state: 2
-  regenerateTime: 60
+  - state: 0
+    sprite: {fileID: 0}
+  - state: 0
+    sprite: {fileID: 0}
+  - state: 2
+    sprite: {fileID: 21300000, guid: 79a33962d7ebe9049b49cb691df999a7, type: 3}
+  regenerateTime: 20
   drops: []

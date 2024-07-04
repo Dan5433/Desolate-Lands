@@ -554,39 +554,37 @@ Tilemap:
   m_TileSpriteArray:
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
   m_TileMatrixArray:
   - m_RefCount: 0
     m_Data:
-      e00: 8.359171e-39
+      e00: 0
       e01: 0
-      e02: 5.5000076
-      e03: 5.5000076
+      e02: 2.98156e-19
+      e03: 2.98156e-19
       e10: 0
       e11: 0
-      e12: 7.86e-43
-      e13: 7.86e-43
-      e20: 2.461989e+23
-      e21: 7.111218e-25
-      e22: -6.9386297e-29
-      e23: -1.2043584e-19
-      e30: 4.5904e-41
-      e31: 7.9e-43
-      e32: 7.86e-43
-      e33: 7.89e-43
+      e12: 8.44e-43
+      e13: 8.44e-43
+      e20: -919710
+      e21: 1.3552512e+17
+      e22: -9.134633e-29
+      e23: -5.635341e-10
+      e30: 4.5905e-41
+      e31: 8.46e-43
+      e32: 8.44e-43
+      e33: 8.46e-43
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: 3.5349e-41, g: 3.5349e-41, b: 3.5349e-41, a: 3.5349e-41}
+    m_Data: {r: 3.5898e-41, g: 3.5898e-41, b: 3.5898e-41, a: 3.5898e-41}
   m_TileObjectToInstantiateArray:
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -22, y: -13, z: 0}
-  m_Size: {x: 126, y: 127, z: 1}
+  m_Size: {x: 126, y: 1000, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -8177,6 +8175,10 @@ PrefabInstance:
     - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
       propertyPath: m_text
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: m_wordSpacing
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7575904289471626183, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
       propertyPath: m_Enabled

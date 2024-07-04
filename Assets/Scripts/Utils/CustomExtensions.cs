@@ -39,13 +39,6 @@ namespace CustomExtensions
         {
             return new Quaternion() { eulerAngles = angles };
         }
-
-        public static NativeArray<char> ToNativeCharArray(this string s)
-        {
-            var array = new NativeArray<char>(s.Length,Allocator.Persistent);
-            array.CopyFrom(s.ToCharArray());
-            return array;
-        }
     }
 
 }
