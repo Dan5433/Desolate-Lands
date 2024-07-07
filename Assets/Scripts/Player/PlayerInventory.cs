@@ -19,8 +19,8 @@ public class PlayerInventory : InventoryBase
                     Destroy(collision.gameObject);
                 }
 
-                SaveInventory();
                 UpdateUI();
+                SaveInventory();
                 break;
         }
     }

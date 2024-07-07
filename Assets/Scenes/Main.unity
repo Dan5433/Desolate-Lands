@@ -1972,6 +1972,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
   - {fileID: 11400000, guid: a2a3b5474aa760143b3ea6272e3780ad, type: 2}
   - {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
+  - {fileID: 11400000, guid: ac3bdd9db40863a40b3999ffc9b8a681, type: 2}
 --- !u!4 &941869351
 Transform:
   m_ObjectHideFlags: 0
@@ -7740,6 +7741,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 04095f74d3843384da7c840bf9d2b575, type: 2}
   - {fileID: 11400000, guid: 8a4ff1f651b1241438e82627e5bca4f2, type: 2}
   - {fileID: 11400000, guid: 0a7b5e0495bd0944daac80fcf994aa9c, type: 2}
+  - {fileID: 11400000, guid: 3eecfd44e80c5ac4eab0c97b14790741, type: 2}
   ground: {fileID: 1841665678}
   top: {fileID: 1017067505}
   solid: {fileID: 330243725}
@@ -7763,7 +7765,9 @@ MonoBehaviour:
   - tiles:
     - weight: 100
       tileId: 2
-    genGap: 10
+    - weight: 20
+      tileId: 7
+    genGap: 20
   player: {fileID: 2136044632}
   worldSize: {x: 32, y: 32}
   chunkSize: {x: 32, y: 32}
@@ -8835,6 +8839,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reach: 1
+  inventory: {fileID: 2136044635}
 --- !u!95 &2136044638
 Animator:
   serializedVersion: 5

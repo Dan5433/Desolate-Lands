@@ -1,6 +1,5 @@
 using CustomClasses;
 using System;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -16,7 +15,7 @@ public class RandomTile : Tile
     {
         if (go == null) return false;
 
-        if(go.TryGetComponent<TilePlaceInit>(out var script))
+        if (go.TryGetComponent<TilePlaceInit>(out var script))
         {
             script.Init(GetTile(), position);
         }

@@ -17,7 +17,7 @@ public class ItemManager : MonoBehaviour
     public Item Air { get { return air; } }
     public GameObject ContainerUI { get { return containerUI; } }
     public GameObject InvSlot { get { return invSlotPrefab; } }
-    public bool ItemGrabbed { get {  return grabbedItem.Item.ItemObj != Air; } }
+    public bool ItemGrabbed { get { return grabbedItem.Item.ItemObj != Air; } }
 
     void Awake()
     {
@@ -27,7 +27,7 @@ public class ItemManager : MonoBehaviour
         }
         else
         {
-            grabbedItem.Item = new(air, air.Name, air.MaxCount);
+            grabbedItem.Item = InvItem.Air;
             Instance = this;
         }
     }
@@ -36,15 +36,15 @@ public class ItemManager : MonoBehaviour
     {
         if (Instance.grabbedItem.Item.ItemObj == Instance.Air) return;
 
-        Vector3 spawnPos = position + direction*distance;
+        Vector3 spawnPos = position + direction * distance;
 
         LayerMask mask = LayerMask.GetMask("Solid");
         RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, mask);
 
-        if(hit) spawnPos = hit.point;
+        if (hit) spawnPos = hit.point;
 
         SpawnGroundItem(Instance.grabbedItem.Item, spawnPos, false);
-        Instance.grabbedItem.Item = new(Instance.Air, Instance.Air.Name, Instance.Air.MaxCount);
+        Instance.grabbedItem.Item = InvItem.Air;
         UpdateItemUI(Instance.grabbedItem.transform, Instance.grabbedItem.Item);
     }
 
@@ -53,9 +53,9 @@ public class ItemManager : MonoBehaviour
         var image = slot.Find("Image").GetComponent<Image>();
         var countTxt = slot.GetComponentInChildren<TMP_Text>();
 
-        if(item.ItemObj == Instance.air )
+        if (item.ItemObj == Instance.air)
         {
-            if(slot.TryGetComponent<SwapItem>(out var script))
+            if (slot.TryGetComponent<SwapItem>(out var script))
             {
                 image.sprite = script.Placeholder;
             }
@@ -108,16 +108,16 @@ public class ItemManager : MonoBehaviour
 
         if (selectedItem.ItemObj != Instance.Air && slotType != SlotType.Any && selectedItem.ItemObj.Slot != slotType) return;
 
-        if(slotType != SlotType.Any) SpecialItemActions(slotItem.ItemObj, selectedItem.ItemObj, GameManager.Instance.Player);
+        if (slotType != SlotType.Any) SpecialItemActions(slotItem.ItemObj, selectedItem.ItemObj, GameManager.Instance.Player);
 
         if (mouseButton == 0)
         {
-            if(slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air) 
+            if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air)
             {
-                if(slotItem.Count + selectedItem.Count <= slotItem.ItemObj.MaxCount) 
+                if (slotItem.Count + selectedItem.Count <= slotItem.ItemObj.MaxCount)
                 {
                     slotItem.Count += selectedItem.Count;
-                    Instance.grabbedItem.Item = new(Instance.Air, Instance.Air.Name, Instance.Air.MaxCount);
+                    Instance.grabbedItem.Item = InvItem.Air;
                 }
                 else
                 {
@@ -131,25 +131,25 @@ public class ItemManager : MonoBehaviour
                 slotItem = new(selectedItem);
             }
         }
-        else if (mouseButton == 1) 
+        else if (mouseButton == 1)
         {
-            if(selectedItem.ItemObj == Instance.Air && slotItem.ItemObj != Instance.Air) 
+            if (selectedItem.ItemObj == Instance.Air && slotItem.ItemObj != Instance.Air)
             {
                 int half = slotItem.Count / 2;
-                Instance.grabbedItem.Item = new(slotItem.ItemObj,slotItem.Name,half);
+                Instance.grabbedItem.Item = new(slotItem.ItemObj, slotItem.Name, half);
 
-                if(slotItem.Count >= 2)
+                if (slotItem.Count >= 2)
                 {
                     slotItem.Count -= half;
                 }
                 else
                 {
-                    slotItem = new(Instance.Air,Instance.Air.Name,Instance.Air.MaxCount);
+                    slotItem = InvItem.Air;
                 }
             }
             else if (slotItem.ItemObj == Instance.Air || slotItem.ItemObj == selectedItem.ItemObj)
             {
-                if (slotItem.ItemObj == Instance.Air) 
+                if (slotItem.ItemObj == Instance.Air)
                 {
                     slotItem = new(selectedItem.ItemObj, selectedItem.Name, 0);
                 }
@@ -157,7 +157,7 @@ public class ItemManager : MonoBehaviour
                 slotItem.Count++;
                 if (Instance.grabbedItem.Item.Count <= 1)
                 {
-                    Instance.grabbedItem.Item = new(Instance.Air, Instance.Air.Name, Instance.Air.MaxCount);
+                    Instance.grabbedItem.Item = InvItem.Air;
                 }
                 else
                 {
@@ -184,7 +184,7 @@ public class ItemManager : MonoBehaviour
         if (slot != null && slot.GetType() == typeof(EquippableItem))
         {
             var item = slot as EquippableItem;
-            foreach(var effect in item.Effects)
+            foreach (var effect in item.Effects)
             {
                 effect.Unequip(invoker);
             }

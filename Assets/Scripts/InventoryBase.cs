@@ -20,10 +20,9 @@ public class InventoryBase : MonoBehaviour
     {
         inventory = new InvItem[invSize];
 
-        Item air = ItemManager.Instance.Air;
         for (int i = 0; i < inventory.Length; i++)
         {
-            inventory[i] = new InvItem(air, air.name, air.MaxCount);
+            inventory[i] = InvItem.Air;
         }
 
         var data = await LoadInventory();
@@ -41,13 +40,13 @@ public class InventoryBase : MonoBehaviour
         if (updateUIOnStart) UpdateUI();
     }
 
-    protected int AddToInventory(InvItem item)
+    public int AddToInventory(InvItem item)
     {
         int excess = item.Count;
         for (int i = 0; i < inventory.Length; i++)
         {
             if ((inventory[i].Count == inventory[i].ItemObj.MaxCount || inventory[i].ItemObj != item.ItemObj)
-                && inventory[i].ItemObj != ItemManager.Instance.Air) { continue; }
+                && inventory[i].ItemObj != ItemManager.Instance.Air) continue;
 
             if (excess + inventory[i].Count <= item.ItemObj.MaxCount)
             {
@@ -61,6 +60,7 @@ public class InventoryBase : MonoBehaviour
                 continue;
             }
         }
+
         return excess;
     }
     protected void GenLoot(WeightedItem[] lootTable)

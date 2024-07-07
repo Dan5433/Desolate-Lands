@@ -1,4 +1,6 @@
+using CustomClasses;
 using CustomExtensions;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -7,9 +9,10 @@ public class Interact : MonoBehaviour
     Vector3Int targetedCell;
     GameObject activeUI;
     GameObject activeTile;
-    float offsetForCell = 0.01f;
+    const float offsetForCell = 0.01f;
     Break breakScript;
     [SerializeField] float reach;
+    [SerializeField] InventoryBase inventory;
 
     void Awake()
     {
@@ -18,26 +21,67 @@ public class Interact : MonoBehaviour
 
     void Update()
     {
-        LayerMask mask = LayerMask.GetMask("Solid");
+        LayerMask mask = LayerMask.GetMask("Interactable");
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, reach, mask);
 
-        if (hit)
+        if (!hit)
         {
-            Vector2 newPos = hit.ExtendRaycast(offsetForCell, transform);
+            breakScript.ResetBreaking();
+            return;
+        }
 
-            if (hit.transform.TryGetComponent(out Tilemap tilemap))
+        Vector2 newPos = hit.ExtendRaycast(offsetForCell, transform);
+
+        if (hit.transform.TryGetComponent(out Tilemap tilemap))
+        {
+            if (targetedCell != tilemap.WorldToCell(newPos) && targetedCell.z != -1)
             {
-                if (targetedCell != tilemap.WorldToCell(newPos) && targetedCell.z != -1)
-                {
-                    breakScript.ResetBreaking();
-                    targetedCell.z = -1;
-                    return;
-                }
-
-                targetedCell = tilemap.WorldToCell(newPos);
+                breakScript.ResetBreaking();
+                targetedCell.z = -1;
+                return;
             }
 
-            if (activeUI == null && Input.GetMouseButtonDown(1))
+            targetedCell = tilemap.WorldToCell(newPos);
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+
+            if (hit.transform.TryGetComponent<Gatherable>(out var gatherable))
+            {
+                if (gatherable.State != GatherableTileState.Replenished) return;
+
+                gatherable.State = 0;
+
+                GatherableTile tile = gatherable.GetComponentInParent<Tilemap>()
+                    .GetTile<GatherableTile>(gatherable.TilePosition);
+
+                Dictionary<Item, int> excess = new();
+                foreach (var drop in tile.Drops)
+                {
+                    int count = Random.Range(drop.MinDropCount, drop.MaxDropCount);
+                    if (count == 0) { continue; }
+
+                    InvItem item = new(drop.Item, drop.Item.Name, count);
+
+                    int leftover = inventory.AddToInventory(item);
+                    if (leftover > 0) excess.Add(drop.Item, leftover);
+                }
+
+                inventory.UpdateUI();
+                inventory.SaveInventory();
+
+                foreach (KeyValuePair<Item, int> item in excess)
+                {
+                    InvItem dropItem = new(item.Key, item.Key.Name, item.Value);
+
+                    ItemManager.SpawnGroundItem(dropItem, transform.position, true);
+                }
+
+                return;
+            }
+
+            if (activeUI == null)
             {
                 GameObject containerTile = tilemap.GetInstantiatedObject(targetedCell);
                 activeTile = containerTile;
@@ -57,16 +101,12 @@ public class Interact : MonoBehaviour
                 }
                 return;
             }
+        }
 
-            if (Input.GetMouseButton(0))
-            {
-                BreakableTile tile = tilemap.GetTile<BreakableTile>(targetedCell);
-                breakScript.Breaking(tile, targetedCell, tilemap);
-            }
-            else
-            {
-                breakScript.ResetBreaking();
-            }
+        if (Input.GetMouseButton(0))
+        {
+            BreakableTile tile = tilemap.GetTile<BreakableTile>(targetedCell);
+            if (tile != null) breakScript.Breaking(tile, targetedCell, tilemap);
         }
         else
         {

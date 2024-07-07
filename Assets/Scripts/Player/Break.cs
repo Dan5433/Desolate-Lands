@@ -18,7 +18,7 @@ public class Break : MonoBehaviour
     [SerializeField] EfficientTool tool;
     [SerializeField] RequiredMaterial material;
     [SerializeField][Tooltip("In Seconds")] float breakTimeReduction;
-    [SerializeField][Tooltip("Mutiplier per Material")] float wrongToolPenalty;
+    [SerializeField][Tooltip("Mutiplier")] float wrongToolPenalty;
     public void ResetBreaking()
     {
         breaking = false;

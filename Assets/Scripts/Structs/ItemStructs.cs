@@ -47,6 +47,8 @@ namespace CustomClasses
             set { count = Mathf.Clamp(value, 1, item.MaxCount); }
         }
 
+        public static InvItem Air { get; } = new(ItemManager.Instance.Air, ItemManager.Instance.Air.Name, 0);
+
         public InvItem(Item item, string name, int count)
         {
             this.item = item;
@@ -59,11 +61,6 @@ namespace CustomClasses
             item = original.item;
             name = original.name;
             count = original.count;
-        }
-        public static InvItem Air()
-        {
-            Item air = ItemManager.Instance.Air;
-            return new InvItem(air, air.Name, 0);
         }
     }
 

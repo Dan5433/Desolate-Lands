@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f543da42a355c478e7d3fc27ed4bd9, type: 3}
+  m_Name: Straw
+  m_EditorClassIdentifier: 
+  id: 5
+  defaultName: Straw
+  maxCount: 10
+  sprite: {fileID: 21300000, guid: e92849e1dd7bc06428f85eed0b798083, type: 3}
+  slot: 0

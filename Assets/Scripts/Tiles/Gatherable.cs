@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,18 +9,33 @@ public class Gatherable : MonoBehaviour
     Vector3Int tilePosition;
     float resetTimePerState;
     float currentStateTimer;
+    JsonFileDataHandler dataHandler;
 
-    public GatherableTileState State { get { return state; } }
+    public Vector3Int TilePosition { get { return tilePosition; } }
+    public GatherableTileState State
+    {
+        set
+        {
+            state = value;
+            UpdateState();
+            SaveState();
+        }
+
+        get { return state; }
+    }
+
 
     public void Init(float resetTime, Vector3Int position)
     {
+        string filePath = Path.Combine("Terrain", "Gatherable" + transform.position);
+        dataHandler = new(GameManager.Instance.DataDirPath, filePath);
+
         tilePosition = position;
 
-        int numberOfStates = Enum.GetNames(typeof(GatherableTileState)).Length - 1;
+        int numberOfStates = (int)GatherableTileState.Replenished;
         resetTimePerState = resetTime / numberOfStates;
 
-        state = GatherableTileState.Replenished;
-        UpdateState();
+        LoadState();
     }
 
     void Update()
@@ -29,6 +45,7 @@ public class Gatherable : MonoBehaviour
         if (currentStateTimer < resetTimePerState)
         {
             currentStateTimer += Time.deltaTime;
+            SaveState();
         }
         else
         {
@@ -42,4 +59,33 @@ public class Gatherable : MonoBehaviour
     {
         GetComponentInParent<Tilemap>().RefreshTile(tilePosition);
     }
+
+    async void SaveState()
+    {
+
+        GatherableStateData data = new()
+        {
+            state = state,
+            timer = currentStateTimer
+        };
+
+        await dataHandler.SaveDataAsync(data);
+    }
+
+    async void LoadState()
+    {
+
+        var data = await dataHandler.LoadDataAsync<GatherableStateData>();
+        state = data != null ? data.state : GatherableTileState.Replenished;
+        currentStateTimer = data != null ? data.timer : 0;
+
+        UpdateState();
+    }
+}
+
+[Serializable]
+public class GatherableStateData
+{
+    public GatherableTileState state;
+    public float timer;
 }
