@@ -13,26 +13,25 @@ public class SaveTerrain : MonoBehaviour
         main = GetComponent<GenerateTerrain>();
     }
 
-    public async void SaveTilesAsync(Tilemap tilemap, Vector2Int startPos, string saveName)
+    public async void SaveTilesAsync(Tilemap tilemap, Vector2Int indexPos, string saveName)
     {
-        Vector2Int endPos = startPos + main.ChunkSize;
         TerrainSaveData data = new();
 
-        for (int x = startPos.x; x < endPos.x; x++)
+        for (int x = indexPos.x * main.ChunkSize.x; x < indexPos.x * main.ChunkSize.x + main.ChunkSize.x; x++)
         {
-            for (int y = startPos.y; y < endPos.y; y++)
+            for (int y = indexPos.y * main.ChunkSize.y; y < indexPos.y * main.ChunkSize.y + main.ChunkSize.y; y++)
             {
-                Tile tile = tilemap.GetTile<Tile>(new Vector3Int(x, y));
+                Tile tile = tilemap.GetTile<Tile>(new(x,y));
                 if (tile == null) continue;
 
                 int id = Array.FindIndex(main.MasterTiles, t => t == tile);
 
                 data.indexes.Add(id);
-                data.positions.Add(new Vector3Int(x, y));
+                data.positions.Add(new(x, y));
             }
         }
 
-        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), saveName + startPos);
+        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), saveName + indexPos);
         await handler.SaveDataAsync(data);
     }
 }

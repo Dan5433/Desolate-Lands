@@ -47,7 +47,6 @@ namespace CustomClasses
             set { count = Mathf.Clamp(value, 1, item.MaxCount); }
         }
 
-        public static InvItem Air { get; } = new(ItemManager.Instance.Air, ItemManager.Instance.Air.Name, 0);
 
         public InvItem(Item item, string name, int count)
         {

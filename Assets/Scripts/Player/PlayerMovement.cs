@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
         //Cursor.SetCursor(cursor,Vector2.zero,CursorMode.Auto);         
         Cursor.lockState = CursorLockMode.Confined;
 
-        string[] pos = PlayerPrefs.GetString("pos","0,0,0").Split(",");
+        string[] pos = PlayerPrefs.GetString("pos", "0,0,0").Split(",");
         transform.position = new Vector3(float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
     }
 

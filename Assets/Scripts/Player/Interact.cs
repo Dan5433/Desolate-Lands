@@ -105,8 +105,10 @@ public class Interact : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
+            if (tilemap == null) return;
+
             BreakableTile tile = tilemap.GetTile<BreakableTile>(targetedCell);
-            if (tile != null) breakScript.Breaking(tile, targetedCell, tilemap);
+            breakScript.Breaking(tile, targetedCell, tilemap);
         }
         else
         {

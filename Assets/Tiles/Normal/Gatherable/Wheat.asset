@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9d21fd7081bf9d40813e6f262bd9708, type: 3}
   m_Name: Wheat
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 79a33962d7ebe9049b49cb691df999a7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -41,7 +41,7 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: e53d969edba0cb0438e6ef7087ed69cf, type: 3}
   - state: 2
     sprite: {fileID: 21300000, guid: 79a33962d7ebe9049b49cb691df999a7, type: 3}
-  regenerateTime: 60
+  regenerateTime: 300
   drops:
   - item: {fileID: 11400000, guid: ac3bdd9db40863a40b3999ffc9b8a681, type: 2}
     minDropCount: 1

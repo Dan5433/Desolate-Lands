@@ -21,7 +21,7 @@ public class GenerateTerrain : MonoBehaviour
     [SerializeField] TerrainGenTiles[] topTiles;
     [SerializeField] Transform player;
     [SerializeField] Vector2Int worldSize = new(100, 100);
-    [SerializeField] Vector2Int chunkSize = new(32, 32);
+    static Vector2Int chunkSize = new(32, 32);
     [SerializeField] float renderDist;
     [SerializeField] ParticleSystem gasBorder;
     LoadTerrain loadTerrain;
@@ -46,7 +46,7 @@ public class GenerateTerrain : MonoBehaviour
         {
             for (int y = -worldSize.y; y < worldSize.y; y++)
             {
-                chunks.Add(new Vector2Int(x * chunkSize.x, y * chunkSize.y), false);
+                chunks.Add(new Vector2Int(x, y), false);
             }
         }
     }
@@ -98,9 +98,9 @@ public class GenerateTerrain : MonoBehaviour
 
     void FixedUpdate()
     {
-        foreach (Vector2Int pos in chunks.Keys.ToList())
+        foreach (Vector2Int pos in chunks.Keys.ToArray())
         {
-            float distance = Vector2.Distance(pos + offsetToMiddle, player.position);
+            float distance = Vector2.Distance(pos * chunkSize + offsetToMiddle, player.position);
 
             if (distance <= renderDist && !chunks[pos])
             {
@@ -113,7 +113,7 @@ public class GenerateTerrain : MonoBehaviour
                 }
                 else
                 {
-                    GenChunk(pos);
+                    GenChunk(pos * chunkSize, pos);
                 }
 
                 chunks[pos] = true;
@@ -121,9 +121,9 @@ public class GenerateTerrain : MonoBehaviour
             }
             else if (distance > renderDist && chunks[pos])
             {
-                loadTerrain.SetFlatTiles(ground, pos, new Tile[chunkSize.x * chunkSize.y]);
-                loadTerrain.SetFlatTiles(top, pos, new Tile[chunkSize.x * chunkSize.y]);
-                loadTerrain.SetFlatTiles(solid, pos, new Tile[chunkSize.x * chunkSize.y]);
+                loadTerrain.SetFlatTiles(ground, pos * chunkSize, new Tile[chunkSize.x * chunkSize.y]);
+                loadTerrain.SetFlatTiles(top, pos * chunkSize, new Tile[chunkSize.x * chunkSize.y]);
+                loadTerrain.SetFlatTiles(solid, pos * chunkSize, new Tile[chunkSize.x * chunkSize.y]);
                 chunks[pos] = false;
             }
         }
@@ -137,19 +137,19 @@ public class GenerateTerrain : MonoBehaviour
         return true;
     }
 
-    void GenChunk(Vector2Int startPos)
+    void GenChunk(Vector2Int tilePos, Vector2Int indexPos)
     {
-        GenBoxTiles(ground, grTiles, startPos);
+        GenBoxTiles(ground, grTiles, tilePos);
         foreach (var genTiles in topTiles)
         {
-            GenScatteredTiles(top, genTiles.Tiles, genTiles.GenGap, startPos);
+            GenScatteredTiles(top, genTiles.Tiles, genTiles.GenGap, tilePos);
         }
 
-        GenStructures(startPos, solid);
+        GenStructures(tilePos, solid);
 
-        saveTerrain.SaveTilesAsync(top, startPos, "topchunk");
-        saveTerrain.SaveTilesAsync(solid, startPos, "solidchunk");
-        saveTerrain.SaveTilesAsync(ground, startPos, "groundchunk");
+        saveTerrain.SaveTilesAsync(top, indexPos, "topchunk");
+        saveTerrain.SaveTilesAsync(solid, indexPos, "solidchunk");
+        saveTerrain.SaveTilesAsync(ground, indexPos, "groundchunk");
     }
 
     void GenStructures(Vector2Int startPos, Tilemap tilemap)
@@ -229,6 +229,19 @@ public class GenerateTerrain : MonoBehaviour
         }
 
         tilemap.SetTiles(allCoords.ToArray(), allTiles.ToArray());
+    }
+
+    public static Vector2Int GetChunkIndexFromPosition(Vector3 position)
+    {
+        Vector2Int chunkPos = new();
+
+        if (position.x < 0) chunkPos.x = Mathf.FloorToInt(position.x / chunkSize.x);
+        else chunkPos.x = Mathf.CeilToInt(position.x / chunkSize.x) - 1;
+
+        if (position.y < 0) chunkPos.y = Mathf.FloorToInt(position.y / chunkSize.y);
+        else chunkPos.y = Mathf.CeilToInt(position.y / chunkSize.y) - 1;
+
+        return chunkPos;
     }
 }
 

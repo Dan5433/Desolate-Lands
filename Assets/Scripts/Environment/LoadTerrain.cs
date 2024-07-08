@@ -33,9 +33,9 @@ public class LoadTerrain : MonoBehaviour
         tilemap.SetTiles(genCoords, tiles);
     }
 
-    public async void LoadTiles(Tilemap tilemap, Vector2Int startPos, string saveName)
+    public async void LoadTiles(Tilemap tilemap, Vector2Int indexPos, string saveName)
     {
-        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), saveName + startPos);
+        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), saveName + indexPos);
 
         var data = await handler.LoadDataAsync<TerrainSaveData>();
 

@@ -18,6 +18,7 @@ public class Item : ScriptableObject
     public SlotType Slot { get { return slot; } }
 }
 
+[Serializable]
 public enum SlotType
 {
     Any,

@@ -22,7 +22,7 @@ public class InventoryBase : MonoBehaviour
 
         for (int i = 0; i < inventory.Length; i++)
         {
-            inventory[i] = InvItem.Air;
+            inventory[i] = ItemManager.Instance.InvItemAir;
         }
 
         var data = await LoadInventory();

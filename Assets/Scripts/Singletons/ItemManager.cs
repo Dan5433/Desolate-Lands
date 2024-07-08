@@ -12,9 +12,11 @@ public class ItemManager : MonoBehaviour
     [SerializeField] GameObject containerUI;
     [SerializeField] ItemRef grabbedItem;
     [SerializeField] Item air;
+    InvItem invItemAir;
     [SerializeField] Item[] items;
     public Item[] Items { get { return items; } }
     public Item Air { get { return air; } }
+    public InvItem InvItemAir { get { return invItemAir; } }
     public GameObject ContainerUI { get { return containerUI; } }
     public GameObject InvSlot { get { return invSlotPrefab; } }
     public bool ItemGrabbed { get { return grabbedItem.Item.ItemObj != Air; } }
@@ -27,7 +29,8 @@ public class ItemManager : MonoBehaviour
         }
         else
         {
-            grabbedItem.Item = InvItem.Air;
+            invItemAir = new(air, air.Name, 0);
+            grabbedItem.Item = invItemAir;
             Instance = this;
         }
     }
@@ -44,7 +47,7 @@ public class ItemManager : MonoBehaviour
         if (hit) spawnPos = hit.point;
 
         SpawnGroundItem(Instance.grabbedItem.Item, spawnPos, false);
-        Instance.grabbedItem.Item = InvItem.Air;
+        Instance.grabbedItem.Item = Instance.InvItemAir;
         UpdateItemUI(Instance.grabbedItem.transform, Instance.grabbedItem.Item);
     }
 
@@ -117,7 +120,7 @@ public class ItemManager : MonoBehaviour
                 if (slotItem.Count + selectedItem.Count <= slotItem.ItemObj.MaxCount)
                 {
                     slotItem.Count += selectedItem.Count;
-                    Instance.grabbedItem.Item = InvItem.Air;
+                    Instance.grabbedItem.Item = Instance.InvItemAir;
                 }
                 else
                 {
@@ -144,7 +147,7 @@ public class ItemManager : MonoBehaviour
                 }
                 else
                 {
-                    slotItem = InvItem.Air;
+                    slotItem = Instance.InvItemAir;
                 }
             }
             else if (slotItem.ItemObj == Instance.Air || slotItem.ItemObj == selectedItem.ItemObj)
@@ -157,7 +160,7 @@ public class ItemManager : MonoBehaviour
                 slotItem.Count++;
                 if (Instance.grabbedItem.Item.Count <= 1)
                 {
-                    Instance.grabbedItem.Item = InvItem.Air;
+                    Instance.grabbedItem.Item = Instance.InvItemAir;
                 }
                 else
                 {

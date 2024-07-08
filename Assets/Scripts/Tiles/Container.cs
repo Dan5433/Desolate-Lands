@@ -27,6 +27,7 @@ public class Container : InventoryBase
 
     void OnDestroy()
     {
+        Debug.Log(GenerateTerrain.GetChunkIndexFromPosition(transform.position));
         if (!PlayerPrefs.HasKey(transform.parent.name + (transform.localPosition + offsetToCell).ToVector3Int()))
         {
             foreach (var item in inventory)

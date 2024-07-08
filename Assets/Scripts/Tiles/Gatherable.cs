@@ -18,7 +18,6 @@ public class Gatherable : MonoBehaviour
         {
             state = value;
             UpdateState();
-            SaveState();
         }
 
         get { return state; }
@@ -45,7 +44,6 @@ public class Gatherable : MonoBehaviour
         if (currentStateTimer < resetTimePerState)
         {
             currentStateTimer += Time.deltaTime;
-            SaveState();
         }
         else
         {
@@ -80,6 +78,11 @@ public class Gatherable : MonoBehaviour
         currentStateTimer = data != null ? data.timer : 0;
 
         UpdateState();
+    }
+
+    void OnDestroy()
+    {
+        SaveState();
     }
 }
 
