@@ -21,7 +21,7 @@ public class SaveTerrain : MonoBehaviour
         {
             for (int y = indexPos.y * main.ChunkSize.y; y < indexPos.y * main.ChunkSize.y + main.ChunkSize.y; y++)
             {
-                Tile tile = tilemap.GetTile<Tile>(new(x,y));
+                Tile tile = tilemap.GetTile<Tile>(new(x, y));
                 if (tile == null) continue;
 
                 int id = Array.FindIndex(main.MasterTiles, t => t == tile);
@@ -31,8 +31,23 @@ public class SaveTerrain : MonoBehaviour
             }
         }
 
-        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), saveName + indexPos);
+        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), tilemap.name + saveName + indexPos);
         await handler.SaveDataAsync(data);
+    }
+
+    public static async void RemoveTileSaveData(Vector3Int tilePosition, string tilemapName)
+    {
+        JsonFileDataHandler dataHandler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"),
+            tilemapName + GenerateTerrain.chunkSaveName + GenerateTerrain.GetChunkIndexFromPosition(tilePosition));
+
+        var save = await dataHandler.LoadDataAsync<TerrainSaveData>();
+
+        var index = save.positions.FindIndex(position => position == tilePosition);
+
+        save.indexes.RemoveAt(index);
+        save.positions.Remove(tilePosition);
+
+        await dataHandler.SaveDataAsync(save);
     }
 }
 

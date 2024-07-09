@@ -1,11 +1,12 @@
 using CustomClasses;
 using CustomExtensions;
+using TreeEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class Container : InventoryBase
+public class Container : InventoryBase, IBreakable
 {
     [SerializeField] WeightedItem[] lootPool;
-    static Vector3 offsetToCell = new(-0.5f, -0.5f, 0);
 
     public WeightedItem[] LootPool { set { lootPool = value; } }
     public int InvSize { set { invSize = value; } }
@@ -25,16 +26,14 @@ public class Container : InventoryBase
         GenLoot(lootPool);
     }
 
-    void OnDestroy()
+    public void OnBreak()
     {
-        if (!PlayerPrefs.HasKey(transform.parent.name + (transform.localPosition + offsetToCell).ToVector3Int()))
+        var tilePosition = transform.parent.GetComponent<Tilemap>().WorldToCell(transform.position);
+        foreach (var item in inventory)
         {
-            foreach (var item in inventory)
-            {
-                InvItem groundItem = new(item.ItemObj, item.Name, item.Count);
-
-                ItemManager.SpawnGroundItem(groundItem, transform.position + offsetToCell, true);
-            }
+            ItemManager.SpawnGroundItem(item, tilePosition, true);
         }
+
+        DeleteInventory();
     }
 }

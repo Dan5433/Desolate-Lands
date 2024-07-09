@@ -105,6 +105,13 @@ public class InventoryBase : MonoBehaviour
         }
     }
 
+    protected async void DeleteInventory()
+    {
+        var fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Storage", GetSaveKey());
+
+        await Task.Run(() => { File.Delete(Path.Combine(fullPath)); });
+    }
+
     public async void SaveInventory()
     {
         var save = new InventorySaveData() { inventory = new(invSize) };

@@ -1,7 +1,6 @@
-using System.Collections;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -35,7 +34,7 @@ public class LoadTerrain : MonoBehaviour
 
     public async void LoadTiles(Tilemap tilemap, Vector2Int indexPos, string saveName)
     {
-        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), saveName + indexPos);
+        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), tilemap.name+saveName + indexPos);
 
         var data = await handler.LoadDataAsync<TerrainSaveData>();
 
@@ -47,5 +46,15 @@ public class LoadTerrain : MonoBehaviour
         }
 
         tilemap.SetTiles(data.positions.ToArray(), tiles);
+    }
+
+    public static async Task<bool> TileExists(Vector3Int tilePosition, string tilemapName)
+    {
+        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"),
+            tilemapName + GenerateTerrain.chunkSaveName + GenerateTerrain.GetChunkIndexFromPosition(tilePosition));
+
+        var save = await handler.LoadDataAsync<TerrainSaveData>();
+
+        return save.positions.Contains(tilePosition);
     }
 }

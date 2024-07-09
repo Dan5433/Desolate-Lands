@@ -4,7 +4,6 @@ using UnityEngine.Tilemaps;
 public class Mine : MonoBehaviour
 {
     Transform player;
-    Tilemap parent;
     float pulseStage = 0f;
     bool pulseUp = true;
     [SerializeField] float pulseSpeed = 0.03f;
@@ -13,7 +12,6 @@ public class Mine : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("Player").GetComponent<Transform>();
-        parent = GameObject.Find("Top").GetComponent<Tilemap>();
     }
 
     void FixedUpdate()
@@ -51,7 +49,6 @@ public class Mine : MonoBehaviour
     {
         if (collision.transform.CompareTag("Player"))
         {
-            PlayerPrefs.DeleteKey(parent.name + parent.WorldToCell(transform.position));
             Destroy(gameObject);
         }
 
@@ -60,5 +57,8 @@ public class Mine : MonoBehaviour
             Destroy(collision.gameObject);
             Destroy(gameObject);
         }
+
+        var tilePosition = transform.parent.GetComponent<Tilemap>().WorldToCell(transform.position);
+        SaveTerrain.RemoveTileSaveData(tilePosition,transform.parent.name);
     }
 }

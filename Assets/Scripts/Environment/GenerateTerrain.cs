@@ -21,12 +21,13 @@ public class GenerateTerrain : MonoBehaviour
     [SerializeField] TerrainGenTiles[] topTiles;
     [SerializeField] Transform player;
     [SerializeField] Vector2Int worldSize = new(100, 100);
-    static Vector2Int chunkSize = new(32, 32);
     [SerializeField][Tooltip("In Chunks")] int renderDist;
-    [SerializeField] ParticleSystem gasBorder;
+    [SerializeField] ParticleSystem gasBorder; //TODO: Optimize border for bigger worlds (2048x2048 takes 18 ms for particle system update resulting in 60 fps)
     LoadTerrain loadTerrain;
     SaveTerrain saveTerrain;
     HashSet<Vector2Int> loadedChunks = new();
+    static Vector2Int chunkSize = new(32, 32);
+    public const string chunkSaveName = "chunk";
 
     public Tile[] MasterTiles { get { return masterTiles; } }
     public Vector2Int ChunkSize { get { return chunkSize; } }
@@ -37,7 +38,7 @@ public class GenerateTerrain : MonoBehaviour
         loadTerrain = GetComponent<LoadTerrain>();
         saveTerrain = GetComponent<SaveTerrain>();
 
-        InstantiateBorders();
+        //InstantiateBorders();
     }
 
     void InstantiateBorders()
@@ -77,14 +78,6 @@ public class GenerateTerrain : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Delete))
-        {
-            PlayerPrefs.DeleteAll();
-        }
-    }
-
     LinkedList<Vector2Int> GetChunksInsideRenderDistance(Vector2Int currentChunk)
     {
         LinkedList<Vector2Int> rendered = new();
@@ -98,11 +91,11 @@ public class GenerateTerrain : MonoBehaviour
         return rendered;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         var renderedChunks = GetChunksInsideRenderDistance(GetChunkIndexFromPosition(player.position));
 
-        foreach(var chunk in loadedChunks.ToArray())
+        foreach (var chunk in loadedChunks.ToArray())
         {
             if (renderedChunks.Contains(chunk)) continue;
 
@@ -113,23 +106,21 @@ public class GenerateTerrain : MonoBehaviour
             loadedChunks.Remove(chunk);
         }
 
-        foreach(var chunk in renderedChunks)
+        foreach (var chunk in renderedChunks)
         {
-            if (loadedChunks.Contains(chunk)) continue;
+            if (!loadedChunks.Add(chunk)) continue;
 
-            string fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Terrain", "groundchunk" + chunk);
+            string fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Terrain", "Groundchunk" + chunk);
             if (File.Exists(fullPath))
             {
-                loadTerrain.LoadTiles(ground, chunk, "groundchunk");
-                loadTerrain.LoadTiles(top, chunk, "topchunk");
-                loadTerrain.LoadTiles(solid, chunk, "solidchunk");
+                loadTerrain.LoadTiles(ground, chunk, chunkSaveName);
+                loadTerrain.LoadTiles(top, chunk, chunkSaveName);
+                loadTerrain.LoadTiles(solid, chunk, chunkSaveName);
             }
             else
             {
                 GenChunk(chunk * chunkSize, chunk);
             }
-
-            loadedChunks.Add(chunk);
         }
     }
     bool HasRoomToPlaceStructure(Tilemap tilemap, Vector3Int startPos, Vector3Int structSize)
@@ -151,9 +142,9 @@ public class GenerateTerrain : MonoBehaviour
 
         GenStructures(tilePos, solid);
 
-        saveTerrain.SaveTilesAsync(top, indexPos, "topchunk");
-        saveTerrain.SaveTilesAsync(solid, indexPos, "solidchunk");
-        saveTerrain.SaveTilesAsync(ground, indexPos, "groundchunk");
+        saveTerrain.SaveTilesAsync(top, indexPos, chunkSaveName);
+        saveTerrain.SaveTilesAsync(solid, indexPos, chunkSaveName);
+        saveTerrain.SaveTilesAsync(ground, indexPos, chunkSaveName);
     }
 
     void GenStructures(Vector2Int startPos, Tilemap tilemap)

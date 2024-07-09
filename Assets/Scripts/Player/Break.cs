@@ -1,5 +1,7 @@
 using CustomClasses;
 using CustomExtensions;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -82,7 +84,11 @@ public class Break : MonoBehaviour
 
     void OnBreak(Tilemap tilemap)
     {
-        PlayerPrefs.DeleteKey(tilemap.name + breakCell);
+        SaveTerrain.RemoveTileSaveData(breakCell, tilemap.name);
+
+        var go = tilemap.GetInstantiatedObject(breakCell);
+        if (go) go.GetComponent<IBreakable>().OnBreak();
+
         tilemap.SetTile(breakCell, null);
         effects.SetTile(breakCell, null);
 
