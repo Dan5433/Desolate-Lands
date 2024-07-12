@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CameraConfine : MonoBehaviour
 {
-    [SerializeField] GenerateTerrain genTerrain;
+    [SerializeField] TerrainManager genTerrain;
     [SerializeField] CinemachineConfiner confiner;
 
     void Awake()

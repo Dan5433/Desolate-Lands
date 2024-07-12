@@ -6,7 +6,7 @@ public class WorldBorderEffect : MonoBehaviour
     [SerializeField][Tooltip("How far from the border the effects start")] float effectRange;
     [SerializeField] float[] postProcessMaxIntensities;
     [SerializeField] PostProcessProfile postProcessEffect;
-    [SerializeField] GenerateTerrain genTerrain;
+    [SerializeField] TerrainManager genTerrain;
     Vector2Int totalWorldSize;
     bool effectEnabled;
 

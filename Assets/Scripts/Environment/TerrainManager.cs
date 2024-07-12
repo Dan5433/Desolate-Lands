@@ -10,12 +10,10 @@ using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(SaveTerrain))]
 [RequireComponent(typeof(LoadTerrain))]
-public class GenerateTerrain : MonoBehaviour
+public class TerrainManager : MonoBehaviour
 {
     [SerializeField] Tile[] masterTiles;
-    [SerializeField] Tilemap ground;
-    [SerializeField] Tilemap top;
-    [SerializeField] Tilemap solid;
+    [SerializeField] Tilemap ground, top, solid;
     [SerializeField] WeightedStructure[] structures;
     [SerializeField] WeightedTileById[] grTiles;
     [SerializeField] TerrainGenTiles[] topTiles;
@@ -93,6 +91,7 @@ public class GenerateTerrain : MonoBehaviour
 
     void Update()
     {
+        //TODO: only save user change data to tiles and generate chunks each time using the seed
         var renderedChunks = GetChunksInsideRenderDistance(GetChunkIndexFromPosition(player.position));
 
         foreach (var chunk in loadedChunks.ToArray())
@@ -110,12 +109,10 @@ public class GenerateTerrain : MonoBehaviour
         {
             if (!loadedChunks.Add(chunk)) continue;
 
-            string fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Terrain", "Groundchunk" + chunk);
+            string fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Terrain", chunk.ToString());
             if (File.Exists(fullPath))
             {
-                loadTerrain.LoadTiles(ground, chunk, chunkSaveName);
-                loadTerrain.LoadTiles(top, chunk, chunkSaveName);
-                loadTerrain.LoadTiles(solid, chunk, chunkSaveName);
+                loadTerrain.LoadTiles(chunk, ground, top, solid);
             }
             else
             {
@@ -132,7 +129,7 @@ public class GenerateTerrain : MonoBehaviour
         return true;
     }
 
-    void GenChunk(Vector2Int tilePos, Vector2Int indexPos)
+    void GenChunk(Vector2Int tilePos, Vector2Int chunkIndex)
     {
         GenBoxTiles(ground, grTiles, tilePos);
         foreach (var genTiles in topTiles)
@@ -142,9 +139,7 @@ public class GenerateTerrain : MonoBehaviour
 
         GenStructures(tilePos, solid);
 
-        saveTerrain.SaveTilesAsync(top, indexPos, chunkSaveName);
-        saveTerrain.SaveTilesAsync(solid, indexPos, chunkSaveName);
-        saveTerrain.SaveTilesAsync(ground, indexPos, chunkSaveName);
+        saveTerrain.SaveTilesAsync(chunkIndex, ground, top, solid);
     }
 
     void GenStructures(Vector2Int startPos, Tilemap tilemap)
