@@ -15,7 +15,7 @@ public class GatherableTile : Tile
 
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
     {
-        if (go == null) return false;
+        if (go == null || !Application.isPlaying) return false;
 
         if (go.TryGetComponent<Gatherable>(out var script))
         {

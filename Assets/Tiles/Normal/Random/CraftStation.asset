@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01e841da93b54ec4e99f5d015a84555c, type: 3}
   m_Name: CraftStation
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 5986319763700e44fbfa5283f5e852d4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -34,7 +34,6 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 3593850188700526489, guid: f569912dca92731428914023a568546f, type: 3}
   m_Flags: 1
   m_ColliderType: 1
-  previewSprite: {fileID: 21300000, guid: 5986319763700e44fbfa5283f5e852d4, type: 3}
   tiles:
   - weight: 3
     tile: {fileID: 11400000, guid: 04095f74d3843384da7c840bf9d2b575, type: 2}

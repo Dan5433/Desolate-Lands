@@ -20,9 +20,9 @@ public class SaveTerrain : MonoBehaviour
         {
             TilemapSaveData data = new() { indexes = new(), positions = new() };
 
-            for (int x = chunkIndex.x * main.ChunkSize.x; x < chunkIndex.x * main.ChunkSize.x + main.ChunkSize.x; x++)
+            for (int x = chunkIndex.x * TerrainManager.ChunkSize.x; x < chunkIndex.x * TerrainManager.ChunkSize.x + TerrainManager.ChunkSize.x; x++)
             {
-                for (int y = chunkIndex.y * main.ChunkSize.y; y < chunkIndex.y * main.ChunkSize.y + main.ChunkSize.y; y++)
+                for (int y = chunkIndex.y * TerrainManager.ChunkSize.y; y < chunkIndex.y * TerrainManager.ChunkSize.y + TerrainManager.ChunkSize.y; y++)
                 {
                     Tile tile = tilemap.GetTile<Tile>(new(x, y));
                     if (tile == null) continue;
@@ -46,7 +46,7 @@ public class SaveTerrain : MonoBehaviour
     public static async void RemoveTileSaveData(Vector3Int tilePosition, string tilemapName)
     {
         JsonFileDataHandler dataHandler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), 
-            TerrainManager.GetChunkIndexFromPosition(tilePosition).ToString());
+            TerrainManager.GetChunkIndexFromPosition(tilePosition + new Vector3(0.5f,0.5f,0)).ToString());
 
         var save = await dataHandler.LoadDataAsync<TerrainSaveData>();
 

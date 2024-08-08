@@ -15,8 +15,8 @@ public class LoadTerrain : MonoBehaviour
 
     public void SetFlatTiles(Tilemap tilemap, Vector2Int startPos, Tile[] tiles)
     {
-        Vector2Int endPos = startPos + main.ChunkSize;
-        Vector3Int[] genCoords = new Vector3Int[main.ChunkSize.x * main.ChunkSize.y];
+        Vector2Int endPos = startPos + TerrainManager.ChunkSize;
+        Vector3Int[] genCoords = new Vector3Int[TerrainManager.ChunkSize.x * TerrainManager.ChunkSize.y];
 
         int index = 0;
 

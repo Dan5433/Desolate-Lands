@@ -12,7 +12,7 @@ public class WorldBorderEffect : MonoBehaviour
 
     void Awake()
     {
-        totalWorldSize = genTerrain.WorldSize * genTerrain.ChunkSize;
+        totalWorldSize = genTerrain.WorldSize * TerrainManager.ChunkSize;
     }
 
     void Update()

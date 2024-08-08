@@ -10,7 +10,7 @@ public class CameraConfine : MonoBehaviour
     {
         var collider = GetComponent<PolygonCollider2D>();
         var worldSize = genTerrain.WorldSize;
-        var chunkSize = genTerrain.ChunkSize;
+        var chunkSize = TerrainManager.ChunkSize;
 
         Vector2[] points = {
             new Vector2(worldSize.x * chunkSize.x, worldSize.y * chunkSize.y),

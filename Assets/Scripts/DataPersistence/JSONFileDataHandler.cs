@@ -72,7 +72,7 @@ public class JsonFileDataHandler
             {
                 using (StreamWriter writer = new(stream))
                 {
-                    writer.Write(serializedData);
+                    await writer.WriteAsync(serializedData);
                 }
             }
         }

@@ -18,9 +18,11 @@ public class TerrainManager : MonoBehaviour
     [SerializeField] WeightedTileById[] grTiles;
     [SerializeField] TerrainGenTiles[] topTiles;
     [SerializeField] Transform player;
-    [SerializeField] Vector2Int worldSize = new(100, 100);
+    [SerializeField] Vector2Int worldSize;
+    [SerializeField] int structureRollsPerChunk;
     [SerializeField][Tooltip("In Chunks")] int renderDist;
-    [SerializeField] ParticleSystem gasBorder; //TODO: Optimize border for bigger worlds (2048x2048 takes 18 ms for particle system update resulting in 60 fps)
+
+    WorldBorderManager borderManager;
     LoadTerrain loadTerrain;
     SaveTerrain saveTerrain;
     HashSet<Vector2Int> loadedChunks = new();
@@ -28,87 +30,64 @@ public class TerrainManager : MonoBehaviour
     public const string chunkSaveName = "chunk";
 
     public Tile[] MasterTiles { get { return masterTiles; } }
-    public Vector2Int ChunkSize { get { return chunkSize; } }
+    public static Vector2Int ChunkSize { get { return chunkSize; } }
     public Vector2Int WorldSize { get { return worldSize; } }
 
     void Awake()
     {
         loadTerrain = GetComponent<LoadTerrain>();
         saveTerrain = GetComponent<SaveTerrain>();
-
-        //InstantiateBorders();
-    }
-
-    void InstantiateBorders()
-    {
-        ParticleSystem[] borders = {
-            Instantiate(gasBorder, new Vector3(0, chunkSize.y * worldSize.y),
-                                   new Vector3(0,0,180).AnglesToQuaternion()),
-            Instantiate(gasBorder, new Vector3(0, -(chunkSize.y * worldSize.y)),
-                                   Quaternion.identity),
-            Instantiate(gasBorder, new Vector3(chunkSize.y * worldSize.y, 0),
-                                   new Vector3(0, 0, 90).AnglesToQuaternion()),
-            Instantiate(gasBorder, new Vector3(-(chunkSize.y * worldSize.y), 0),
-                                   new Vector3(0, 0, -90).AnglesToQuaternion()) };
-
-        foreach (var b in borders)
-        {
-            var shape = b.shape;
-            var main = b.main;
-            var emission = b.emission;
-            int size;
-
-            if (b.transform.position.x == 0)
-            {
-                size = chunkSize.x * worldSize.x;
-            }
-            else
-            {
-                size = chunkSize.x * worldSize.x;
-            }
-
-            shape.radius *= size;
-            main.maxParticles *= size;
-            emission.rateOverTimeMultiplier *= size;
-
-            b.Stop();
-            b.Play();
-        }
+        borderManager = GetComponent<WorldBorderManager>(); 
     }
 
     LinkedList<Vector2Int> GetChunksInsideRenderDistance(Vector2Int currentChunk)
     {
         LinkedList<Vector2Int> rendered = new();
-        for(int x = currentChunk.x - renderDist; x <= currentChunk.x + renderDist; x++)
+        for (int x = currentChunk.x - renderDist; x <= currentChunk.x + renderDist; x++)
         {
-            for(int y = currentChunk.y - renderDist; y <= currentChunk.y + renderDist; y++) 
-            { 
+            for (int y = currentChunk.y - renderDist; y <= currentChunk.y + renderDist; y++)
+            {
                 rendered.AddLast(new Vector2Int(x, y));
             }
         }
         return rendered;
     }
 
+    void CompressTilemaps(Vector2Int currentChunkIndex, params Tilemap[] tilemaps)
+    {
+        //TODO: Find out why origin doesn't automatically update
+        foreach (var tilemap in tilemaps)
+        {
+            tilemap.origin = (Vector3Int)(currentChunkIndex * chunkSize - chunkSize);
+            tilemap.size = new(chunkSize.x * (renderDist * 2 + 1), chunkSize.y * (renderDist * 2 + 1), 1);
+            tilemap.ResizeBounds();
+        }
+    }
+
     void Update()
     {
-        //TODO: only save user change data to tiles and generate chunks each time using the seed
-        var renderedChunks = GetChunksInsideRenderDistance(GetChunkIndexFromPosition(player.position));
+        //TODO: only save user change data to tiles and generate chunks using the seed each time 
+        bool shrunkTilemap = false;
+        var currentChunk = GetChunkIndexFromPosition(player.position);
+        var renderedChunks = GetChunksInsideRenderDistance(currentChunk);
 
         foreach (var chunk in loadedChunks.ToArray())
         {
             if (renderedChunks.Contains(chunk)) continue;
 
-            loadTerrain.SetFlatTiles(ground, chunk * chunkSize, new Tile[chunkSize.x * chunkSize.y]);
-            loadTerrain.SetFlatTiles(top, chunk * chunkSize, new Tile[chunkSize.x * chunkSize.y]);
-            loadTerrain.SetFlatTiles(solid, chunk * chunkSize, new Tile[chunkSize.x * chunkSize.y]);
+            //unload chunk if not in render distance but is loaded
+            borderManager.UnloadBorder(chunk);
 
             loadedChunks.Remove(chunk);
+
+            shrunkTilemap = true;
         }
 
         foreach (var chunk in renderedChunks)
         {
-            if (!loadedChunks.Add(chunk)) continue;
+            if (!loadedChunks.Add(chunk) || !ChunkInsideWorldBorder(chunk)) continue;
 
+            //load chunk if in render distance and not loaded already
             string fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Terrain", chunk.ToString());
             if (File.Exists(fullPath))
             {
@@ -118,14 +97,54 @@ public class TerrainManager : MonoBehaviour
             {
                 GenChunk(chunk * chunkSize, chunk);
             }
+
+            LoadBorderIfEndOfWorld(chunk);
+        }
+
+        //if (shrunkTilemap) CompressTilemaps(currentChunk, ground, top, solid);
+    }
+
+    bool ChunkInsideWorldBorder(Vector2Int chunk)
+    {
+        return chunk.x < worldSize.x && chunk.x >= -worldSize.x && chunk.y < worldSize.y && chunk.y >= -worldSize.y;
+    }
+
+    void LoadBorderIfEndOfWorld(Vector2Int chunk)
+    {
+        if (chunk.x == worldSize.x - 1 || chunk.x == -worldSize.x)
+        {
+            if (Mathf.Sign(chunk.x) == -1)
+            {
+                borderManager.LoadBorder(chunk, Direction.Right);
+            }
+            else
+            {
+                borderManager.LoadBorder(chunk, Direction.Left);
+            }
+        }
+
+        if (chunk.y == worldSize.y - 1 || chunk.y == -worldSize.y)
+        {
+            if (Mathf.Sign(chunk.y) == -1)
+            {
+                borderManager.LoadBorder(chunk, Direction.Up);
+            }
+            else
+            {
+                borderManager.LoadBorder(chunk, Direction.Down);
+            }
         }
     }
-    bool HasRoomToPlaceStructure(Tilemap tilemap, Vector3Int startPos, Vector3Int structSize)
+
+    bool HasRoomToPlaceStructure(Tilemap tilemap, BoundsInt bounds)
     {
-        if (tilemap.HasTile(startPos)) return false;
-        if (tilemap.HasTile(startPos + new Vector3Int(structSize.x, 0 - 1))) return false;
-        if (tilemap.HasTile(startPos + new Vector3Int(0, structSize.y - 1))) return false;
-        if (tilemap.HasTile(startPos + new Vector3Int(structSize.x - 1, structSize.y - 1))) return false;
+        foreach(var tile in tilemap.GetTilesBlock(bounds))
+        {
+            if(tile != null)
+            {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -145,19 +164,22 @@ public class TerrainManager : MonoBehaviour
     void GenStructures(Vector2Int startPos, Tilemap tilemap)
     {
         Vector2Int endPos = startPos + chunkSize;
-        Tilemap structure = WeightedUtils.RollStructure(structures);
 
-        if (structure == null) return;
+        for(int i = 0; i < structureRollsPerChunk; i++)
+        {
+            var structure = WeightedUtils.RollStructure(structures);
 
-        Vector3Int randPos = new(Random.Range(startPos.x, endPos.x), Random.Range(startPos.y, endPos.y));
+            if (structure == null) continue;
 
-        if (!HasRoomToPlaceStructure(tilemap, randPos, structure.size)) return;
+            Vector3Int spawnPosition = new(Random.Range(startPos.x, endPos.x), Random.Range(startPos.y, endPos.y));
 
-        TileBase[] allTiles = structure.GetAllTiles();
-        BoundsInt bounds = structure.cellBounds;
-        bounds.position = randPos;
+            var bounds = structure.cellBounds;
+            bounds.position = spawnPosition;
 
-        tilemap.SetTilesBlock(bounds, allTiles);
+            if (!HasRoomToPlaceStructure(tilemap, bounds)) continue;
+
+            tilemap.SetTilesBlock(bounds, structure.GetAllTiles());
+        }
     }
 
     void GenBoxTiles(Tilemap tilemap, WeightedTileById[] tiles, Vector2Int startPos)
@@ -227,7 +249,7 @@ public class TerrainManager : MonoBehaviour
 
         if (position.x < 0) chunkPos.x = Mathf.FloorToInt(position.x / chunkSize.x);
         else chunkPos.x = Mathf.CeilToInt(position.x / chunkSize.x) - 1;
-        
+
         if (position.y < 0) chunkPos.y = Mathf.FloorToInt(position.y / chunkSize.y);
         else chunkPos.y = Mathf.CeilToInt(position.y / chunkSize.y) - 1;
 

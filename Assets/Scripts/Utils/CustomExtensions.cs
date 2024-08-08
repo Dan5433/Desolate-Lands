@@ -1,4 +1,6 @@
+using System;
 using Unity.Collections;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -35,10 +37,25 @@ namespace CustomExtensions
             main.startColor = color;
         }
 
+        public static void Restart(this ParticleSystem system)
+        {
+            system.Stop();
+            system.Play();
+        }
+
         public static Quaternion AnglesToQuaternion(this Vector3 angles)
         {
             return new Quaternion() { eulerAngles = angles };
         }
     }
 
+}
+
+[Serializable]
+public enum Direction
+{
+    Up = 0,
+    Down = 2,
+    Left = 1,
+    Right = 3,
 }

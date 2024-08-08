@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 [CreateAssetMenu]
 public class RandomTile : Tile
 {
-    [SerializeField] Sprite previewSprite;
     [SerializeField] WeightedTile[] tiles;
 
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
@@ -21,12 +20,6 @@ public class RandomTile : Tile
         }
 
         return true;
-    }
-
-    public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
-    {
-        base.GetTileData(position, tilemap, ref tileData);
-        tileData.sprite = previewSprite;
     }
 
     Tile GetTile()

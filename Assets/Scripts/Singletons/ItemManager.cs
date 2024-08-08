@@ -113,34 +113,43 @@ public class ItemManager : MonoBehaviour
 
         if (slotType != SlotType.Any) SpecialItemActions(slotItem.ItemObj, selectedItem.ItemObj, GameManager.Instance.Player);
 
+        //switch and deposit item functions
         if (mouseButton == 0)
         {
+            //if item is same
             if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air)
             {
+                //add if sum is less or equal to max count
                 if (slotItem.Count + selectedItem.Count <= slotItem.ItemObj.MaxCount)
                 {
                     slotItem.Count += selectedItem.Count;
                     Instance.grabbedItem.Item = Instance.InvItemAir;
                 }
+                //deposit the maximum amount into the slot if greater than max count
                 else
                 {
                     Instance.grabbedItem.Item.Count -= slotItem.ItemObj.MaxCount - slotItem.Count;
                     slotItem.Count = slotItem.ItemObj.MaxCount;
                 }
             }
+            //switch items in other cases
             else
             {
                 Instance.grabbedItem.Item = new(slotItem);
                 slotItem = new(selectedItem);
             }
         }
+        //split and deposit single functions
         else if (mouseButton == 1)
         {
+            //if slot isn't air and held item is empty
             if (selectedItem.ItemObj == Instance.Air && slotItem.ItemObj != Instance.Air)
             {
+                //grab half of count
                 int half = slotItem.Count / 2;
                 Instance.grabbedItem.Item = new(slotItem.ItemObj, slotItem.Name, half);
 
+                //subtract half from slot or empty it if count is 0
                 if (slotItem.Count >= 2)
                 {
                     slotItem.Count -= half;
@@ -150,13 +159,16 @@ public class ItemManager : MonoBehaviour
                     slotItem = Instance.InvItemAir;
                 }
             }
+            //if slot is empty or item is the same
             else if (slotItem.ItemObj == Instance.Air || slotItem.ItemObj == selectedItem.ItemObj)
             {
+                //add item data if slot is empty
                 if (slotItem.ItemObj == Instance.Air)
                 {
                     slotItem = new(selectedItem.ItemObj, selectedItem.Name, 0);
                 }
 
+                //increment count by 1 and update held item accordingly
                 slotItem.Count++;
                 if (Instance.grabbedItem.Item.Count <= 1)
                 {
@@ -167,6 +179,7 @@ public class ItemManager : MonoBehaviour
                     Instance.grabbedItem.Item.Count--;
                 }
             }
+            //switch items in other cases
             else
             {
                 Instance.grabbedItem.Item = new(slotItem);

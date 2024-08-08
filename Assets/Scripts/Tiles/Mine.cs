@@ -3,27 +3,10 @@ using UnityEngine.Tilemaps;
 
 public class Mine : MonoBehaviour
 {
-    Transform player;
-    [SerializeField] float revealDist = 3f;
-
     void Start()
     {
-        player = GameObject.Find("Player").GetComponent<Transform>();
-    }
-
-    void Update()
-    {
-        SpriteRenderer skull = transform.Find("skull").GetComponent<SpriteRenderer>();
-        skull.color = Color.Lerp(Color.white, Color.red, Mathf.PingPong(Time.time, 1));
-
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
-        float revealMultiplier = player.GetComponent<CustomPlayerData>().MineRevealDistMultiplier;
-
-        foreach(var renderer in GetComponentsInChildren<SpriteRenderer>())
-        {
-            renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b,
-                1 - distanceToPlayer * 1 / (revealDist * revealMultiplier));
-        }
+        var animManager = GameObject.Find("TerrainManager").GetComponent<MineAnimationManager>();
+        animManager.AddMine(transform);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -41,5 +24,14 @@ public class Mine : MonoBehaviour
 
         var tilePosition = transform.parent.GetComponent<Tilemap>().WorldToCell(transform.position);
         SaveTerrain.RemoveTileSaveData(tilePosition, transform.parent.name);
+    }
+
+    void OnDestroy()
+    {
+        var terrainManager = GameObject.Find("TerrainManager");
+        if(terrainManager && terrainManager.TryGetComponent<MineAnimationManager>(out var animManager))
+        {
+            animManager.DeleteMine(transform);
+        }
     }
 }

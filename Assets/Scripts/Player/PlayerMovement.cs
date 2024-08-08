@@ -1,3 +1,4 @@
+using EditorAttributes;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -13,8 +14,8 @@ public class PlayerMovement : MonoBehaviour
         //Cursor.SetCursor(cursor,Vector2.zero,CursorMode.Auto);         
         Cursor.lockState = CursorLockMode.Confined;
 
-        string[] pos = PlayerPrefs.GetString("pos", "0,0,0").Split(",");
-        transform.position = new Vector3(float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        //string[] pos = PlayerPrefs.GetString("pos", "0,0,0").Split(",");
+        //transform.position = new Vector3(float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
     }
 
     void FixedUpdate()
@@ -23,6 +24,12 @@ public class PlayerMovement : MonoBehaviour
         horInput = Input.GetAxis("Horizontal");
 
         transform.Translate(new Vector2(horInput, vertInput).normalized * speed);
+    }
+
+    [Button("Get Chunk Index",36)]
+    void PrintCurrentChunk()
+    {
+        Debug.Log(TerrainManager.GetChunkIndexFromPosition(transform.position));
     }
 
     void OnDestroy()
