@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [Serializable]
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "2D/Tiles/Gatherable Tile")]
 public class GatherableTile : Tile
 {
     [SerializeField] GatherableTileSprite[] sprites;

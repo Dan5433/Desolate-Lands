@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "Items/Mine Reaveal Effect")]
 public class MineRevealEffect : ItemEffect
 {
     [SerializeField] float distance;

@@ -24,6 +24,17 @@ public class Interact : MonoBehaviour
         LayerMask mask = LayerMask.GetMask("Interactable");
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, reach, mask);
 
+        if (activeTile != null && !ItemManager.Instance.ItemGrabbed &&
+            (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1) ||
+            Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2))
+        {
+            if (activeUI != null) activeUI.SetActive(false);
+            activeUI = null;
+            activeTile = null;
+
+            return;
+        }
+
         if (!hit)
         {
             breakScript.ResetBreaking();
@@ -81,6 +92,22 @@ public class Interact : MonoBehaviour
                 return;
             }
 
+            if(hit.transform.TryGetComponent<CraftStation>(out var craftStation))
+            {
+                if (!craftStation.CraftingUi.activeSelf)
+                {
+                    craftStation.UpdateCraftingUI();
+                    craftStation.CraftingUi.SetActive(true);
+                    craftStation.CraftingUi.GetComponent<SlotCraftStationUI>().SetStation(craftStation);
+                    craftStation.UpdateUI();
+                }
+
+                activeTile = craftStation.gameObject;
+                activeUI = craftStation.CraftingUi;
+
+                return;
+            }
+
             if (activeUI == null)
             {
                 GameObject containerTile = tilemap.GetInstantiatedObject(targetedCell);
@@ -91,8 +118,7 @@ public class Interact : MonoBehaviour
                     GameObject ui = container.UI.gameObject;
                     activeUI = ui;
 
-                    bool active = ui.activeSelf;
-                    if (!active)
+                    if (!ui.activeSelf)
                     {
                         ui.GetComponent<InventoryRef>().Inventory = container;
                         container.UpdateUI();
@@ -113,15 +139,6 @@ public class Interact : MonoBehaviour
         else
         {
             breakScript.ResetBreaking();
-        }
-
-        if (activeTile != null && !ItemManager.Instance.ItemGrabbed &&
-            (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1) ||
-            Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2))
-        {
-            if (activeUI != null) activeUI.SetActive(false);
-            activeUI = null;
-            activeTile = null;
         }
     }
 }

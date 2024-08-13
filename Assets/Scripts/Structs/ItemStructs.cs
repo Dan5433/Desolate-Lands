@@ -44,7 +44,7 @@ namespace CustomClasses
         public int Count
         {
             get { return count; }
-            set { count = Mathf.Clamp(value, 1, item.MaxCount); }
+            set { count = Mathf.Clamp(value, 0, item.MaxCount); }
         }
 
 

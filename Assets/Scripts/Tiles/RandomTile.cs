@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
 [Serializable]
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "2D/Tiles/Random Tile")]
 public class RandomTile : Tile
 {
     [SerializeField] WeightedTile[] tiles;

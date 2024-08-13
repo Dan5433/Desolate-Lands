@@ -63,6 +63,7 @@ public class InventoryBase : MonoBehaviour
 
         return excess;
     }
+
     protected void GenLoot(WeightedItem[] lootTable)
     {
         int totalWeight = 0;
@@ -149,10 +150,14 @@ public class InventoryBase : MonoBehaviour
             Instantiate(ItemManager.Instance.InvSlot, ui);
         }
 
+        int slotIndex = 0;
         for (int i = 0; i < ui.childCount; i++)
         {
             var slot = ui.GetChild(i);
-            ItemManager.UpdateItemUI(slot, inventory[i]);
+            if (!ItemManager.IsInvSlot(slot.gameObject)) continue;
+
+            ItemManager.UpdateItemUI(slot, inventory[slotIndex]);
+            slotIndex++;
         }
     }
 
@@ -162,6 +167,11 @@ public class InventoryBase : MonoBehaviour
     }
     protected virtual void GenInventory()
     {
+    }
+
+    public void SetUI(Transform ui)
+    {
+        this.ui = ui;
     }
 }
 

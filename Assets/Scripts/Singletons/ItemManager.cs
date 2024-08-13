@@ -51,6 +51,12 @@ public class ItemManager : MonoBehaviour
         UpdateItemUI(Instance.grabbedItem.transform, Instance.grabbedItem.Item);
     }
 
+    public static bool IsInvSlot(GameObject gameObject)
+    {
+        if (gameObject.GetComponent<SwapItem>() != null) return true;
+        return false;
+    }
+
     public static void UpdateItemUI(Transform slot, InvItem item)
     {
         var image = slot.Find("Image").GetComponent<Image>();
@@ -101,11 +107,84 @@ public class ItemManager : MonoBehaviour
         groundItem.transform.position = pos;
     }
 
-    public static void GrabItem(Transform slot, int mouseButton, SlotType slotType)
+    static void DepositItem(ref InvItem slotItem, InvItem selectedItem)
     {
-        var slotInventory = slot.parent.GetComponent<InventoryRef>().Inventory;
+        //add if sum is less or equal to max count
+        if (slotItem.Count + selectedItem.Count <= slotItem.ItemObj.MaxCount)
+        {
+            slotItem.Count += selectedItem.Count;
+            Instance.grabbedItem.Item = Instance.InvItemAir;
+        }
+        //deposit the maximum amount into the slot if greater than max count
+        else
+        {
+            Instance.grabbedItem.Item.Count -= slotItem.ItemObj.MaxCount - slotItem.Count;
+            slotItem.Count = slotItem.ItemObj.MaxCount;
+        }
+    }
 
-        int index = slot.GetSiblingIndex();
+    static void SplitSlot(ref InvItem slotItem)
+    {
+        int half = slotItem.Count / 2;
+        Instance.grabbedItem.Item = new(slotItem.ItemObj, slotItem.Name, half);
+
+        if (slotItem.Count >= 2)
+        {
+            slotItem.Count -= half;
+        }
+        else
+        {
+            slotItem = Instance.InvItemAir;
+        }
+    }
+
+    static void IncrementSlot(ref InvItem slotItem, InvItem selectedItem)
+    {
+        //add item data if slot is empty
+        if (slotItem.ItemObj == Instance.Air)
+        {
+            slotItem = new(selectedItem.ItemObj, selectedItem.Name, 0);
+        }
+
+        slotItem.Count++;
+        if (Instance.grabbedItem.Item.Count <= 1)
+        {
+            Instance.grabbedItem.Item = Instance.InvItemAir;
+        }
+        else
+        {
+            Instance.grabbedItem.Item.Count--;
+        }
+    }
+
+    static void SwapSlots(ref InvItem slotItem, InvItem selectedItem, bool allowDeposit, bool allowWithdraw)
+    {
+        if (!allowDeposit && slotItem.ItemObj == Instance.Air) return;
+        if (!allowWithdraw && selectedItem.ItemObj == Instance.Air) return;
+
+        Instance.grabbedItem.Item = new(slotItem);
+        slotItem = new(selectedItem);
+    }
+
+    static int GetSlotIndex(Transform slot)
+    {
+        int index = 0;
+        var parent = slot.parent;
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            var child = parent.GetChild(i);
+
+            if (child == slot) break;
+            if (IsInvSlot(child.gameObject)) index++;
+        }
+        return index;
+    }
+
+    public static void GrabItem(Transform slot, int mouseButton, SlotType slotType, bool allowDeposit, bool allowWithdraw)
+    {
+        var slotInventory = slot.parent.GetComponentInParent<InventoryRef>().Inventory;
+
+        int index = GetSlotIndex(slot);
         InvItem slotItem = slotInventory.Inventory[index];
         InvItem selectedItem = new(Instance.grabbedItem.Item);
 
@@ -113,77 +192,33 @@ public class ItemManager : MonoBehaviour
 
         if (slotType != SlotType.Any) SpecialItemActions(slotItem.ItemObj, selectedItem.ItemObj, GameManager.Instance.Player);
 
-        //switch and deposit item functions
         if (mouseButton == 0)
         {
-            //if item is same
             if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air)
             {
-                //add if sum is less or equal to max count
-                if (slotItem.Count + selectedItem.Count <= slotItem.ItemObj.MaxCount)
-                {
-                    slotItem.Count += selectedItem.Count;
-                    Instance.grabbedItem.Item = Instance.InvItemAir;
-                }
-                //deposit the maximum amount into the slot if greater than max count
-                else
-                {
-                    Instance.grabbedItem.Item.Count -= slotItem.ItemObj.MaxCount - slotItem.Count;
-                    slotItem.Count = slotItem.ItemObj.MaxCount;
-                }
+                if (allowDeposit) DepositItem(ref slotItem, selectedItem);
             }
-            //switch items in other cases
+
             else
             {
-                Instance.grabbedItem.Item = new(slotItem);
-                slotItem = new(selectedItem);
+                SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw);
             }
         }
-        //split and deposit single functions
+
         else if (mouseButton == 1)
         {
-            //if slot isn't air and held item is empty
             if (selectedItem.ItemObj == Instance.Air && slotItem.ItemObj != Instance.Air)
             {
-                //grab half of count
-                int half = slotItem.Count / 2;
-                Instance.grabbedItem.Item = new(slotItem.ItemObj, slotItem.Name, half);
-
-                //subtract half from slot or empty it if count is 0
-                if (slotItem.Count >= 2)
-                {
-                    slotItem.Count -= half;
-                }
-                else
-                {
-                    slotItem = Instance.InvItemAir;
-                }
+                if (allowWithdraw) SplitSlot(ref slotItem);
             }
-            //if slot is empty or item is the same
             else if (slotItem.ItemObj == Instance.Air || slotItem.ItemObj == selectedItem.ItemObj)
             {
-                //add item data if slot is empty
-                if (slotItem.ItemObj == Instance.Air)
-                {
-                    slotItem = new(selectedItem.ItemObj, selectedItem.Name, 0);
-                }
-
-                //increment count by 1 and update held item accordingly
-                slotItem.Count++;
-                if (Instance.grabbedItem.Item.Count <= 1)
-                {
-                    Instance.grabbedItem.Item = Instance.InvItemAir;
-                }
-                else
-                {
-                    Instance.grabbedItem.Item.Count--;
-                }
+                if (allowDeposit) IncrementSlot(ref slotItem, selectedItem);
             }
-            //switch items in other cases
+
             else
             {
-                Instance.grabbedItem.Item = new(slotItem);
-                slotItem = new(selectedItem);
+                SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw);
             }
         }
 

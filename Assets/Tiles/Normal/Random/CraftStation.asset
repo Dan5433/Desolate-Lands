@@ -35,7 +35,5 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   tiles:
-  - weight: 3
-    tile: {fileID: 11400000, guid: 04095f74d3843384da7c840bf9d2b575, type: 2}
-  - weight: 5
-    tile: {fileID: 11400000, guid: 8a4ff1f651b1241438e82627e5bca4f2, type: 2}
+  - weight: 1
+    tile: {fileID: 11400000, guid: 013a38b27e79ef8499ad291fccb7d3ee, type: 2}

@@ -20,6 +20,7 @@ public class TerrainManager : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] Vector2Int worldSize;
     [SerializeField] int structureRollsPerChunk;
+    [SerializeField] Vector2Int structureMargin;
     [SerializeField][Tooltip("In Chunks")] int renderDist;
 
     WorldBorderManager borderManager;
@@ -101,7 +102,7 @@ public class TerrainManager : MonoBehaviour
             LoadBorderIfEndOfWorld(chunk);
         }
 
-        //if (shrunkTilemap) CompressTilemaps(currentChunk, ground, top, solid);
+        if (shrunkTilemap) CompressTilemaps(currentChunk, ground, top, solid);
     }
 
     bool ChunkInsideWorldBorder(Vector2Int chunk)
@@ -136,9 +137,11 @@ public class TerrainManager : MonoBehaviour
         }
     }
 
-    bool HasRoomToPlaceStructure(Tilemap tilemap, BoundsInt bounds)
+    bool HasRoomToPlaceStructure(Tilemap tilemap, BoundsInt structureBounds)
     {
-        foreach(var tile in tilemap.GetTilesBlock(bounds))
+        structureBounds.position -= (Vector3Int)structureMargin;
+        structureBounds.size += (Vector3Int)structureMargin*2;
+        foreach (var tile in tilemap.GetTilesBlock(structureBounds))
         {
             if(tile != null)
             {

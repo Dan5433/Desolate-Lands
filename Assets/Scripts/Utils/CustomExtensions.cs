@@ -1,6 +1,4 @@
 using System;
-using Unity.Collections;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
