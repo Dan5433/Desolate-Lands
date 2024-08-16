@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,26 +6,47 @@ public class SlotCraftStationUI : MonoBehaviour
 {
     [SerializeField] CraftStation currentStation;
     [SerializeField] Image progressBar;
-    CraftingRecipe selectedRecipe;
+    [SerializeField] Image output;
+    [SerializeField] GameObject previewPanel;
+    CraftingRecipe selectedRecipe = null;
     float progress;
     bool buttonHeld;
 
     public void SetStation(CraftStation station)
     {
         currentStation = station;
+        ResetStation();
     }
 
-    public void SetProgress(float progress)
+    public void LoadState(float progress)
     {
         this.progress = progress;
+
+        UpdateOutput();
     }
 
-    public void ResetStation()
+    public void OnInputChanged()
     {
-        selectedRecipe = null;
+        if (selectedRecipe != null) ResetStation();
+
+        UpdateOutput();
+    }
+
+    void ResetStation()
+    {
+        if(IsInputEmpty()) selectedRecipe = null;
         buttonHeld = false;
         progressBar.fillAmount = 0;
         progress = 0;
+
+        output.sprite = ItemManager.Instance.Air.Sprite;
+        previewPanel.SetActive(false);
+    }
+    public void PressButton()
+    {
+        if (selectedRecipe == null || !IsOutputAvailable(selectedRecipe.reward)) return;
+
+        buttonHeld = true;
     }
 
     public void ReleaseButton()
@@ -34,6 +56,11 @@ public class SlotCraftStationUI : MonoBehaviour
         currentStation.SaveProgress(progress);
     }
 
+    bool IsInputEmpty()
+    {
+        return currentStation.Inventory[0].ItemObj == ItemManager.Instance.Air;
+    }
+
     bool IsOutputAvailable(CraftItem recipeOutput)
     {
         return currentStation.Inventory[1].ItemObj == ItemManager.Instance.Air ||
@@ -41,17 +68,24 @@ public class SlotCraftStationUI : MonoBehaviour
             currentStation.Inventory[1].Count + recipeOutput.count <= currentStation.Inventory[1].ItemObj.MaxCount);
     }
 
-    public void UpdateOutput()
+    void PreviewOutput(CraftingRecipe craftingRecipe)  
     {
-        if (buttonHeld) return;
+        output.sprite = craftingRecipe.reward.item.Sprite;
+        previewPanel.SetActive(true);
 
+        progressBar.fillAmount = progress / selectedRecipe.craftTime;
+    }
+
+    void UpdateOutput()
+    {
         CraftItem input = new(currentStation.Inventory[0].ItemObj, currentStation.Inventory[0].Count);
         var craftingRecipe = CraftingManager.GetSingleSlotRecipe(input, currentStation.Type);
 
         if (craftingRecipe == null || !IsOutputAvailable(craftingRecipe.reward)) return;
 
         selectedRecipe = craftingRecipe;
-        buttonHeld = true;
+
+        PreviewOutput(craftingRecipe);
     }
 
     void OutputReward()
@@ -72,9 +106,9 @@ public class SlotCraftStationUI : MonoBehaviour
             currentStation.Inventory[0] = ItemManager.Instance.InvItemAir;
         }
 
-        currentStation.UpdateUI();
-
         ResetStation();
+
+        currentStation.UpdateUI();
     }
 
     void Update()

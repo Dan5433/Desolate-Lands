@@ -21,7 +21,7 @@ public class Interact : MonoBehaviour
 
     void Update()
     {
-        LayerMask mask = LayerMask.GetMask("Interactable");
+        LayerMask mask = LayerMask.GetMask("Solid");
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, reach, mask);
 
         if (activeTile != null && !ItemManager.Instance.ItemGrabbed &&

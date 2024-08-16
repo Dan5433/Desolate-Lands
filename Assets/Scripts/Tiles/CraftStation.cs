@@ -27,7 +27,7 @@ public class CraftStation : InventoryBase
 
         var craftingUi = CraftingUi.GetComponent<SlotCraftStationUI>();
         craftingUi.SetStation(this);
-        craftingUi.SetProgress(await LoadProgress());
+        craftingUi.LoadState(await LoadProgress());
     }
 
     async Task<float> LoadProgress()

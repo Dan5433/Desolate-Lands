@@ -97,7 +97,7 @@ public class InventoryBase : MonoBehaviour
 
     protected virtual void InitInventory(InventorySaveData data)
     {
-        for (int i = 0; i < inventory.Length; i++)
+        for (int i = 0; i < data.inventory.Count; i++)
         {
             var name = data.inventory[i].name;
             var count = data.inventory[i].count;
