@@ -82,7 +82,7 @@ public class Gatherable : MonoBehaviour
 
     void OnDestroy()
     {
-        SaveState();
+        if(state != GatherableTileState.Replenished) SaveState();
     }
 }
 

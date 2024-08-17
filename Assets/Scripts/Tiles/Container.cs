@@ -21,9 +21,35 @@ public class Container : InventoryBase, IBreakable
         return base.GetSaveKey() + transform.position;
     }
 
-    protected override void GenInventory()
+    public void GenInventory()
     {
+        if (IsInventorySaved()) return;
+
         GenLoot(lootPool);
+        SaveInventory();
+    }
+
+    protected void GenLoot(WeightedItem[] lootTable)
+    {
+        int totalWeight = 0;
+        foreach (var item in lootTable) totalWeight += item.weight;
+
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            int randomWeight = Random.Range(0, totalWeight);
+            foreach (var item in lootTable)
+            {
+                randomWeight -= item.weight;
+                if (randomWeight < 0)
+                {
+                    int count = Random.Range(1, item.item.MaxCount);
+
+                    InvItem loot = new(item.item, item.item.Name, count);
+                    inventory[i] = loot;
+                    break;
+                }
+            }
+        }
     }
 
     public void OnBreak()

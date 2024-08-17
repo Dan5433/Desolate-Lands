@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CraftStation : InventoryBase
 {
-    public StationType Type;
+    public CraftingStationType Type;
     public GameObject CraftingUi;
 
     void OnEnable()

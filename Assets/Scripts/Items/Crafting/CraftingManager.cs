@@ -8,7 +8,8 @@ public class CraftingManager : MonoBehaviour
 {
     public static CraftingManager Instance;
 
-    [SerializeField] CraftingRecipe[] recipes;
+    [SerializeField] SlotCraftingRecipe[] recipes;
+    [SerializeField] CraftingPrototype[] prototypes;
     [SerializeField] GameObject singleSlotUI;
     [SerializeField] GameObject chooseItemUI;
 
@@ -27,19 +28,19 @@ public class CraftingManager : MonoBehaviour
         }
     }
 
-    public static CraftingRecipe GetSingleSlotRecipe(CraftItem input, StationType type)
+    public static SlotCraftingRecipe GetSingleSlotRecipe(CraftItem input, CraftingStationType type)
     {
         foreach(var recipe in Instance.recipes)
         {
-            if(recipe.cost.Length == 1 && recipe.type == type 
-                && recipe.cost[0].item == input.item && recipe.cost[0].count <= input.count) return recipe;
+            if(recipe.type == type && recipe.cost.item == input.item 
+                && recipe.cost.count <= input.count) return recipe;
         }
         return null;
     }
 
-    public static HashSet<CraftingRecipe> GetCraftableRecipes(InvItem[] availableItems, StationType type)
+    public static HashSet<CraftingPrototype> GetCraftablePrototypes(InvItem[] availableItems, PrototypingStationType type)
     {
-        var results = new HashSet<CraftingRecipe>();
+        var results = new HashSet<CraftingPrototype>();
         
         //initialize dictionary for easy lookup
         var itemsCount = new Dictionary<Item, int>();
@@ -48,7 +49,7 @@ public class CraftingManager : MonoBehaviour
             itemsCount[item.ItemObj] = item.Count; 
         }
 
-        foreach(var recipe in Instance.recipes)
+        foreach(var recipe in Instance.prototypes)
         {
             if (recipe.type != type) continue;
 
@@ -65,11 +66,17 @@ public class CraftingManager : MonoBehaviour
 }
 
 [Serializable]
-public enum StationType
+public enum CraftingStationType
 {
-    Workbench = 0,
+    Smelter = 0,
     SpinningWheel = 1,
     Loom = 2,
+}
+
+[Serializable]
+public enum PrototypingStationType
+{
+    Workbench = 0,
 }
 
 [Serializable]
@@ -86,10 +93,20 @@ public struct CraftItem
 }
 
 [Serializable]
-public class CraftingRecipe
+public class SlotCraftingRecipe
+{
+    public CraftItem cost;
+    public CraftItem reward;
+    public CraftingStationType type;
+    public float craftTime;
+    public int gearReward;
+}
+
+[Serializable]
+public class CraftingPrototype
 {
     public CraftItem[] cost;
     public CraftItem reward;
-    public StationType type;
-    public float craftTime;
+    public PrototypingStationType type;
+    public int gearCost;
 }

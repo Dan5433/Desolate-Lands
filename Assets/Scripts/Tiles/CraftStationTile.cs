@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(menuName = "2D/Tiles/Craft Station Tile")]
 public class CraftStationTile : BreakableTile
 {
-    [SerializeField] StationType type;
+    [SerializeField] CraftingStationType type;
     [SerializeField] UIType uiType;
 
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)

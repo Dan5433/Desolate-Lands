@@ -121,6 +121,7 @@ public class Interact : MonoBehaviour
                     if (!ui.activeSelf)
                     {
                         ui.GetComponent<InventoryRef>().Inventory = container;
+                        container.GenInventory();
                         container.UpdateUI();
                         ui.SetActive(true);
                     }

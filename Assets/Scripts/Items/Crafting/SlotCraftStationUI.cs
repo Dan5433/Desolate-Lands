@@ -4,11 +4,12 @@ using UnityEngine.UI;
 
 public class SlotCraftStationUI : MonoBehaviour
 {
+    [SerializeField] PlayerResources playerResources;
     [SerializeField] CraftStation currentStation;
     [SerializeField] Image progressBar;
     [SerializeField] Image output;
     [SerializeField] GameObject previewPanel;
-    CraftingRecipe selectedRecipe = null;
+    SlotCraftingRecipe selectedRecipe = null;
     float progress;
     bool buttonHeld;
 
@@ -53,7 +54,7 @@ public class SlotCraftStationUI : MonoBehaviour
     {
         buttonHeld = false;
 
-        currentStation.SaveProgress(progress);
+        if(progress > 0) currentStation.SaveProgress(progress);
     }
 
     bool IsInputEmpty()
@@ -68,7 +69,7 @@ public class SlotCraftStationUI : MonoBehaviour
             currentStation.Inventory[1].Count + recipeOutput.count <= currentStation.Inventory[1].ItemObj.MaxCount);
     }
 
-    void PreviewOutput(CraftingRecipe craftingRecipe)  
+    void PreviewOutput(SlotCraftingRecipe craftingRecipe)  
     {
         output.sprite = craftingRecipe.reward.item.Sprite;
         previewPanel.SetActive(true);
@@ -95,10 +96,12 @@ public class SlotCraftStationUI : MonoBehaviour
 
         currentStation.Inventory[1] = new(selectedRecipe.reward.item, selectedRecipe.reward.item.Name, 0);
 
-        if (maxOutput < currentStation.Inventory[0].Count / selectedRecipe.cost[0].count)
+        playerResources.AddGears(selectedRecipe.gearReward * currentStation.Inventory[0].Count);
+
+        if (maxOutput < currentStation.Inventory[0].Count / selectedRecipe.cost.count)
         {
             currentStation.Inventory[1].Count += maxOutput * selectedRecipe.reward.count;
-            currentStation.Inventory[0].Count -= maxOutput * selectedRecipe.cost[0].count;
+            currentStation.Inventory[0].Count -= maxOutput * selectedRecipe.cost.count;
         }
         else
         {

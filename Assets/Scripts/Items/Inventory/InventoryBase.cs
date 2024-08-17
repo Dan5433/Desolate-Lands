@@ -27,15 +27,7 @@ public class InventoryBase : MonoBehaviour
 
         var data = await LoadInventory();
 
-        if (data != null)
-        {
-            InitInventory(data);
-        }
-        else
-        {
-            GenInventory();
-            SaveInventory();
-        }
+        if (data != null) InitInventory(data);
 
         if (updateUIOnStart) UpdateUI();
     }
@@ -64,27 +56,10 @@ public class InventoryBase : MonoBehaviour
         return excess;
     }
 
-    protected void GenLoot(WeightedItem[] lootTable)
+    protected bool IsInventorySaved()
     {
-        int totalWeight = 0;
-        foreach (var item in lootTable) totalWeight += item.weight;
-
-        for (int i = 0; i < inventory.Length; i++)
-        {
-            int randomWeight = Random.Range(0, totalWeight);
-            foreach (var item in lootTable)
-            {
-                randomWeight -= item.weight;
-                if (randomWeight < 0)
-                {
-                    int count = Random.Range(1, item.item.MaxCount);
-
-                    InvItem loot = new(item.item, item.item.Name, count);
-                    inventory[i] = loot;
-                    break;
-                }
-            }
-        }
+        var fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Storage", GetSaveKey());
+        return File.Exists(fullPath);
     }
 
     protected async Task<InventorySaveData> LoadInventory()
@@ -164,9 +139,6 @@ public class InventoryBase : MonoBehaviour
     protected virtual string GetSaveKey()
     {
         return gameObject.name;
-    }
-    protected virtual void GenInventory()
-    {
     }
 
     public void SetUI(Transform ui)
