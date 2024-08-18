@@ -17,8 +17,7 @@ public class Break : MonoBehaviour
     [SerializeField] ParticleSystem breakParticles;
     [SerializeField] Tilemap effects;
     [SerializeField] PlayAudio audioSource;
-    [SerializeField] EfficientTool tool;
-    [SerializeField] RequiredMaterial material;
+    [SerializeField] InventoryBase toolInventory;
     [SerializeField][Tooltip("In Seconds")] float breakTimeReduction;
     [SerializeField][Tooltip("Mutiplier")] float wrongToolPenalty;
     public void ResetBreaking()
@@ -36,15 +35,12 @@ public class Break : MonoBehaviour
         tile = breakTile;
         breakCell = cell;
 
-        //if (tile.MinMaterial > material)
-        //{
-        //    Debug.LogWarning("Need stronger material!");
-        //    return;
-        //}
+        var equippedTool = toolInventory.Inventory[0].ItemObj as Tool;
+        if (equippedTool == null /*|| tile.MinMaterial > equippedTool.Material*/) return;
 
         if (!breaking)
         {
-            ApplyPenalties();
+            ApplyPenalties(equippedTool);
 
             curBreakTime = breakingTime;
             breaking = true;
@@ -54,7 +50,7 @@ public class Break : MonoBehaviour
         {
             curBreakTime -= Time.deltaTime;
 
-            audioSource.PlayRandomSound(material.ToString());
+            audioSource.PlayRandomSound(equippedTool.Material.ToString());
             UpdateEffect();
         }
 
@@ -105,10 +101,10 @@ public class Break : MonoBehaviour
         breakParticles.Play();
     }
 
-    void ApplyPenalties()
+    void ApplyPenalties(Tool tool)
     {
-        breakingTime = tile.BreakingTime - breakTimeReduction * (material - tile.MinMaterial);
-        if (tile.Tool != tool && tile.Tool != EfficientTool.None)
+        breakingTime = tile.BreakingTime - breakTimeReduction * (tool.Material - tile.MinMaterial);
+        if (tile.Tool != tool.Type && tile.Tool != ToolType.None)
         {
             breakingTime *= wrongToolPenalty;
         }

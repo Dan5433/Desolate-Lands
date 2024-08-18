@@ -16,24 +16,25 @@ public class SlotCraftStationUI : MonoBehaviour
     public void SetStation(CraftStation station)
     {
         currentStation = station;
-        ResetStation();
+
+        ResetUI();
     }
 
     public void LoadState(float progress)
     {
-        this.progress = progress;
+        if(!IsInputEmpty()) this.progress = progress;
 
-        UpdateOutput();
+        UpdateRecipe();
     }
 
     public void OnInputChanged()
     {
-        if (selectedRecipe != null) ResetStation();
+        if (selectedRecipe != null) ResetUI();
 
-        UpdateOutput();
+        UpdateRecipe();
     }
 
-    void ResetStation()
+    void ResetUI()
     {
         if(IsInputEmpty()) selectedRecipe = null;
         buttonHeld = false;
@@ -77,7 +78,7 @@ public class SlotCraftStationUI : MonoBehaviour
         progressBar.fillAmount = progress / selectedRecipe.craftTime;
     }
 
-    void UpdateOutput()
+    void UpdateRecipe()
     {
         CraftItem input = new(currentStation.Inventory[0].ItemObj, currentStation.Inventory[0].Count);
         var craftingRecipe = CraftingManager.GetSingleSlotRecipe(input, currentStation.Type);
@@ -96,7 +97,10 @@ public class SlotCraftStationUI : MonoBehaviour
 
         currentStation.Inventory[1] = new(selectedRecipe.reward.item, selectedRecipe.reward.item.Name, 0);
 
-        playerResources.AddGears(selectedRecipe.gearReward * currentStation.Inventory[0].Count);
+        foreach(var reward in selectedRecipe.resourceRewards)
+        {
+            playerResources.AddResource(reward.resource, reward.count * currentStation.Inventory[0].Count);
+        }
 
         if (maxOutput < currentStation.Inventory[0].Count / selectedRecipe.cost.count)
         {
@@ -109,7 +113,7 @@ public class SlotCraftStationUI : MonoBehaviour
             currentStation.Inventory[0] = ItemManager.Instance.InvItemAir;
         }
 
-        ResetStation();
+        ResetUI();
 
         currentStation.UpdateUI();
     }

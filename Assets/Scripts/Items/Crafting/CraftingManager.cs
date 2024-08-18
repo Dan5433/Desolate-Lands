@@ -8,7 +8,8 @@ public class CraftingManager : MonoBehaviour
 {
     public static CraftingManager Instance;
 
-    [SerializeField] SlotCraftingRecipe[] recipes;
+    [SerializeField] SlotCraftingRecipe[] slotRecipes;
+    [SerializeField] CraftingRecipe[] craftingRecipes;
     [SerializeField] CraftingPrototype[] prototypes;
     [SerializeField] GameObject singleSlotUI;
     [SerializeField] GameObject chooseItemUI;
@@ -30,7 +31,7 @@ public class CraftingManager : MonoBehaviour
 
     public static SlotCraftingRecipe GetSingleSlotRecipe(CraftItem input, CraftingStationType type)
     {
-        foreach(var recipe in Instance.recipes)
+        foreach(var recipe in Instance.slotRecipes)
         {
             if(recipe.type == type && recipe.cost.item == input.item 
                 && recipe.cost.count <= input.count) return recipe;
@@ -53,7 +54,7 @@ public class CraftingManager : MonoBehaviour
         {
             if (recipe.type != type) continue;
 
-            foreach (var item in recipe.cost)
+            foreach (var item in recipe.recipe.cost)
             {
                 if (!itemsCount.ContainsKey(item.item) || itemsCount[item.item] < item.count) break;
 
@@ -99,14 +100,20 @@ public class SlotCraftingRecipe
     public CraftItem reward;
     public CraftingStationType type;
     public float craftTime;
-    public int gearReward;
+    public PlayerResource[] resourceRewards;
+}
+
+[Serializable]
+public class CraftingRecipe
+{
+    public CraftItem[] cost;
+    public CraftItem reward;
 }
 
 [Serializable]
 public class CraftingPrototype
 {
-    public CraftItem[] cost;
-    public CraftItem reward;
+    public CraftingRecipe recipe;
     public PrototypingStationType type;
-    public int gearCost;
+    public PlayerResource[] resourceCost;
 }

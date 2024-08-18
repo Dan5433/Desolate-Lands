@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
@@ -6,27 +7,32 @@ using UnityEngine;
 
 public class PlayerResources : MonoBehaviour
 {
-    [SerializeField] Transform resources;
-    int availableGears;
+    [SerializeField] ResourceUI[] resourcesUI;
+    [SerializeField] PlayerResource[] resources;
 
     void Start()
     {
         LoadResourceData();
     }
 
-    public void AddGears(int gears)
+    public void AddResource(Resources type, int count)
     {
-        availableGears += gears;
+        int index = Array.FindIndex(resources, r => r.resource == type);
+        resources[index].count += count;
 
         UpdateUI();
     }
 
     void UpdateUI()
     {
-        var gears = resources.transform.Find("Gears");
-        gears.GetComponentInChildren<TMP_Text>().text = availableGears.ToString();
+        foreach(var resource in resources)
+        {
+            var UI = Array.Find(resourcesUI, ui => ui.type == resource.resource).UI;
 
-        if(!gears.gameObject.activeSelf && availableGears > 0) gears.gameObject.SetActive(true);
+            UI.GetComponentInChildren<TMP_Text>().text = resource.count.ToString();
+
+            if (!UI.gameObject.activeSelf && resource.count > 0) UI.gameObject.SetActive(true);
+        }
     }
 
     async void LoadResourceData()
@@ -36,24 +42,19 @@ public class PlayerResources : MonoBehaviour
 
         var save = await dataHandler.LoadDataAsync<PlayerCraftingSave>();
 
-        if (save != null)
-        {
-            availableGears = save.gears;
-        }
-        else
-        {
-            availableGears = 0;
-        }
+        if (save != null) resources = save.resources.ToArray();
 
         UpdateUI();
     }
 
     async void SaveResourceData()
     {
-        PlayerCraftingSave save = new()
+        PlayerCraftingSave save = new();
+
+        foreach(var resource in resources)
         {
-            gears = availableGears,
-        };
+            save.resources.Add(resource);
+        }
 
         string dirPath = Path.Combine(GameManager.Instance.DataDirPath, "Player");
         JsonFileDataHandler dataHandler = new(dirPath, "ResourceData");
@@ -70,5 +71,26 @@ public class PlayerResources : MonoBehaviour
 [Serializable]
 public class PlayerCraftingSave
 {
-    public int gears;
+    public List<PlayerResource> resources = new();
+
+}
+
+[Serializable]
+public struct PlayerResource
+{
+    public Resources resource;
+    public int count;
+}
+
+[Serializable]
+public struct ResourceUI
+{
+    public Resources type;
+    public Transform UI;
+}
+
+[Serializable]
+public enum Resources
+{
+    Gears = 0,
 }

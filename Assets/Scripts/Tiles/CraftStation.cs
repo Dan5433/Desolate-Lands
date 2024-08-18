@@ -3,8 +3,9 @@ using System.IO;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class CraftStation : InventoryBase
+public class CraftStation : InventoryBase, IBreakable
 {
     public CraftingStationType Type;
     public GameObject CraftingUi;
@@ -50,6 +51,17 @@ public class CraftStation : InventoryBase
         JsonFileDataHandler handler = new(GameManager.Instance.DataDirPath, filePath);
 
         await handler.SaveDataAsync(save);
+    }
+
+    public void OnBreak()
+    {
+        var tilePosition = transform.parent.GetComponent<Tilemap>().WorldToCell(transform.position);
+        foreach (var item in inventory)
+        {
+            ItemManager.SpawnGroundItem(item, tilePosition, true);
+        }
+
+        DeleteInventory();
     }
 }
 

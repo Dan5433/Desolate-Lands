@@ -3,14 +3,17 @@ using UnityEngine;
 
 namespace CustomClasses
 {
-    public enum EfficientTool
+    [Serializable]
+    public enum ToolType
     {
         None,
         Axe,
         Pickaxe,
         Shovel
     }
-    public enum RequiredMaterial
+
+    [Serializable]
+    public enum ItemMaterial
     {
         None,
         Wood,
@@ -20,6 +23,7 @@ namespace CustomClasses
         Iron,
         Aluminium
     }
+
     [Serializable]
     public struct DropItem
     {
