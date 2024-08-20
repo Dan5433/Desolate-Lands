@@ -33,7 +33,7 @@ MonoBehaviour:
     e33: 1
   m_InstancedGameObject: {fileID: 7134427891682201430, guid: c667e14e786c982448e09ca8c3ef74f1, type: 3}
   m_Flags: 1
-  m_ColliderType: 0
+  m_ColliderType: 1
   breakingTime: 4
   drops:
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}

@@ -54,6 +54,8 @@ public class Container : InventoryBase, IBreakable
 
     public void OnBreak()
     {
+        if (!IsInventorySaved()) GenLoot(lootPool);
+
         var tilePosition = transform.parent.GetComponent<Tilemap>().WorldToCell(transform.position);
         foreach (var item in inventory)
         {

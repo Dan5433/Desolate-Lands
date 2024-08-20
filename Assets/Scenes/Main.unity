@@ -5627,6 +5627,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
   - {fileID: 11400000, guid: ac3bdd9db40863a40b3999ffc9b8a681, type: 2}
   - {fileID: 11400000, guid: 47f6930499348c24782aecbf901b5630, type: 2}
+  - {fileID: 11400000, guid: 62725090a3dfcef4f982a36a085e5ab6, type: 2}
 --- !u!4 &941869351
 Transform:
   m_ObjectHideFlags: 0
@@ -11889,7 +11890,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01f559dc0a1f1ab498af49c72d515d10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: []
+  inventory:
+  - item: {fileID: 11400000, guid: 62725090a3dfcef4f982a36a085e5ab6, type: 2}
+    name: 
+    count: 0
   invSize: 3
   ui: {fileID: 1087214258}
   updateUIOnStart: 1
@@ -19019,7 +19023,7 @@ MonoBehaviour:
   breakParticles: {fileID: 953168185}
   effects: {fileID: 1852077160}
   audioSource: {fileID: 1021015152}
-  toolInventory: {fileID: 0}
+  toolInventory: {fileID: 1087214264}
   breakTimeReduction: 0.25
   wrongToolPenalty: 1.5
 --- !u!114 &2136044637

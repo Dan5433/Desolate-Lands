@@ -43,8 +43,10 @@ public class Interact : MonoBehaviour
 
         Vector2 newPos = hit.ExtendRaycast(offsetForCell, transform);
 
-        if (hit.transform.TryGetComponent(out Tilemap tilemap))
+        if (hit.transform.TryGetComponent<Tilemap>(out var tilemap) || hit.transform.parent.GetComponent<Tilemap>() != null)
         {
+            if(tilemap == null) tilemap = hit.transform.parent.GetComponent<Tilemap>();
+
             if (targetedCell != tilemap.WorldToCell(newPos) && targetedCell.z != -1)
             {
                 breakScript.ResetBreaking();
@@ -57,7 +59,6 @@ public class Interact : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-
             if (hit.transform.TryGetComponent<Gatherable>(out var gatherable))
             {
                 if (gatherable.State != GatherableTileState.Replenished) return;
@@ -100,31 +101,22 @@ public class Interact : MonoBehaviour
                     craftStation.CraftingUi.SetActive(true);
                     craftStation.CraftingUi.GetComponent<SlotCraftStationUI>().SetStation(craftStation);
                     craftStation.UpdateUI();
+
+                    UpdateUI(craftStation.gameObject, craftStation.CraftingUi);
                 }
-
-                activeTile = craftStation.gameObject;
-                activeUI = craftStation.CraftingUi;
-
                 return;
             }
 
-            if (activeUI == null)
+            if (hit.transform.TryGetComponent<Container>(out var container))
             {
-                GameObject containerTile = tilemap.GetInstantiatedObject(targetedCell);
-                activeTile = containerTile;
-
-                if (containerTile != null && containerTile.TryGetComponent<Container>(out var container))
+                if (!container.UI.gameObject.activeSelf)
                 {
-                    GameObject ui = container.UI.gameObject;
-                    activeUI = ui;
+                    container.UI.GetComponent<InventoryRef>().Inventory = container;
+                    container.GenInventory();
+                    container.UpdateUI();
+                    container.UI.gameObject.SetActive(true);
 
-                    if (!ui.activeSelf)
-                    {
-                        ui.GetComponent<InventoryRef>().Inventory = container;
-                        container.GenInventory();
-                        container.UpdateUI();
-                        ui.SetActive(true);
-                    }
+                    UpdateUI(container.gameObject, container.UI.gameObject);
                 }
                 return;
             }
@@ -141,5 +133,11 @@ public class Interact : MonoBehaviour
         {
             breakScript.ResetBreaking();
         }
+    }
+
+    void UpdateUI(GameObject tile, GameObject ui)
+    {
+        activeTile = tile;
+        activeUI = ui;
     }
 }

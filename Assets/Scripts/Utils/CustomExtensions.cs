@@ -20,7 +20,7 @@ namespace CustomExtensions
             return new Vector2Int((int)vector.x, (int)vector.y);
         }
 
-        public static Vector2 ExtendRaycast(this RaycastHit2D hit, float distance, UnityEngine.Transform transform)
+        public static Vector2 ExtendRaycast(this RaycastHit2D hit, float distance, Transform transform)
         {
             Ray2D ray = new(transform.position, transform.up);
             return ray.GetPoint(hit.distance + distance);
