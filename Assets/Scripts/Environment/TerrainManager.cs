@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -39,6 +40,11 @@ public class TerrainManager : MonoBehaviour
         loadTerrain = GetComponent<LoadTerrain>();
         saveTerrain = GetComponent<SaveTerrain>();
         borderManager = GetComponent<WorldBorderManager>(); 
+    }
+
+    void Start()
+    {
+        CompressTilemaps(GetChunkIndexFromPosition(player.position), ground, top, solid);
     }
 
     LinkedList<Vector2Int> GetChunksInsideRenderDistance(Vector2Int currentChunk)

@@ -97,18 +97,23 @@ public class SlotCraftStationUI : MonoBehaviour
 
         currentStation.Inventory[1] = new(selectedRecipe.reward.item, selectedRecipe.reward.item.Name, 0);
 
-        foreach(var reward in selectedRecipe.resourceRewards)
-        {
-            playerResources.AddResource(reward.resource, reward.count * currentStation.Inventory[0].Count);
-        }
-
         if (maxOutput < currentStation.Inventory[0].Count / selectedRecipe.cost.count)
         {
+            foreach (var reward in selectedRecipe.resourceRewards)
+            {
+                playerResources.AddResource(reward.resource, reward.count * maxOutput);
+            }
+
             currentStation.Inventory[1].Count += maxOutput * selectedRecipe.reward.count;
             currentStation.Inventory[0].Count -= maxOutput * selectedRecipe.cost.count;
         }
         else
         {
+            foreach (var reward in selectedRecipe.resourceRewards)
+            {
+                playerResources.AddResource(reward.resource, reward.count * currentStation.Inventory[0].Count);
+            }
+
             currentStation.Inventory[1].Count += currentStation.Inventory[0].Count * selectedRecipe.reward.count;
             currentStation.Inventory[0] = ItemManager.Instance.InvItemAir;
         }

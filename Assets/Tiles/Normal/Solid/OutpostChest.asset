@@ -33,7 +33,7 @@ MonoBehaviour:
     e33: 1
   m_InstancedGameObject: {fileID: 5557921506770125580, guid: 3ae7c2add328b154e92aedfc8285a5aa, type: 3}
   m_Flags: 1
-  m_ColliderType: 1
+  m_ColliderType: 0
   breakingTime: 1.5
   drops:
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
@@ -49,19 +49,11 @@ MonoBehaviour:
   minMaterial: 2
   lootPool:
   - weight: 100
-    probabilityFrom: 0
-    probabilityTo: 0
     item: {fileID: 11400000, guid: 1bf2836710c82f240a3f909f96733269, type: 2}
   - weight: 30
-    probabilityFrom: 0
-    probabilityTo: 0
     item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
   - weight: 15
-    probabilityFrom: 0
-    probabilityTo: 0
     item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
   - weight: 5
-    probabilityFrom: 0
-    probabilityTo: 0
     item: {fileID: 11400000, guid: dcf350a4453a35e489105e52a694480a, type: 2}
   invSize: 9

@@ -92,28 +92,3 @@ public struct CraftItem
         this.count = count;
     }
 }
-
-[Serializable]
-public class SlotCraftingRecipe
-{
-    public CraftItem cost;
-    public CraftItem reward;
-    public CraftingStationType type;
-    public float craftTime;
-    public PlayerResource[] resourceRewards;
-}
-
-[Serializable]
-public class CraftingRecipe
-{
-    public CraftItem[] cost;
-    public CraftItem reward;
-}
-
-[Serializable]
-public class CraftingPrototype
-{
-    public CraftingRecipe recipe;
-    public PrototypingStationType type;
-    public PlayerResource[] resourceCost;
-}

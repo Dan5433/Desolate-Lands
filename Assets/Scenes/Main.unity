@@ -2889,7 +2889,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 478340031}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 231, y: 350, z: -10}
+  m_LocalPosition: {x: 225, y: 399, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3244,7 +3244,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 231, y: 350, z: -10}
+  m_LocalPosition: {x: 225, y: 399, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5656,42 +5656,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotRecipes:
-  - cost:
-      item: {fileID: 11400000, guid: ac3bdd9db40863a40b3999ffc9b8a681, type: 2}
-      count: 1
-    reward:
-      item: {fileID: 11400000, guid: 47f6930499348c24782aecbf901b5630, type: 2}
-      count: 2
-    type: 1
-    craftTime: 15
-    resourceRewards:
-    - resource: 0
-      count: 1
+  - {fileID: 0}
   craftingRecipes:
-  - cost:
-    - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
-      count: 3
-    - item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
-      count: 2
-    - item: {fileID: 11400000, guid: 47f6930499348c24782aecbf901b5630, type: 2}
-      count: 1
-    reward:
-      item: {fileID: 11400000, guid: 62725090a3dfcef4f982a36a085e5ab6, type: 2}
-      count: 1
+  - {fileID: 0}
   prototypes:
-  - recipe:
-      cost:
-      - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
-        count: 3
-      - item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
-        count: 2
-      - item: {fileID: 11400000, guid: 47f6930499348c24782aecbf901b5630, type: 2}
-        count: 1
-      reward:
-        item: {fileID: 11400000, guid: 62725090a3dfcef4f982a36a085e5ab6, type: 2}
-        count: 1
-    type: 0
-    resourceCost: []
+  - {fileID: 0}
   singleSlotUI: {fileID: 2003840430}
   chooseItemUI: {fileID: 1399322442}
 --- !u!1 &953168183
@@ -18916,7 +18885,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136044628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 231, y: 350, z: 0}
+  m_LocalPosition: {x: 225, y: 399, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children:
