@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class SlotCraftStationUI : MonoBehaviour
 {
-    [SerializeField] PlayerResources playerResources;
+    [SerializeField] PlayerCrafting playerResources;
     [SerializeField] CraftStation currentStation;
     [SerializeField] Image progressBar;
     [SerializeField] Image output;
@@ -101,7 +101,7 @@ public class SlotCraftStationUI : MonoBehaviour
         {
             foreach (var reward in selectedRecipe.resourceRewards)
             {
-                playerResources.AddResource(reward.resource, reward.count * maxOutput);
+                playerResources.AddResource(reward.type, reward.count * maxOutput);
             }
 
             currentStation.Inventory[1].Count += maxOutput * selectedRecipe.reward.count;
@@ -111,7 +111,7 @@ public class SlotCraftStationUI : MonoBehaviour
         {
             foreach (var reward in selectedRecipe.resourceRewards)
             {
-                playerResources.AddResource(reward.resource, reward.count * currentStation.Inventory[0].Count);
+                playerResources.AddResource(reward.type, reward.count * currentStation.Inventory[0].Count);
             }
 
             currentStation.Inventory[1].Count += currentStation.Inventory[0].Count * selectedRecipe.reward.count;

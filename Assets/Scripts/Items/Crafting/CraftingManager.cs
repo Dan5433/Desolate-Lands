@@ -1,21 +1,22 @@
 using CustomClasses;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class CraftingManager : MonoBehaviour
 {
     public static CraftingManager Instance;
 
-    [SerializeField] SlotCraftingRecipe[] slotRecipes;
-    [SerializeField] CraftingRecipe[] craftingRecipes;
-    [SerializeField] CraftingPrototype[] prototypes;
-    [SerializeField] GameObject singleSlotUI;
-    [SerializeField] GameObject chooseItemUI;
+    [SerializeField] Recipes[] slotRecipes;
+    [SerializeField] Prototypes[] prototypes;
+    [SerializeField] CraftingRecipe[] playerRecipes;
+    [SerializeField] GameObject craftingUI;
+    [SerializeField] GameObject prototypingUI;
 
-    public GameObject SingleSlotUI { get { return singleSlotUI; } }
-    public GameObject ChooseItemUI { get { return chooseItemUI; } }
+    public GameObject CraftingUI { get { return craftingUI; } }
+    public GameObject PrototypingUI { get { return prototypingUI; } }
+
+    public CraftingRecipe[] PlayerRecipes { get { return playerRecipes; } }
 
     void Awake()
     {
@@ -31,15 +32,17 @@ public class CraftingManager : MonoBehaviour
 
     public static SlotCraftingRecipe GetSingleSlotRecipe(CraftItem input, CraftingStationType type)
     {
-        foreach(var recipe in Instance.slotRecipes)
+        var matching = Array.Find(Instance.slotRecipes, r => r.type == type);
+
+        foreach(var recipe in matching.recipes)
         {
-            if(recipe.type == type && recipe.cost.item == input.item 
+            if(recipe.cost.item == input.item 
                 && recipe.cost.count <= input.count) return recipe;
         }
         return null;
     }
 
-    public static HashSet<CraftingPrototype> GetCraftablePrototypes(InvItem[] availableItems, PrototypingStationType type)
+    public static HashSet<CraftingPrototype> GetCraftablePrototypes(InvItem[] availableItems, PlayerResource[] availableResources, PrototypingStationType type)
     {
         var results = new HashSet<CraftingPrototype>();
         
@@ -47,22 +50,59 @@ public class CraftingManager : MonoBehaviour
         var itemsCount = new Dictionary<Item, int>();
         foreach(var item in availableItems)
         {
-            itemsCount[item.ItemObj] = item.Count; 
+            if(!itemsCount.ContainsKey(item.ItemObj)) itemsCount[item.ItemObj] = 0;
+
+            itemsCount[item.ItemObj] += item.Count; 
         }
 
-        foreach(var recipe in Instance.prototypes)
+        var resourcesCount = new Dictionary<Resource, int>();
+        foreach (var resource in availableResources)
         {
-            if (recipe.type != type) continue;
+            resourcesCount[resource.type] = resource.count;
+        }
 
+        var matching = Array.Find(Instance.prototypes, p => p.type == type);
+
+        foreach(var recipe in matching.prototypes)
+        {
+            bool available = true;
             foreach (var item in recipe.recipe.cost)
             {
-                if (!itemsCount.ContainsKey(item.item) || itemsCount[item.item] < item.count) break;
-
-                results.Add(recipe);
+                if (!itemsCount.ContainsKey(item.item) || itemsCount[item.item] < item.count)
+                {
+                    available = false;
+                    break;
+                }
             }
-        }
 
+            foreach (var resource in recipe.resourceCost)
+            {
+                if (!available) break;
+
+                if (resourcesCount[resource.resource.type] < resource.count)
+                {
+                    available = false;
+                    break;
+                }
+            }
+
+            if (available) results.Add(recipe);
+        }
         return results;
+    }
+
+    [Serializable]
+    struct Recipes
+    {
+        public CraftingStationType type;
+        public SlotCraftingRecipe[] recipes;
+    }
+
+    [Serializable]
+    struct Prototypes
+    {
+        public PrototypingStationType type;
+        public CraftingPrototype[] prototypes;
     }
 }
 

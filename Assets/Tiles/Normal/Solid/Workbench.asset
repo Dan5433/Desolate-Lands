@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbdb3586d885f48428ac32c60d7a2a3a, type: 3}
-  m_Name: SpinningWheel
+  m_Script: {fileID: 11500000, guid: bd93269b57dc8584db11ab54d55cee8f, type: 3}
+  m_Name: Workbench
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: 7bb7e642cc867064bb138b3377bb9bd0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 72b72183d66970d4f8ea287025a5a005, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -31,23 +31,20 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 1
-  m_InstancedGameObject: {fileID: 7134427891682201430, guid: c667e14e786c982448e09ca8c3ef74f1, type: 3}
+  m_InstancedGameObject: {fileID: 5168300196735632252, guid: ef9aa519f36d0ed4e97e35efc81313dc, type: 3}
   m_Flags: 1
   m_ColliderType: 0
-  breakingTime: 4
+  breakingTime: 8
   drops:
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
     minDropCount: 0
     maxDropCount: 1
-  - item: {fileID: 11400000, guid: 47f6930499348c24782aecbf901b5630, type: 2}
+  - item: {fileID: 11400000, guid: a2a3b5474aa760143b3ea6272e3780ad, type: 2}
     minDropCount: 0
     maxDropCount: 1
-  - item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
-    minDropCount: 1
-    maxDropCount: 2
   colors:
-  - {r: 0.4528302, g: 0.32544208, b: 0.10466359, a: 1}
-  - {r: 0.7075472, g: 0.5442102, b: 0.3037113, a: 1}
-  tool: 1
+  - {r: 0.4339623, g: 0.29661795, b: 0.22312212, a: 1}
+  - {r: 0.5754717, g: 0.4399986, b: 0.36645603, a: 1}
+  tool: 2
   minMaterial: 3
-  type: 1
+  type: 0

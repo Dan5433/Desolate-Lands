@@ -13,6 +13,7 @@ public class Interact : MonoBehaviour
     Break breakScript;
     [SerializeField] float reach;
     [SerializeField] InventoryBase inventory;
+    [SerializeField] PlayerCrafting crafting;
 
     void Awake()
     {
@@ -107,6 +108,17 @@ public class Interact : MonoBehaviour
                 return;
             }
 
+            if (hit.transform.TryGetComponent<PrototypeStation>(out var prototypeStation))
+            {
+                if (!prototypeStation.CraftingUi.activeSelf)
+                {
+                    prototypeStation.UpdateAvailablePrototypesUI(inventory.Inventory, crafting.Resources);
+                    prototypeStation.CraftingUi.SetActive(true);
+                    UpdateUI(prototypeStation.gameObject, prototypeStation.CraftingUi);
+                }
+                return;
+            }
+
             if (hit.transform.TryGetComponent<Container>(out var container))
             {
                 if (!container.UI.gameObject.activeSelf)
@@ -124,7 +136,7 @@ public class Interact : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            if (tilemap == null) return;
+            if (tilemap == null || activeUI != null) return;
 
             BreakableTile tile = tilemap.GetTile<BreakableTile>(targetedCell);
             breakScript.Breaking(tile, targetedCell, tilemap);
