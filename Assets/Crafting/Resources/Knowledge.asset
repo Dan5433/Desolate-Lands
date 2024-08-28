@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Knowledge
   m_EditorClassIdentifier: 
   type: 0
-  sprite: {fileID: 21300000, guid: ba27b91b6eacbbd468c7f27b4290c9d6, type: 3}
+  sprite: {fileID: 21300000, guid: cd9fa2d5c133db44f9bfce6b699ef72b, type: 3}

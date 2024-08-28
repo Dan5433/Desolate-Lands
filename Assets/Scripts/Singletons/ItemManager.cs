@@ -157,13 +157,15 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    static void SwapSlots(ref InvItem slotItem, InvItem selectedItem, bool allowDeposit, bool allowWithdraw)
+    static bool SwapSlots(ref InvItem slotItem, InvItem selectedItem, bool allowDeposit, bool allowWithdraw)
     {
-        if (!allowDeposit && slotItem.ItemObj == Instance.Air) return;
-        if (!allowWithdraw && selectedItem.ItemObj == Instance.Air) return;
+        if (slotItem.ItemObj == Instance.Air && selectedItem.ItemObj == Instance.Air) return false;
+        if (!allowDeposit && slotItem.ItemObj == Instance.Air) return false;
+        if (!allowWithdraw && selectedItem.ItemObj == Instance.Air) return false;
 
         Instance.grabbedItem.Item = new(slotItem);
         slotItem = new(selectedItem);
+        return true;
     }
 
     static int GetSlotIndex(Transform slot)
@@ -197,11 +199,12 @@ public class ItemManager : MonoBehaviour
             if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air)
             {
                 if (allowDeposit) DepositItem(ref slotItem, selectedItem);
+                else return;
             }
 
             else
             {
-                SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw);
+                if (!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw)) return;
             }
         }
 
@@ -210,15 +213,17 @@ public class ItemManager : MonoBehaviour
             if (selectedItem.ItemObj == Instance.Air && slotItem.ItemObj != Instance.Air)
             {
                 if (allowWithdraw) SplitSlot(ref slotItem);
+                else return;
             }
             else if (slotItem.ItemObj == Instance.Air || slotItem.ItemObj == selectedItem.ItemObj)
             {
                 if (allowDeposit) IncrementSlot(ref slotItem, selectedItem);
+                else return;
             }
 
             else
             {
-                SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw);
+                if(!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw)) return;
             }
         }
 
