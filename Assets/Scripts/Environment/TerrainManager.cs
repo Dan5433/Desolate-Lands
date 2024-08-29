@@ -62,12 +62,13 @@ public class TerrainManager : MonoBehaviour
 
     void CompressTilemaps(Vector2Int currentChunkIndex, params Tilemap[] tilemaps)
     {
-        //TODO: Find out why origin doesn't automatically update
         foreach (var tilemap in tilemaps)
         {
             tilemap.origin = (Vector3Int)(currentChunkIndex * chunkSize - chunkSize);
             tilemap.size = new(chunkSize.x * (renderDist * 2 + 1), chunkSize.y * (renderDist * 2 + 1), 1);
             tilemap.ResizeBounds();
+            tilemap.gameObject.SetActive(false);
+            tilemap.gameObject.SetActive(true);
         }
     }
 

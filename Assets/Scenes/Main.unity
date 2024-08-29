@@ -8958,6 +8958,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8a4ff1f651b1241438e82627e5bca4f2, type: 2}
   - {fileID: 11400000, guid: 0a7b5e0495bd0944daac80fcf994aa9c, type: 2}
   - {fileID: 11400000, guid: 3eecfd44e80c5ac4eab0c97b14790741, type: 2}
+  - {fileID: 11400000, guid: fa788fa5aae7cd042a08b764c66e4950, type: 2}
   ground: {fileID: 1841665678}
   top: {fileID: 1017067505}
   solid: {fileID: 330243725}

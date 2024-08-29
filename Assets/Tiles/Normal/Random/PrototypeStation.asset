@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01e841da93b54ec4e99f5d015a84555c, type: 3}
-  m_Name: CraftStation
+  m_Name: PrototypeStation
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: a90388f4a486e9d48acce13189e7b829, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d86ee34176ea4d94082ebacb551bbcbf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -36,4 +36,4 @@ MonoBehaviour:
   m_ColliderType: 1
   tiles:
   - weight: 1
-    tile: {fileID: 11400000, guid: 013a38b27e79ef8499ad291fccb7d3ee, type: 2}
+    tile: {fileID: 11400000, guid: c53f980e2bdc73f468bfd5050a18de11, type: 2}

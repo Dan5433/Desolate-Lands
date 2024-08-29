@@ -55,14 +55,4 @@ public class LoadTerrain : MonoBehaviour
             tilemap.SetTiles(positions, tiles);
         }
     }
-
-    //public static async Task<bool> TileExists(Vector3Int tilePosition, string tilemapName)
-    //{
-    //    JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"),
-    //        tilemapName + TerrainManager.GetChunkIndexFromPosition(tilePosition));
-
-    //    var save = await handler.LoadDataAsync<TerrainSaveData>();
-
-    //    return save.positions.Contains((Vector2Int)tilePosition);
-    //}
 }
