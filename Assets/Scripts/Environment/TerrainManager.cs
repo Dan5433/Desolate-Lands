@@ -67,6 +67,7 @@ public class TerrainManager : MonoBehaviour
             tilemap.origin = (Vector3Int)(currentChunkIndex * chunkSize - chunkSize);
             tilemap.size = new(chunkSize.x * (renderDist * 2 + 1), chunkSize.y * (renderDist * 2 + 1), 1);
             tilemap.ResizeBounds();
+
             tilemap.gameObject.SetActive(false);
             tilemap.gameObject.SetActive(true);
         }

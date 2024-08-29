@@ -1,6 +1,4 @@
 using CustomClasses;
-using CustomExtensions;
-using TreeEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 

@@ -11,6 +11,7 @@ public class GatherableTile : Tile
     [SerializeField] float regenerateTime;
     [SerializeField] DropItem[] drops;
 
+    public GatherableTileSprite[] Sprites { get { return sprites; } }
     public DropItem[] Drops { get { return drops; } }
 
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
@@ -29,14 +30,7 @@ public class GatherableTile : Tile
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
         base.GetTileData(position, tilemap, ref tileData);
-
-        var attachedTilemap = tilemap.GetComponent<Tilemap>();
-        var instancedGameObject = attachedTilemap.GetInstantiatedObject(position);
-
-        if (instancedGameObject != null && instancedGameObject.TryGetComponent<Gatherable>(out var script))
-        {
-            tileData.sprite = Array.Find(sprites, spr => spr.state == script.State).sprite;
-        }
+        if (Application.isPlaying) tileData.sprite = null;
     }
 }
 

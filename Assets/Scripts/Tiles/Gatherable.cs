@@ -55,7 +55,10 @@ public class Gatherable : MonoBehaviour
 
     void UpdateState()
     {
-        GetComponentInParent<Tilemap>().RefreshTile(tilePosition);
+        var tile = GetComponentInParent<Tilemap>().GetTile<GatherableTile>(tilePosition);
+        var sprite = Array.Find(tile.Sprites, s => s.state == state).sprite;
+
+        GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
     async void SaveState()
