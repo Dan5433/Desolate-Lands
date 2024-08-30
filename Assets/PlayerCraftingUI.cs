@@ -91,7 +91,7 @@ public class PlayerCraftingUI : MonoBehaviour
         inventory.UpdateUI();
 
         UpdateAvailableCraftingUI(inventory.Inventory);
-        DefaultState();
+        ResetUI();
     }
 
     public void UpdateAvailableCraftingUI(InvItem[] inventory)
@@ -129,7 +129,7 @@ public class PlayerCraftingUI : MonoBehaviour
         }
     }
 
-    public void DefaultState()
+    public void ResetUI()
     {
         if (selectedRecipe != null) ToggleTooltip();
 
@@ -146,6 +146,6 @@ public class PlayerCraftingUI : MonoBehaviour
 
     void OnDisable()
     {
-        DefaultState();
+        ResetUI();
     }
 }

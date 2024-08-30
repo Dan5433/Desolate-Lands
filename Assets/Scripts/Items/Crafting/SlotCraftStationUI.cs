@@ -120,6 +120,7 @@ public class SlotCraftStationUI : MonoBehaviour
 
         ResetUI();
 
+        currentStation.SaveProgress(progress);
         currentStation.UpdateUI();
     }
 

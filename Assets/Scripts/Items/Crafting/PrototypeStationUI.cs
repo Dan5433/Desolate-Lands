@@ -21,7 +21,7 @@ public class PrototypeStationUI : MonoBehaviour
     {
         currentStation = station;
 
-        DefaultState();
+        ResetUI();
     }
 
     void UpdateMaterialsUI(CraftItem[] cost)
@@ -131,10 +131,10 @@ public class PrototypeStationUI : MonoBehaviour
         crafting.UnlockRecipe(selectedPrototype.recipe);
 
         currentStation.UpdateAvailablePrototypesUI(inventory.Inventory, crafting.Resources);
-        DefaultState();
+        ResetUI();
     }
 
-    public void DefaultState()
+    public void ResetUI()
     {
         if (selectedPrototype != null) ToggleTooltip();
 

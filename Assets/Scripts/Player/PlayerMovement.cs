@@ -1,4 +1,6 @@
 using EditorAttributes;
+using System.IO;
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -8,14 +10,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float speed = 0.015f;
     [SerializeField] Texture2D cursor;
     [SerializeField] Transform cam;
+    const string saveString = "Position";
 
     void Start()
     {
         //Cursor.SetCursor(cursor,Vector2.zero,CursorMode.Auto);         
         Cursor.lockState = CursorLockMode.Confined;
 
-        //string[] pos = PlayerPrefs.GetString("pos", "0,0,0").Split(",");
-        //transform.position = new Vector3(float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        LoadPosition();
     }
 
     void FixedUpdate()
@@ -34,6 +36,31 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDestroy()
     {
-        PlayerPrefs.SetString("pos", transform.position.x + "," + transform.position.y + "," + transform.position.z);
+        SavePosition();
+    }
+
+    async void LoadPosition()
+    {
+        string dirPath = Path.Combine(GameManager.Instance.DataDirPath, "Player");
+        JsonFileDataHandler dataHandler = new(dirPath, saveString);
+
+        var save = await dataHandler.LoadDataAsync<PlayerPosition>();
+
+        if (save != null) transform.position = save.position;
+    }
+
+    async void SavePosition()
+    {
+        PlayerPosition save = new() { position = transform.position };
+
+        string dirPath = Path.Combine(GameManager.Instance.DataDirPath, "Player");
+        JsonFileDataHandler dataHandler = new(dirPath, saveString);
+
+        await dataHandler.SaveDataAsync(save);
+    }
+
+    class PlayerPosition
+    {
+        public Vector3 position;
     }
 }
