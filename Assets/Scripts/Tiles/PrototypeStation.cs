@@ -19,6 +19,9 @@ public class PrototypeStation : MonoBehaviour
 
         var availablePrototypes = CraftingManager.GetCraftablePrototypes(inventory, resources, Type);
 
+        if(availablePrototypes.Count > 0) uiScript.Tooltip.text = "Choose an item to prototype";
+        else uiScript.Tooltip.text = "You don't have enough resources to prototype";
+
         int index = 0;
         foreach(var prototype in availablePrototypes)
         {

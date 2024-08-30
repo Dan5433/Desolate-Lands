@@ -20,6 +20,13 @@ public class Interact : MonoBehaviour
         breakScript = GetComponent<Break>();
     }
 
+    public void DisableUI()
+    {
+        if (activeUI != null) activeUI.SetActive(false);
+        activeUI = null;
+        activeTile = null;
+    }
+
     void Update()
     {
         LayerMask mask = LayerMask.GetMask("Solid");
@@ -29,10 +36,7 @@ public class Interact : MonoBehaviour
             (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1) ||
             Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2))
         {
-            if (activeUI != null) activeUI.SetActive(false);
-            activeUI = null;
-            activeTile = null;
-
+            DisableUI();
             return;
         }
 
@@ -147,7 +151,7 @@ public class Interact : MonoBehaviour
         }
     }
 
-    void UpdateUI(GameObject tile, GameObject ui)
+    public void UpdateUI(GameObject tile, GameObject ui)
     {
         activeTile = tile;
         activeUI = ui;

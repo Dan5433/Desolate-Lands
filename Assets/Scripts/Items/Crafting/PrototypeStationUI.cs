@@ -15,6 +15,8 @@ public class PrototypeStationUI : MonoBehaviour
     CraftingPrototype selectedPrototype;
     PrototypeStation currentStation;
 
+    public TMP_Text Tooltip { get { return selectedPrototypeUI.GetChild(0).GetComponent<TMP_Text>(); } }
+
     public void SetStation(PrototypeStation station)
     {
         currentStation = station;

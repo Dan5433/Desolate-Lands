@@ -10,11 +10,28 @@ public class PlayerCrafting : MonoBehaviour
 {
     [SerializeField] ResourceUI[] resourcesUI;
     [SerializeField] PlayerResource[] resources;
+    [SerializeField] PlayerCraftingUI ui;
+    [SerializeField] Interact interact;
+    [SerializeField] PlayerInventory inventory;
     HashSet<CraftingRecipe> prototypedRecipes = new();
     const string saveString = "CraftingData";
 
     public PlayerResource[] Resources { get { return resources; } }
     public HashSet<CraftingRecipe> PrototypedRecipes {  get { return prototypedRecipes; } }
+
+    void Update()
+    {
+        if (!Input.GetKeyDown(KeyCode.E)) return;
+
+        if (!ui.gameObject.activeSelf)
+        {
+            ui.UpdateAvailableCraftingUI(inventory.Inventory);
+            interact.DisableUI();
+            interact.UpdateUI(gameObject, ui.gameObject);
+            ui.gameObject.SetActive(true);
+        }
+        else interact.DisableUI();
+    }
 
     void Start()
     {
@@ -59,7 +76,7 @@ public class PlayerCrafting : MonoBehaviour
             
             foreach(var index in save.prototypedRecipes)
             {
-                prototypedRecipes.Add(CraftingManager.Instance.PlayerRecipes[index]);
+                prototypedRecipes.Add(CraftingManager.Instance.CraftingRecipes[index]);
             }
         }
 
@@ -74,7 +91,7 @@ public class PlayerCrafting : MonoBehaviour
 
         foreach (var recipe in prototypedRecipes)
         {
-            int index = Array.FindIndex(CraftingManager.Instance.PlayerRecipes, r => r == recipe);
+            int index = Array.FindIndex(CraftingManager.Instance.CraftingRecipes, r => r == recipe);
             save.prototypedRecipes.Add(index);
         }
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Mine : MonoBehaviour
+public class Landmine : MonoBehaviour
 {
     void Start()
     {

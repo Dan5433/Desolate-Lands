@@ -9,14 +9,15 @@ public class CraftingManager : MonoBehaviour
 
     [SerializeField] Recipes[] slotRecipes;
     [SerializeField] Prototypes[] prototypes;
-    [SerializeField] CraftingRecipe[] playerRecipes;
+    [SerializeField] CraftingRecipe[] recipes;
+    [SerializeField] PlayerCrafting crafting;
     [SerializeField] GameObject craftingUI;
     [SerializeField] GameObject prototypingUI;
 
     public GameObject CraftingUI { get { return craftingUI; } }
     public GameObject PrototypingUI { get { return prototypingUI; } }
 
-    public CraftingRecipe[] PlayerRecipes { get { return playerRecipes; } }
+    public CraftingRecipe[] CraftingRecipes { get { return recipes; } }
 
     void Awake()
     {
@@ -87,6 +88,31 @@ public class CraftingManager : MonoBehaviour
             }
 
             if (available) results.Add(recipe);
+        }
+        return results;
+    }
+
+    public static HashSet<CraftingRecipe> GetCraftableRecipes(InvItem[] availableItems)
+    {
+        var results = new HashSet<CraftingRecipe>();
+
+        //initialize dictionary for easy lookup
+        var itemsCount = new Dictionary<Item, int>();
+        foreach (var item in availableItems)
+        {
+            if (!itemsCount.ContainsKey(item.ItemObj)) itemsCount[item.ItemObj] = 0;
+
+            itemsCount[item.ItemObj] += item.Count;
+        }
+
+        foreach (var recipe in Instance.crafting.PrototypedRecipes)
+        {
+            foreach (var item in recipe.cost)
+            {
+                if (!itemsCount.ContainsKey(item.item) || itemsCount[item.item] < item.count) break;
+
+                results.Add(recipe);
+            }
         }
         return results;
     }
