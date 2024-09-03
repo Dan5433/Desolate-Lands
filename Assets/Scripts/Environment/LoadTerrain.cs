@@ -1,6 +1,4 @@
 using System.IO;
-using System.Threading.Tasks;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -13,7 +11,7 @@ public class LoadTerrain : MonoBehaviour
         main = GetComponent<TerrainManager>();
     }
 
-    public void SetFlatTiles(Tilemap tilemap, Vector2Int startPos, Tile[] tiles)
+    public void SetFlatTiles(Tilemap tilemap, Vector2Int startPos, TileBase[] tiles)
     {
         Vector2Int endPos = startPos + TerrainManager.ChunkSize;
         Vector3Int[] genCoords = new Vector3Int[TerrainManager.ChunkSize.x * TerrainManager.ChunkSize.y];
@@ -43,7 +41,7 @@ public class LoadTerrain : MonoBehaviour
             var tilemapIndex = save.tilemapNames.IndexOf(tilemap.name);
             var tilemapSaveData = save.data[tilemapIndex];
 
-            Tile[] tiles = new Tile[tilemapSaveData.indexes.Count];
+            TileBase[] tiles = new TileBase[tilemapSaveData.indexes.Count];
             Vector3Int[] positions = new Vector3Int[tilemapSaveData.positions.Count];
 
             for (int i = 0; i < tiles.Length; i++)

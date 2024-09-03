@@ -1,40 +1,36 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class MineAnimationManager : MonoBehaviour
 {
+    [SerializeField] Tilemap tilemap;
     [SerializeField] Transform player;
     [SerializeField] float revealDist = 3f;
     LinkedList<Transform> mineList = new();
 
     void Update()
     {
-        var colorLerpValue = Mathf.PingPong(Time.time, 1);
         float revealMultiplier = player.GetComponent<CustomPlayerData>().MineRevealDistMultiplier;
 
-        foreach (Transform mine in mineList)
+        foreach (Transform landmine in mineList)
         {
-            var skull = mine.Find("skull").GetComponent<SpriteRenderer>();
-            skull.color = Color.Lerp(Color.white, Color.red, colorLerpValue);
+            float distanceToPlayer = Vector2.Distance(landmine.position, player.position);
 
-            float distanceToPlayer = Vector2.Distance(mine.position, player.position);
+            Color color = new(1, 1, 1, 1 - distanceToPlayer * 1 / (revealDist * revealMultiplier));
 
-            foreach (var renderer in mine.GetComponentsInChildren<SpriteRenderer>())
-            {
-                renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b,
-                    1 - distanceToPlayer * 1 / (revealDist * revealMultiplier));
-            }
+            tilemap.SetColor(tilemap.WorldToCell(landmine.position), color);
         }
     }
 
-    public void AddMine(Transform mine)
+    public void AddMine(Transform landmine)
     {
-        mineList.AddLast(mine);
+        mineList.AddLast(landmine);
     }
 
-    public void DeleteMine(Transform mine)
+    public void DeleteMine(Transform landmine)
     {
-        mineList.Remove(mine);
+        mineList.Remove(landmine);
     }
 
 }

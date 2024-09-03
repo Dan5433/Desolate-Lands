@@ -13,7 +13,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(LoadTerrain))]
 public class TerrainManager : MonoBehaviour
 {
-    [SerializeField] Tile[] masterTiles;
+    [SerializeField] TileBase[] masterTiles;
     [SerializeField] Tilemap ground, top, solid;
     [SerializeField] WeightedStructure[] structures;
     [SerializeField] WeightedTileById[] grTiles;
@@ -31,7 +31,7 @@ public class TerrainManager : MonoBehaviour
     static Vector2Int chunkSize = new(32, 32);
     public const string chunkSaveName = "chunk";
 
-    public Tile[] MasterTiles { get { return masterTiles; } }
+    public TileBase[] MasterTiles { get { return masterTiles; } }
     public static Vector2Int ChunkSize { get { return chunkSize; } }
     public Vector2Int WorldSize { get { return worldSize; } }
 
@@ -197,7 +197,7 @@ public class TerrainManager : MonoBehaviour
     {
         Vector2Int endPos = startPos + chunkSize;
         Vector3Int[] genCoords = new Vector3Int[chunkSize.x * chunkSize.y];
-        Tile[] genTiles = new Tile[genCoords.Length];
+        TileBase[] genTiles = new TileBase[genCoords.Length];
 
         int index = 0;
 
@@ -233,7 +233,7 @@ public class TerrainManager : MonoBehaviour
         }
 
         LinkedList<Vector3Int> allCoords = new();
-        LinkedList<Tile> allTiles = new();
+        LinkedList<TileBase> allTiles = new();
 
         while (spawns.Count > 0)
         {

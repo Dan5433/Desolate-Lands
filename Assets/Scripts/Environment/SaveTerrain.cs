@@ -24,7 +24,7 @@ public class SaveTerrain : MonoBehaviour
             {
                 for (int y = chunkIndex.y * TerrainManager.ChunkSize.y; y < chunkIndex.y * TerrainManager.ChunkSize.y + TerrainManager.ChunkSize.y; y++)
                 {
-                    Tile tile = tilemap.GetTile<Tile>(new(x, y));
+                    TileBase tile = tilemap.GetTile<TileBase>(new(x, y));
                     if (tile == null) continue;
 
                     int id = Array.FindIndex(main.MasterTiles, t => t == tile);

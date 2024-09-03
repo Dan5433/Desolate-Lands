@@ -38,7 +38,7 @@ MonoBehaviour:
   drops:
   - item: {fileID: 11400000, guid: a2a3b5474aa760143b3ea6272e3780ad, type: 2}
     minDropCount: 0
-    maxDropCount: 5
+    maxDropCount: 3
   colors:
   - {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
   - {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 1}

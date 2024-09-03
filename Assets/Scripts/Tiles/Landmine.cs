@@ -22,7 +22,10 @@ public class Landmine : MonoBehaviour
             Destroy(gameObject);
         }
 
-        var tilePosition = transform.parent.GetComponent<Tilemap>().WorldToCell(transform.position);
+        var tilemap = transform.parent.GetComponent<Tilemap>();
+        var tilePosition = tilemap.WorldToCell(transform.position);
+
+        tilemap.SetTile(tilePosition, null);
         SaveTerrain.RemoveTileSaveData(tilePosition, transform.parent.name);
     }
 

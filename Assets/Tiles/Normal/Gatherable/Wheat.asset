@@ -45,4 +45,4 @@ MonoBehaviour:
   drops:
   - item: {fileID: 11400000, guid: ac3bdd9db40863a40b3999ffc9b8a681, type: 2}
     minDropCount: 1
-    maxDropCount: 3
+    maxDropCount: 2

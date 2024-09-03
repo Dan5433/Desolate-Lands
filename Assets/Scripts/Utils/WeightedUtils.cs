@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 
 public class WeightedUtils
 {
-    public static Tile RollTile(WeightedTileById[] tiles, Tile[] masterList)
+    public static TileBase RollTile(WeightedTileById[] tiles, TileBase[] masterList)
     {
         int totalWeight = 0;
         foreach (var tile in tiles) totalWeight += tile.weight;

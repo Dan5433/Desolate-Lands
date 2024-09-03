@@ -10,7 +10,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField] GameObject groundItemPrefab;
     [SerializeField] GameObject invSlotPrefab;
     [SerializeField] GameObject containerUI;
-    [SerializeField] ItemRef grabbedItem;
+    [SerializeField] ItemRef heldItem;
     [SerializeField] Item air;
     InvItem invItemAir;
     [SerializeField] Item[] items;
@@ -19,7 +19,7 @@ public class ItemManager : MonoBehaviour
     public InvItem InvItemAir { get { return invItemAir; } }
     public GameObject ContainerUI { get { return containerUI; } }
     public GameObject InvSlot { get { return invSlotPrefab; } }
-    public bool ItemGrabbed { get { return grabbedItem.Item.ItemObj != Air; } }
+    public bool IsHoldingItem { get { return heldItem.Item.ItemObj != Air; } }
 
     void Awake()
     {
@@ -30,14 +30,14 @@ public class ItemManager : MonoBehaviour
         else
         {
             invItemAir = new(air, air.Name, 0);
-            grabbedItem.Item = invItemAir;
+            heldItem.Item = invItemAir;
             Instance = this;
         }
     }
 
     public static void DropHeldItem(Vector3 position, Vector3 direction, float distance)
     {
-        if (Instance.grabbedItem.Item.ItemObj == Instance.Air) return;
+        if (Instance.heldItem.Item.ItemObj == Instance.Air) return;
 
         Vector3 spawnPos = position + direction * distance;
 
@@ -46,9 +46,9 @@ public class ItemManager : MonoBehaviour
 
         if (hit) spawnPos = hit.point;
 
-        SpawnGroundItem(Instance.grabbedItem.Item, spawnPos, false);
-        Instance.grabbedItem.Item = Instance.InvItemAir;
-        UpdateItemUI(Instance.grabbedItem.transform, Instance.grabbedItem.Item);
+        SpawnGroundItem(Instance.heldItem.Item, spawnPos, false);
+        Instance.heldItem.Item = Instance.InvItemAir;
+        UpdateItemUI(Instance.heldItem.transform, Instance.heldItem.Item);
     }
 
     public static bool IsInvSlot(GameObject gameObject)
@@ -113,12 +113,12 @@ public class ItemManager : MonoBehaviour
         if (slotItem.Count + selectedItem.Count <= slotItem.ItemObj.MaxCount)
         {
             slotItem.Count += selectedItem.Count;
-            Instance.grabbedItem.Item = Instance.InvItemAir;
+            Instance.heldItem.Item = Instance.InvItemAir;
         }
         //deposit the maximum amount into the slot if greater than max count
         else
         {
-            Instance.grabbedItem.Item.Count -= slotItem.ItemObj.MaxCount - slotItem.Count;
+            Instance.heldItem.Item.Count -= slotItem.ItemObj.MaxCount - slotItem.Count;
             slotItem.Count = slotItem.ItemObj.MaxCount;
         }
     }
@@ -126,7 +126,7 @@ public class ItemManager : MonoBehaviour
     static void SplitSlot(ref InvItem slotItem)
     {
         int half = slotItem.Count / 2;
-        Instance.grabbedItem.Item = new(slotItem.ItemObj, slotItem.Name, half);
+        Instance.heldItem.Item = new(slotItem.ItemObj, slotItem.Name, half);
 
         if (slotItem.Count >= 2)
         {
@@ -147,13 +147,13 @@ public class ItemManager : MonoBehaviour
         }
 
         slotItem.Count++;
-        if (Instance.grabbedItem.Item.Count <= 1)
+        if (Instance.heldItem.Item.Count <= 1)
         {
-            Instance.grabbedItem.Item = Instance.InvItemAir;
+            Instance.heldItem.Item = Instance.InvItemAir;
         }
         else
         {
-            Instance.grabbedItem.Item.Count--;
+            Instance.heldItem.Item.Count--;
         }
     }
 
@@ -163,7 +163,7 @@ public class ItemManager : MonoBehaviour
         if (!allowDeposit && slotItem.ItemObj == Instance.Air) return false;
         if (!allowWithdraw && selectedItem.ItemObj == Instance.Air) return false;
 
-        Instance.grabbedItem.Item = new(slotItem);
+        Instance.heldItem.Item = new(slotItem);
         slotItem = new(selectedItem);
         return true;
     }
@@ -188,7 +188,7 @@ public class ItemManager : MonoBehaviour
 
         int index = GetSlotIndex(slot);
         InvItem slotItem = slotInventory.Inventory[index];
-        InvItem selectedItem = new(Instance.grabbedItem.Item);
+        InvItem selectedItem = new(Instance.heldItem.Item);
 
         if (selectedItem.ItemObj != Instance.Air && slotType != SlotType.Any && selectedItem.ItemObj.Slot != slotType) return;
 
@@ -230,7 +230,7 @@ public class ItemManager : MonoBehaviour
         slotInventory.SetSlot(index, slotItem);
 
         UpdateItemUI(slot, slotItem);
-        UpdateItemUI(Instance.grabbedItem.transform, Instance.grabbedItem.Item);
+        UpdateItemUI(Instance.heldItem.transform, Instance.heldItem.Item);
 
         slotInventory.SaveInventory();
     }

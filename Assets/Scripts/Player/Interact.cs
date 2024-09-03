@@ -27,14 +27,24 @@ public class Interact : MonoBehaviour
         activeTile = null;
     }
 
+    bool CanDisableUI()
+    {
+        if(activeTile == null) return false;
+
+        if ((Input.GetKeyDown(KeyCode.Escape) ||
+            Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2)) return true;
+
+        if(!ItemManager.Instance.IsHoldingItem && Input.GetMouseButtonDown(1)) return true;
+
+        return false;
+    }
+
     void Update()
     {
         LayerMask mask = LayerMask.GetMask("Solid");
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, reach, mask);
 
-        if (activeTile != null && !ItemManager.Instance.ItemGrabbed &&
-            (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1) ||
-            Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2))
+        if (CanDisableUI())
         {
             DisableUI();
             return;
@@ -140,7 +150,12 @@ public class Interact : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            if (tilemap == null || activeUI != null) return;
+            if (tilemap == null) return;
+            if (ItemManager.Instance.IsHoldingItem || activeUI != null)
+            {
+                breakScript.ResetBreaking();
+                return;
+            }
 
             BreakableTile tile = tilemap.GetTile<BreakableTile>(targetedCell);
             breakScript.Breaking(tile, targetedCell, tilemap);

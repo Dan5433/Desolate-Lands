@@ -34,26 +34,26 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 5557921506770125580, guid: 3ae7c2add328b154e92aedfc8285a5aa, type: 3}
   m_Flags: 1
   m_ColliderType: 0
-  breakingTime: 1.5
+  breakingTime: 1.75
   drops:
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
     minDropCount: 0
-    maxDropCount: 2
+    maxDropCount: 1
   - item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
     minDropCount: 1
-    maxDropCount: 4
+    maxDropCount: 2
   colors:
   - {r: 0.38823533, g: 0.24313727, b: 0.039215688, a: 1}
   - {r: 0.2509804, g: 0.1254902, b: 0.058823533, a: 1}
   tool: 1
   minMaterial: 2
   lootPool:
-  - weight: 100
+  - weight: 200
     item: {fileID: 11400000, guid: 1bf2836710c82f240a3f909f96733269, type: 2}
-  - weight: 30
+  - weight: 10
     item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
-  - weight: 15
-    item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
   - weight: 5
+    item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
+  - weight: 1
     item: {fileID: 11400000, guid: dcf350a4453a35e489105e52a694480a, type: 2}
   invSize: 9
