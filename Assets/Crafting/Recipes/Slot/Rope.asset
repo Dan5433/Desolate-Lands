@@ -17,9 +17,8 @@ MonoBehaviour:
     count: 1
   reward:
     item: {fileID: 11400000, guid: 47f6930499348c24782aecbf901b5630, type: 2}
-    count: 2
-  type: 1
+    count: 1
   craftTime: 15
   resourceRewards:
-  - resource: 0
+  - type: 0
     count: 1

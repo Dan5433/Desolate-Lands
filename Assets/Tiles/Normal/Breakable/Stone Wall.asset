@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa15b9b0bc27e264f93caea63b4b97fa, type: 3}
+  m_Name: Stone Wall
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 21300000, guid: 6a915b5c61e626446b16f425c569fad7, type: 3}
+  m_DefaultGameObject: {fileID: 628338776450109615, guid: ffbd5ccb826750242b14adf936aef5d3, type: 3}
+  m_DefaultColliderType: 1
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 21300000, guid: 685ee5e87dedc834ca86e676ecb75c6c, type: 3}
+    m_GameObject: {fileID: 628338776450109615, guid: ffbd5ccb826750242b14adf936aef5d3, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 2
+    m_RandomTransform: 0
+    m_Neighbors: 0100000001000000
+    m_NeighborPositions:
+    - {x: 0, y: -1, z: 0}
+    - {x: 0, y: -2, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 4
+    m_Sprites:
+    - {fileID: 21300000, guid: ff37e3e0c21402644b0f78a3ccbec703, type: 3}
+    m_GameObject: {fileID: 628338776450109615, guid: ffbd5ccb826750242b14adf936aef5d3, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 01000000
+    m_NeighborPositions:
+    - {x: 0, y: -1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 3
+    m_Sprites:
+    - {fileID: 21300000, guid: b8e8e92fcce202847830c5efd8a6b1f5, type: 3}
+    m_GameObject: {fileID: 628338776450109615, guid: ffbd5ccb826750242b14adf936aef5d3, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 0
+    m_RandomTransform: 0
+    m_Neighbors: 0200000001000000
+    m_NeighborPositions:
+    - {x: 0, y: -1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    m_RuleTransform: 0
+  breakingTime: 5
+  drops:
+  - item: {fileID: 11400000, guid: a2a3b5474aa760143b3ea6272e3780ad, type: 2}
+    minMax: {x: 1, y: 3}
+    quantityDistribution:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0.8886846
+        outSlope: 0.8886846
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 0.4443423
+        inSlope: 0.05590269
+        outSlope: 0.05590269
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.6458334
+      - serializedVersion: 3
+        time: 0.82625
+        value: 0.80183053
+        inSlope: 0.017680667
+        outSlope: 0.017680667
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.7762131
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.90000004
+        value: 1
+        inSlope: 2.687043
+        outSlope: 2.687043
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  colors:
+  - {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
+  - {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 1}
+  tool: 2
+  minMaterial: 4

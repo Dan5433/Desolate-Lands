@@ -1,5 +1,9 @@
+using EditorAttributes;
 using System;
+using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 namespace CustomClasses
 {
@@ -13,9 +17,20 @@ namespace CustomClasses
     [Serializable]
     public struct WeightedItem
     {
-        public int weight;
         public Item item;
+        public int weight;
+        [MinMaxSlider(1,99)] public Vector2Int minMax;
+        public AnimationCurve quantityDistribution;
+
+        public int RandomCount()
+        {
+            if(minMax.y > item.MaxCount) minMax.y = item.MaxCount;
+
+            float weightedValue = quantityDistribution.Evaluate(Random.value);
+            return (int)Mathf.Lerp(weightedValue, minMax.x, minMax.y);
+        }
     }
+
     [Serializable]
     public struct WeightedStructure
     {

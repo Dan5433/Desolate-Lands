@@ -1,5 +1,7 @@
+using EditorAttributes;
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CustomClasses
 {
@@ -27,13 +29,16 @@ namespace CustomClasses
     [Serializable]
     public struct DropItem
     {
-        [SerializeField] Item item;
-        [SerializeField] int minDropCount;
-        [SerializeField] int maxDropCount;
+        public Item item;
+        public Vector2Int minMax;
+        public AnimationCurve quantityDistribution;
+        public int RandomCount()
+        {
+            if (minMax.y > item.MaxCount) minMax.y = item.MaxCount;
 
-        public Item Item { get { return item; } }
-        public int MinDropCount { get { return minDropCount; } }
-        public int MaxDropCount { get { return maxDropCount; } }
+            float weightedValue = quantityDistribution.Evaluate(Random.value);
+            return (int)Mathf.Lerp(weightedValue, minMax.x, minMax.y);
+        }
 
     }
     [Serializable]

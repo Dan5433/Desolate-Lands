@@ -1,0 +1,13 @@
+{
+  "foldouts": {
+    "OutpostChest (ContainerTile)_RandomCount_Vector2Int": true
+  },
+  "parameterValues": {
+    "OutpostChest (ContainerTile)_RandomCount_Vector2Int": [
+      {
+        "x": 1,
+        "y": 2
+      }
+    ]
+  }
+}

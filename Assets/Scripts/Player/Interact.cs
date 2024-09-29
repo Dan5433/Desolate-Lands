@@ -12,6 +12,7 @@ public class Interact : MonoBehaviour
     const float offsetForCell = 0.01f;
     Break breakScript;
     [SerializeField] float reach;
+    [SerializeField] Vector3 offsetToHead;
     [SerializeField] InventoryBase inventory;
     [SerializeField] PlayerCrafting crafting;
 
@@ -41,8 +42,8 @@ public class Interact : MonoBehaviour
 
     void Update()
     {
-        LayerMask mask = LayerMask.GetMask("Solid");
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, reach, mask);
+        LayerMask mask = LayerMask.GetMask("Interact");
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + offsetToHead, transform.up, reach, mask);
 
         if (CanDisableUI())
         {
@@ -58,9 +59,9 @@ public class Interact : MonoBehaviour
 
         Vector2 newPos = hit.ExtendRaycast(offsetForCell, transform);
 
-        if (hit.transform.TryGetComponent<Tilemap>(out var tilemap) || hit.transform.parent.GetComponent<Tilemap>() != null)
+        if (hit.transform.TryGetComponent<Tilemap>(out var tilemap))
         {
-            if(tilemap == null) tilemap = hit.transform.parent.GetComponent<Tilemap>();
+            tilemap = hit.transform.GetComponent<Tilemap>();
 
             if (targetedCell != tilemap.WorldToCell(newPos) && targetedCell.z != -1)
             {
@@ -74,7 +75,7 @@ public class Interact : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (hit.transform.TryGetComponent<Gatherable>(out var gatherable))
+            if (hit.collider.TryGetComponent<Gatherable>(out var gatherable))
             {
                 if (gatherable.State != GatherableTileState.Replenished) return;
 
@@ -86,13 +87,13 @@ public class Interact : MonoBehaviour
                 Dictionary<Item, int> excess = new();
                 foreach (var drop in tile.Drops)
                 {
-                    int count = Random.Range(drop.MinDropCount, drop.MaxDropCount);
+                    int count = drop.RandomCount();
                     if (count == 0) { continue; }
 
-                    InvItem item = new(drop.Item, drop.Item.Name, count);
+                    InvItem item = new(drop.item, drop.item.Name, count);
 
                     int leftover = inventory.AddToInventory(item);
-                    if (leftover > 0) excess.Add(drop.Item, leftover);
+                    if (leftover > 0) excess.Add(drop.item, leftover);
                 }
 
                 inventory.UpdateUI();
@@ -108,7 +109,7 @@ public class Interact : MonoBehaviour
                 return;
             }
 
-            if(hit.transform.TryGetComponent<CraftStation>(out var craftStation))
+            if(hit.collider.TryGetComponent<CraftStation>(out var craftStation))
             {
                 if (!craftStation.CraftingUi.activeSelf)
                 {
@@ -122,7 +123,7 @@ public class Interact : MonoBehaviour
                 return;
             }
 
-            if (hit.transform.TryGetComponent<PrototypeStation>(out var prototypeStation))
+            if (hit.collider.TryGetComponent<PrototypeStation>(out var prototypeStation))
             {
                 if (!prototypeStation.CraftingUi.activeSelf)
                 {
@@ -133,7 +134,7 @@ public class Interact : MonoBehaviour
                 return;
             }
 
-            if (hit.transform.TryGetComponent<Container>(out var container))
+            if (hit.collider.TryGetComponent<Container>(out var container))
             {
                 if (!container.UI.gameObject.activeSelf)
                 {
@@ -147,7 +148,7 @@ public class Interact : MonoBehaviour
                 return;
             }
         }
-
+        //TODO: Fix breaking collision (1 block off)
         if (Input.GetMouseButton(0))
         {
             if (tilemap == null) return;

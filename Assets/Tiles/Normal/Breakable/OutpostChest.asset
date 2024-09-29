@@ -1,0 +1,187 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b2d5b9becab4b4bb687a7089f6a7d6, type: 3}
+  m_Name: OutpostChest
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 21300000, guid: b288ac8051b6e814293ada6ca87b2f94, type: 3}
+  m_DefaultGameObject: {fileID: 5557921506770125580, guid: 3ae7c2add328b154e92aedfc8285a5aa, type: 3}
+  m_DefaultColliderType: 1
+  m_TilingRules: []
+  breakingTime: 1.75
+  drops:
+  - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
+    minMax: {x: 0, y: 0}
+    quantityDistribution:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  - item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
+    minMax: {x: 0, y: 0}
+    quantityDistribution:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  colors:
+  - {r: 0.38823533, g: 0.24313727, b: 0.039215688, a: 1}
+  - {r: 0.2509804, g: 0.1254902, b: 0.058823533, a: 1}
+  tool: 1
+  minMaterial: 2
+  lootPool:
+  - item: {fileID: 11400000, guid: 1bf2836710c82f240a3f909f96733269, type: 2}
+    weight: 85
+    minMax: {x: 1, y: 1}
+    quantityDistribution:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  - item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
+    weight: 10
+    minMax: {x: 1, y: 4}
+    quantityDistribution:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.05
+        value: 0
+        inSlope: 0.6367924
+        outSlope: 0.6367924
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.20512821
+      - serializedVersion: 3
+        time: 0.4
+        value: 0.2989681
+        inSlope: -0.0008989956
+        outSlope: -0.0008989956
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 1
+      - serializedVersion: 3
+        time: 0.7
+        value: 0.6062027
+        inSlope: -0.042160347
+        outSlope: -0.042160347
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 1
+      - serializedVersion: 3
+        time: 0.85
+        value: 0.7873295
+        inSlope: -0.09274234
+        outSlope: -0.09274234
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.17156868
+        outWeight: 1
+      - serializedVersion: 3
+        time: 0.95
+        value: 1.0000017
+        inSlope: -0.79759884
+        outSlope: -0.79759884
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.61111104
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
+    weight: 5
+    minMax: {x: 1, y: 2}
+    quantityDistribution:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.05
+        value: 0
+        inSlope: 0.9124143
+        outSlope: 0.9124143
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.6
+        value: 0.5018279
+        inSlope: 0.019128598
+        outSlope: 0.019128598
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.5972222
+      - serializedVersion: 3
+        time: 0.85
+        value: 1.0010662
+        inSlope: 1.9969532
+        outSlope: 1.9969532
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  - item: {fileID: 11400000, guid: dcf350a4453a35e489105e52a694480a, type: 2}
+    weight: 1
+    minMax: {x: 1, y: 1}
+    quantityDistribution:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  invSize: 9

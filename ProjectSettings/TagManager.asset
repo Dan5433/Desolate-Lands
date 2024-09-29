@@ -17,8 +17,8 @@ TagManager:
   - Item
   - PostProcessing
   - Solid
-  - 
-  - 
+  - Minimap
+  - Interact
   - 
   - 
   - 
@@ -43,4 +43,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Minimap
+    uniqueID: 1323550095
     locked: 0

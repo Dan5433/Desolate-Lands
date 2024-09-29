@@ -90,10 +90,10 @@ public class Break : MonoBehaviour
 
         foreach (var drop in tile.Drops)
         {
-            int count = Random.Range(drop.MinDropCount, drop.MaxDropCount);
+            int count = drop.RandomCount();
             if (count == 0) { continue; }
 
-            ItemManager.SpawnGroundItem(new InvItem(drop.Item, drop.Item.Name, count), breakCell, true);
+            ItemManager.SpawnGroundItem(new InvItem(drop.item, drop.item.Name, count), breakCell, true);
         }
 
         breakParticles.ChangeColors(tile.Colors[0], tile.Colors[1]);
@@ -103,10 +103,10 @@ public class Break : MonoBehaviour
 
     void ApplyPenalties(Tool tool)
     {
+        if (!tile) return;
+
         breakingTime = tile.BreakingTime - breakTimeReduction * (tool.Material - tile.MinMaterial);
-        if (tile.Tool != tool.Type && tile.Tool != ToolType.None)
-        {
-            breakingTime *= wrongToolPenalty;
-        }
+
+        if (tile.Tool != tool.Type && tile.Tool != ToolType.None) breakingTime *= wrongToolPenalty;
     }
 }

@@ -1,0 +1,14 @@
+{
+  "foldouts": {
+    "Curve Random Test (CurveWeightedRandomTest)_WeightedRandom_Vector2Int_Int32": true
+  },
+  "parameterValues": {
+    "Curve Random Test (CurveWeightedRandomTest)_WeightedRandom_Vector2Int_Int32": [
+      {
+        "x": 1,
+        "y": 2
+      },
+      100
+    ]
+  }
+}

@@ -75,6 +75,7 @@ public class Gatherable : MonoBehaviour
 
     async void LoadState()
     {
+        if (!this) return;
 
         var data = await dataHandler.LoadDataAsync<GatherableStateData>();
         state = data != null ? data.state : GatherableTileState.Replenished;

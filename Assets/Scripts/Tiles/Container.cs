@@ -1,6 +1,8 @@
 using CustomClasses;
+using EditorAttributes;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static UnityEditor.Progress;
 
 public class Container : InventoryBase, IBreakable
 {
@@ -13,6 +15,7 @@ public class Container : InventoryBase, IBreakable
     {
         ui = ItemManager.Instance.ContainerUI.transform;
     }
+
 
     protected override string GetSaveKey()
     {
@@ -40,9 +43,7 @@ public class Container : InventoryBase, IBreakable
                 randomWeight -= item.weight;
                 if (randomWeight < 0)
                 {
-                    int count = Random.Range(1, item.item.MaxCount);
-
-                    InvItem loot = new(item.item, item.item.Name, count);
+                    InvItem loot = new(item.item, item.item.Name, item.RandomCount());
                     inventory[i] = loot;
                     break;
                 }

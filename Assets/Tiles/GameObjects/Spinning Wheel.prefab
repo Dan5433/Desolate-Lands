@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3082741200089673552}
   - component: {fileID: 4476523831524281280}
   - component: {fileID: -1146020534340997939}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spinning Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}

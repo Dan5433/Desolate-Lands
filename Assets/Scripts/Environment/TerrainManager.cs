@@ -15,12 +15,11 @@ public class TerrainManager : MonoBehaviour
 {
     [SerializeField] TileBase[] masterTiles;
     [SerializeField] Tilemap ground, top, solid;
-    [SerializeField] WeightedStructure[] structures;
+    [SerializeField] StructureGroup[] structures;
     [SerializeField] WeightedTileById[] grTiles;
     [SerializeField] TerrainGenTiles[] topTiles;
     [SerializeField] Transform player;
     [SerializeField] Vector2Int worldSize;
-    [SerializeField] int structureRollsPerChunk;
     [SerializeField] Vector2Int structureMargin;
     [SerializeField][Tooltip("In Chunks")] int renderDist;
 
@@ -176,20 +175,23 @@ public class TerrainManager : MonoBehaviour
     {
         Vector2Int endPos = startPos + chunkSize;
 
-        for(int i = 0; i < structureRollsPerChunk; i++)
+        foreach(var structureGroup in structures)
         {
-            var structure = WeightedUtils.RollStructure(structures);
+            for (int i = 0; i < structureGroup.rollsPerChunk; i++)
+            {
+                var structure = WeightedUtils.RollStructure(structureGroup.structures);
 
-            if (structure == null) continue;
+                if (structure == null) continue;
 
-            Vector3Int spawnPosition = new(Random.Range(startPos.x, endPos.x), Random.Range(startPos.y, endPos.y));
+                Vector3Int spawnPosition = new(Random.Range(startPos.x, endPos.x), Random.Range(startPos.y, endPos.y));
 
-            var bounds = structure.cellBounds;
-            bounds.position = spawnPosition;
+                var bounds = structure.cellBounds;
+                bounds.position = spawnPosition;
 
-            if (!HasRoomToPlaceStructure(tilemap, bounds)) continue;
+                if (!HasRoomToPlaceStructure(tilemap, bounds)) continue;
 
-            tilemap.SetTilesBlock(bounds, structure.GetAllTiles());
+                tilemap.SetTilesBlock(bounds, structure.GetAllTiles());
+            }
         }
     }
 
@@ -276,4 +278,11 @@ public struct TerrainGenTiles
 
     public WeightedTileById[] Tiles { get { return tiles; } }
     public int GenGap { get { return genGap; } }
+}
+
+[Serializable]
+public struct StructureGroup
+{
+    [SerializeField] public WeightedStructure[] structures;
+    [SerializeField] public int rollsPerChunk;
 }

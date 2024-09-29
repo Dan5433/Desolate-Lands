@@ -44,5 +44,37 @@ MonoBehaviour:
   regenerateTime: 300
   drops:
   - item: {fileID: 11400000, guid: ac3bdd9db40863a40b3999ffc9b8a681, type: 2}
-    minDropCount: 1
-    maxDropCount: 2
+    minMax: {x: 1, y: 2}
+    quantityDistribution:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.05
+        value: 0
+        inSlope: 1.1017267
+        outSlope: 1.1017267
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.55
+        value: 0.5508633
+        inSlope: -0.0037657255
+        outSlope: -0.0037657255
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.56183875
+      - serializedVersion: 3
+        time: 0.7
+        value: 1
+        inSlope: 0.019473394
+        outSlope: 0.019473394
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.75
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4

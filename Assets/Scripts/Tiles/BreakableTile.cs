@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 [Serializable]
 [CreateAssetMenu(menuName = "2D/Tiles/Breakable Tile")]
-public class BreakableTile : Tile
+public class BreakableTile : RuleTile
 {
     [SerializeField][Tooltip("In Seconds")] protected float breakingTime;
     [SerializeField] protected DropItem[] drops;
