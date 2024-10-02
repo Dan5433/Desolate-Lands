@@ -44,6 +44,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: World Canvas
+    uniqueID: 2793791971
+    locked: 0
   - name: Minimap
     uniqueID: 1323550095
     locked: 0

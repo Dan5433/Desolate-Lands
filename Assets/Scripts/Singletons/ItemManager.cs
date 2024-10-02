@@ -41,7 +41,7 @@ public class ItemManager : MonoBehaviour
 
         Vector3 spawnPos = position + direction * distance;
 
-        LayerMask mask = LayerMask.GetMask("Solid");
+        LayerMask mask = LayerMask.GetMask("Interact");
         RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, mask);
 
         if (hit) spawnPos = hit.point;
