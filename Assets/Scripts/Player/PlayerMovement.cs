@@ -8,13 +8,10 @@ public class PlayerMovement : MonoBehaviour
     float vertInput;
     float horInput;
     [SerializeField] float speed = 0.015f;
-    [SerializeField] Texture2D cursor;
-    [SerializeField] Transform cam;
     const string saveString = "Position";
 
     void Start()
-    {
-        //Cursor.SetCursor(cursor,Vector2.zero,CursorMode.Auto);         
+    {      
         Cursor.lockState = CursorLockMode.Confined;
 
         LoadPosition();

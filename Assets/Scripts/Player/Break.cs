@@ -83,7 +83,7 @@ public class Break : MonoBehaviour
         SaveTerrain.RemoveTileSaveData(breakCell, tilemap.name);
 
         var go = tilemap.GetInstantiatedObject(breakCell);
-        if (go) go.GetComponent<IBreakable>().OnBreak();
+        if (go.TryGetComponent<IBreakable>(out var breakable)) breakable.OnBreak();
 
         tilemap.SetTile(breakCell, null);
         effects.SetTile(breakCell, null);

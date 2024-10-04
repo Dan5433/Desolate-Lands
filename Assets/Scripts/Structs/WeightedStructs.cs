@@ -42,6 +42,6 @@ namespace CustomClasses
     public struct WeightedTile
     {
         public int weight;
-        public Tile tile;
+        public TileBase tile;
     }
 }

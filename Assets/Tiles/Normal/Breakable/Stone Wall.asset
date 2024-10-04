@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stone Wall
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 21300000, guid: 6a915b5c61e626446b16f425c569fad7, type: 3}
-  m_DefaultGameObject: {fileID: 628338776450109615, guid: ffbd5ccb826750242b14adf936aef5d3, type: 3}
+  m_DefaultGameObject: {fileID: 628338776450109615, guid: f7541f3341c10d842a26c42cac8b070c, type: 3}
   m_DefaultColliderType: 0
   m_TilingRules:
   - m_Id: 0

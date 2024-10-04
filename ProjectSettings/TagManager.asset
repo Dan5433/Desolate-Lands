@@ -44,6 +44,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Ground
+    uniqueID: 4074392645
+    locked: 0
+  - name: Top
+    uniqueID: 243129621
+    locked: 0
+  - name: PlayerCollision
+    uniqueID: 1339230143
+    locked: 0
+  - name: Decor
+    uniqueID: 2378930063
+    locked: 0
+  - name: Particles
+    uniqueID: 4215129471
+    locked: 0
   - name: World Canvas
     uniqueID: 2793791971
     locked: 0

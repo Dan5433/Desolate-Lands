@@ -11,7 +11,7 @@ public class DropHeldItem : MonoBehaviour, IPointerDownHandler
         {
             ItemManager.DropHeldItem(player.position, player.up, throwDistance);
 
-            var interactScript = player.GetComponent<Interact>();
+            var interactScript = player.GetComponentInParent<Interact>();
             interactScript.DisableUI();
         }
     }

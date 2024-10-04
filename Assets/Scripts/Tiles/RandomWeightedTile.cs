@@ -22,7 +22,7 @@ public class RandomWeightedTile : Tile
         return true;
     }
 
-    Tile GetTile()
+    TileBase GetTile()
     {
         int totalWeight = 0;
         foreach (var tile in tiles) totalWeight += tile.weight;

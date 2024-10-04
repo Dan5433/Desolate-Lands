@@ -12,7 +12,7 @@ public class Interact : MonoBehaviour
     const float offsetForCell = 0.01f;
     Break breakScript;
     [SerializeField] float reach;
-    [SerializeField] Vector3 offsetToHead;
+    [SerializeField] Transform origin;
     [SerializeField] InventoryBase inventory;
     [SerializeField] PlayerCrafting crafting;
 
@@ -43,7 +43,9 @@ public class Interact : MonoBehaviour
     void Update()
     {
         LayerMask mask = LayerMask.GetMask("Interact");
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + offsetToHead, transform.up, reach, mask);
+        RaycastHit2D hit = Physics2D.Raycast(origin.position, origin.up, reach, mask);
+
+        Debug.DrawRay(origin.position, origin.up, Color.green, reach);
 
         if (CanDisableUI())
         {
@@ -57,20 +59,17 @@ public class Interact : MonoBehaviour
             return;
         }
 
-        Vector2 newPos = hit.ExtendRaycast(offsetForCell, transform);
-
         if (hit.transform.TryGetComponent<Tilemap>(out var tilemap))
         {
-            tilemap = hit.transform.GetComponent<Tilemap>();
-
-            if (targetedCell != tilemap.WorldToCell(newPos) && targetedCell.z != -1)
+            var newCell = tilemap.WorldToCell(hit.collider.transform.position);
+            if (targetedCell != newCell && targetedCell.z != -1)
             {
                 breakScript.ResetBreaking();
                 targetedCell.z = -1;
                 return;
             }
 
-            targetedCell = tilemap.WorldToCell(newPos);
+            targetedCell = newCell;
         }
 
         if (Input.GetMouseButtonDown(1))
