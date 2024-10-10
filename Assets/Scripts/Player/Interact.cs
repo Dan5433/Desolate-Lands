@@ -15,6 +15,7 @@ public class Interact : MonoBehaviour
     [SerializeField] Transform origin;
     [SerializeField] InventoryBase inventory;
     [SerializeField] PlayerCrafting crafting;
+    [SerializeField] AudioSource interactAudio;
 
     void Awake()
     {
@@ -158,7 +159,7 @@ public class Interact : MonoBehaviour
             }
 
             BreakableTile tile = tilemap.GetTile<BreakableTile>(targetedCell);
-            breakScript.Breaking(tile, targetedCell, tilemap);
+            breakScript.Breaking(tile, targetedCell, tilemap, interactAudio);
         }
         else
         {

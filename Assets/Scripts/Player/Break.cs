@@ -1,7 +1,5 @@
 using CustomClasses;
 using CustomExtensions;
-using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,7 +14,6 @@ public class Break : MonoBehaviour
     [SerializeField] Tile[] breakEffects;
     [SerializeField] ParticleSystem breakParticles;
     [SerializeField] Tilemap effects;
-    [SerializeField] PlayAudio audioSource;
     [SerializeField] InventoryBase toolInventory;
     [SerializeField][Tooltip("In Seconds")] float breakTimeReduction;
     [SerializeField][Tooltip("Mutiplier")] float wrongToolPenalty;
@@ -30,7 +27,7 @@ public class Break : MonoBehaviour
         }
     }
 
-    public void Breaking(BreakableTile breakTile, Vector3Int cell, Tilemap tilemap)
+    public void Breaking(BreakableTile breakTile, Vector3Int cell, Tilemap tilemap, AudioSource interactAudio)
     {
         tile = breakTile;
         breakCell = cell;
@@ -50,7 +47,7 @@ public class Break : MonoBehaviour
         {
             curBreakTime -= Time.deltaTime;
 
-            audioSource.PlayRandomSound(equippedTool.Material.ToString());
+            interactAudio.PlayRandomClip(tile.BreakingAudio);
             UpdateEffect();
         }
 

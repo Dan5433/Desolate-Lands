@@ -37,6 +37,11 @@ MonoBehaviour:
   colors:
   - {r: 0.38823533, g: 0.24313727, b: 0.039215688, a: 1}
   - {r: 0.2509804, g: 0.1254902, b: 0.058823533, a: 1}
+  breakingAudio:
+  - {fileID: 8300000, guid: 9f1c9f982f6f72b4da4ee6be51ae9e8f, type: 3}
+  - {fileID: 8300000, guid: ff1fc06de28d6504ca6d90124f277117, type: 3}
+  - {fileID: 8300000, guid: 612f39e33be0a2241995c5c92d7c5396, type: 3}
+  - {fileID: 8300000, guid: 964c34ef9a21aca4e8b4f421f515fb56, type: 3}
   tool: 1
   minMaterial: 2
   lootPool:

@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     float vertInput;
     float horInput;
     [SerializeField] float speed = 0.015f;
+    [SerializeField] PlayerSprites sprites;
+    [SerializeField] SpriteRenderer gfx;
     const string saveString = "Position";
 
     void Start()
@@ -23,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
         horInput = Input.GetAxis("Horizontal");
 
         transform.Translate(new Vector2(horInput, vertInput).normalized * speed);
+        UpdateSprite(vertInput, horInput);
     }
 
     [Button("Get Chunk Index",36)]
@@ -34,6 +37,27 @@ public class PlayerMovement : MonoBehaviour
     void OnDestroy()
     {
         SavePosition();
+    }
+
+    void UpdateSprite(float vertInput, float horInput)
+    {
+        if (vertInput > 0)
+        {
+            gfx.sprite = sprites.north;
+        }
+        if (vertInput < 0)
+        {
+            gfx.sprite = sprites.south;
+        }
+
+        if (horInput > 0)
+        {
+            gfx.sprite = sprites.east;
+        }
+        if (horInput < 0)
+        {
+            gfx.sprite = sprites.west;
+        }
     }
 
     async void LoadPosition()
@@ -59,5 +83,18 @@ public class PlayerMovement : MonoBehaviour
     class PlayerPosition
     {
         public Vector3 position;
+    }
+
+    [Serializable]
+    struct PlayerSprites
+    {
+        public Sprite north;
+        public Sprite east;
+        public Sprite south;
+        public Sprite west;
+        public Sprite ne;
+        public Sprite se;
+        public Sprite sw;
+        public Sprite nw;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 namespace CustomExtensions
 {
@@ -44,6 +45,13 @@ namespace CustomExtensions
         public static Quaternion AnglesToQuaternion(this Vector3 angles)
         {
             return new Quaternion() { eulerAngles = angles };
+        }
+
+        public static void PlayRandomClip(this AudioSource source, AudioClip[] audio)
+        {
+            if (source.isPlaying || audio.Length == 0) return;
+
+            source.PlayOneShot(audio[Random.Range(0, audio.Length)]);
         }
     }
 
