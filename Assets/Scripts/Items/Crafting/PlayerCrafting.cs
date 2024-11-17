@@ -16,8 +16,8 @@ public class PlayerCrafting : MonoBehaviour
     HashSet<CraftingRecipe> prototypedRecipes = new();
     const string saveString = "CraftingData";
 
-    public PlayerResource[] Resources { get { return resources; } }
-    public HashSet<CraftingRecipe> PrototypedRecipes {  get { return prototypedRecipes; } }
+    public PlayerResource[] Resources => resources;
+    public HashSet<CraftingRecipe> PrototypedRecipes => prototypedRecipes;
 
     void Update()
     {
@@ -43,10 +43,10 @@ public class PlayerCrafting : MonoBehaviour
         prototypedRecipes.Add(recipe);
     }
 
-    public void AddResource(Resource type, int count)
+    public void ChangeResourceCount(Resource type, int changeBy)
     {
         int index = Array.FindIndex(resources, r => r.type == type);
-        resources[index].count += count;
+        resources[index].count += changeBy;
 
         UpdateUI();
     }
@@ -58,60 +58,61 @@ public class PlayerCrafting : MonoBehaviour
             var UI = Array.Find(resourcesUI, ui => ui.type == resource.type).UI;
 
             UI.GetComponentInChildren<TMP_Text>().text = resource.count.ToString();
-
-            if (!UI.gameObject.activeSelf && resource.count > 0) UI.gameObject.SetActive(true);
         }
     }
 
-    async void LoadCraftingData()
+    void LoadCraftingData()
     {
-        string dirPath = Path.Combine(GameManager.Instance.DataDirPath, "Player");
-        JsonFileDataHandler dataHandler = new(dirPath, saveString);
+        string dirPath = Path.Combine(GameManager.DataDirPath, "Player");   
+        BinaryDataHandler dataHandler = new(dirPath, saveString);
 
-        var save = await dataHandler.LoadDataAsync<PlayerCraftingSave>();
+        if (!dataHandler.FileExists()) return;
 
-        if (save != null)
+        dataHandler.LoadData(reader =>
         {
-            resources = save.resources.ToArray();
-            
-            foreach(var index in save.prototypedRecipes)
+            for (int i = 0; i < resources.Length; i++)
             {
-                prototypedRecipes.Add(CraftingManager.Instance.CraftingRecipes[index]);
+                resources[i].count = reader.ReadInt32();
             }
-        }
+
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                prototypedRecipes.Add(
+                    CraftingManager.Instance.CraftingRecipes[reader.ReadInt32()]);
+            }
+        });
 
         UpdateUI();
     }
 
-    async void SaveCraftingData()
+    void SaveCraftingData()
     {
-        PlayerCraftingSave save = new();
+        string dirPath = Path.Combine(GameManager.DataDirPath, "Player");
+        BinaryDataHandler dataHandler = new(dirPath, saveString);
 
-        foreach(var resource in resources) save.resources.Add(resource);
-
-        foreach (var recipe in prototypedRecipes)
+        dataHandler.SaveData(writer =>
         {
-            int index = Array.FindIndex(CraftingManager.Instance.CraftingRecipes, r => r == recipe);
-            save.prototypedRecipes.Add(index);
-        }
+            foreach(var resource in resources)
+            {
+                writer.Write(resource.count);
+            }
 
-        string dirPath = Path.Combine(GameManager.Instance.DataDirPath, "Player");
-        JsonFileDataHandler dataHandler = new(dirPath, saveString);
+            writer.Write(prototypedRecipes.Count);
+            foreach(var recipe in prototypedRecipes)
+            {
+                int index = Array.FindIndex(
+                    CraftingManager.Instance.CraftingRecipes, r => r == recipe);
 
-        await dataHandler.SaveDataAsync(save);
+                writer.Write(index);
+            }
+        });
     }
 
-    private void OnDestroy()
+    private void OnApplicationQuit()
     {
         SaveCraftingData();
     }
-}
-
-[Serializable]
-public class PlayerCraftingSave
-{
-    public List<PlayerResource> resources = new();
-    public List<int> prototypedRecipes = new();
 }
 
 [Serializable]

@@ -49,7 +49,7 @@ public class PlayerCraftingUI : MonoBehaviour
         var itemsCost = new Dictionary<Item, int>();
         foreach (var item in selectedRecipe.cost)
         {
-            itemsCost[item.item] = item.count;
+            itemsCost.Add(item.item, item.count);
         }
 
         int index = 0;
@@ -76,9 +76,11 @@ public class PlayerCraftingUI : MonoBehaviour
             index++;
         }
 
-        InvItem reward = new(selectedRecipe.reward.item,
-            selectedRecipe.reward.item.Name,
-            selectedRecipe.reward.count);
+        var reward = selectedRecipe.reward.item switch
+        {
+            Tool tool => new InvTool(tool, tool.Name, selectedRecipe.reward.count),
+            _ => new InvItem(selectedRecipe.reward.item, selectedRecipe.reward.item.Name, selectedRecipe.reward.count)
+        };
 
         int excess = inventory.AddToInventory(reward);
 

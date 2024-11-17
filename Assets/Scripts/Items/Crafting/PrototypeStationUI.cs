@@ -81,7 +81,7 @@ public class PrototypeStationUI : MonoBehaviour
     {
         foreach (var resource in selectedPrototype.resourceCost)
         {
-            crafting.AddResource(resource.resource.type, -resource.count);
+            crafting.ChangeResourceCount(resource.resource.type, -resource.count);
         }
 
         var itemsCost = new Dictionary<Item, int>();
@@ -114,9 +114,11 @@ public class PrototypeStationUI : MonoBehaviour
             index++;
         }
 
-        InvItem reward = new(selectedPrototype.recipe.reward.item, 
-            selectedPrototype.recipe.reward.item.Name, 
-            selectedPrototype.recipe.reward.count);
+        InvItem reward = selectedPrototype.recipe.reward.item switch
+        {
+            Tool tool => new InvTool(tool, tool.Name, selectedPrototype.recipe.reward.count),
+            _ => new InvItem(selectedPrototype.recipe.reward.item, selectedPrototype.recipe.reward.item.Name, selectedPrototype.recipe.reward.count)
+        };
 
         int excess = inventory.AddToInventory(reward);
 

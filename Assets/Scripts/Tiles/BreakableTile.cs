@@ -13,10 +13,10 @@ public class BreakableTile : RuleTile
     [SerializeField] protected AudioClip[] breakingAudio;
     [SerializeField] protected ToolType tool;
     [SerializeField] protected ItemMaterial minMaterial;
-    public float BreakingTime { get { return breakingTime; } }
-    public DropItem[] Drops { get { return drops; } }
-    public Color[] Colors { get { return colors; } }
-    public AudioClip[] BreakingAudio { get { return breakingAudio; } }
-    public ToolType Tool { get { return tool; } }
-    public ItemMaterial MinMaterial { get { return minMaterial; } }
+    public float BreakingTime => breakingTime;
+    public DropItem[] Drops => drops;
+    public Color[] Colors => colors;
+    public AudioClip[] BreakingAudio => breakingAudio;
+    public ToolType Tool => tool;
+    public ItemMaterial MinMaterial => minMaterial;
 }

@@ -11,11 +11,11 @@ public class Item : ScriptableObject
     [SerializeField] Sprite sprite;
     [SerializeField] SlotType slot;
 
-    public int Id { get { return id; } }
-    public string Name { get { return defaultName; } }
-    public int MaxCount { get { return maxCount; } }
-    public Sprite Sprite { get { return sprite; } }
-    public SlotType Slot { get { return slot; } }
+    public int Id => id;
+    public string Name => defaultName;
+    public int MaxCount => maxCount;
+    public Sprite Sprite => sprite;
+    public SlotType Slot => slot;
 }
 
 [Serializable]

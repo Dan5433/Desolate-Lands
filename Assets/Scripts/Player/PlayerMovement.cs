@@ -2,6 +2,7 @@ using EditorAttributes;
 using System.IO;
 using System;
 using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -10,10 +11,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float speed = 0.015f;
     [SerializeField] PlayerSprites sprites;
     [SerializeField] SpriteRenderer gfx;
-    const string saveString = "Position";
+    const string saveString = "Position.bin";
 
     void Start()
-    {      
+    {
         Cursor.lockState = CursorLockMode.Confined;
 
         LoadPosition();
@@ -28,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
         UpdateSprite(vertInput, horInput);
     }
 
-    [Button("Get Chunk Index",36)]
+    [Button("Get Chunk Index", 36)]
     void PrintCurrentChunk()
     {
         Debug.Log(TerrainManager.GetChunkIndexFromPosition(transform.position));
@@ -59,30 +60,27 @@ public class PlayerMovement : MonoBehaviour
             gfx.sprite = sprites.west;
         }
     }
-
-    async void LoadPosition()
+    void SavePosition()
     {
-        string dirPath = Path.Combine(GameManager.Instance.DataDirPath, "Player");
-        JsonFileDataHandler dataHandler = new(dirPath, saveString);
+        string dirPath = Path.Combine(GameManager.DataDirPath, "Player");
+        var handler = new BinaryDataHandler(dirPath, saveString);
 
-        var save = await dataHandler.LoadDataAsync<PlayerPosition>();
-
-        if (save != null) transform.position = save.position;
+        handler.SaveData(writer =>
+        {
+            writer.Write(transform.position.x);
+            writer.Write(transform.position.y);
+        });
     }
 
-    async void SavePosition()
+    void LoadPosition()
     {
-        PlayerPosition save = new() { position = transform.position };
+        string dirPath = Path.Combine(GameManager.DataDirPath, "Player");
+        BinaryDataHandler dataHandler = new(dirPath, saveString);
 
-        string dirPath = Path.Combine(GameManager.Instance.DataDirPath, "Player");
-        JsonFileDataHandler dataHandler = new(dirPath, saveString);
-
-        await dataHandler.SaveDataAsync(save);
-    }
-
-    class PlayerPosition
-    {
-        public Vector3 position;
+        dataHandler.LoadData(reader =>
+        {
+            transform.position = new(reader.ReadSingle(), reader.ReadSingle());
+        });
     }
 
     [Serializable]

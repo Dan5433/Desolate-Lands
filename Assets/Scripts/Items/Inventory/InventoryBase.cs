@@ -1,37 +1,41 @@
 using CustomClasses;
+using EditorAttributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class InventoryBase : MonoBehaviour
 {
     [SerializeField] protected InvItem[] inventory;
-    [SerializeField] protected int invSize;
     [SerializeField] protected Transform ui;
     [SerializeField] protected bool updateUIOnStart = false;
 
-    public Transform UI { get { return ui; } }
-    public InvItem[] Inventory { get { return inventory; } }
+    public Transform UI => ui;
+    public InvItem[] Inventory => inventory;
 
-    async void Start()
+    void Start()
     {
-        inventory = new InvItem[invSize];
-
         for (int i = 0; i < inventory.Length; i++)
         {
             inventory[i] = ItemManager.Instance.InvItemAir;
         }
 
-        var data = await LoadInventory();
-
-        if (data != null) InitInventory(data);
+        if (IsInventorySaved()) LoadInventory();
 
         if (updateUIOnStart) UpdateUI();
+        InitInventory();
     }
 
+    [Button("Add To Inventory", 30)]
+    public void AdminAdd(int itemIndex, int count)
+    {
+        var item = ItemManager.Instance.Items[itemIndex];
+        AddToInventory(new(item,item.name,count));
+    }
+    
     public int AddToInventory(InvItem item)
     {
         int excess = item.Count;
@@ -58,55 +62,48 @@ public class InventoryBase : MonoBehaviour
 
     protected bool IsInventorySaved()
     {
-        var fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Storage", GetSaveKey());
+        var fullPath = Path.Combine(GameManager.DataDirPath, "Storage", GetSaveKey());
         return File.Exists(fullPath);
     }
 
-    protected async Task<InventorySaveData> LoadInventory()
-    {
-        var fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Storage");
-        var dataHandler = new JsonFileDataHandler(fullPath, GetSaveKey());
+    protected virtual void InitInventory() { }
 
-        return await dataHandler.LoadDataAsync<InventorySaveData>();
-    }
-
-    protected virtual void InitInventory(InventorySaveData data)
+    void LoadInventory()
     {
-        for (int i = 0; i < data.inventory.Count; i++)
+        var dirPath = Path.Combine(GameManager.DataDirPath, "Storage");
+        var dataHandler = new BinaryDataHandler(dirPath, GetSaveKey());
+
+        dataHandler.LoadData(reader =>
         {
-            var name = data.inventory[i].name;
-            var count = data.inventory[i].count;
-            var item = ItemManager.Instance.Items[data.inventory[i].id];
-            inventory[i] = new InvItem(item, name, count);
-        }
+            for(int i = 0; i < inventory.Length; i++)
+            {
+                int index = reader.ReadInt32();
+                inventory[i] = ItemManager.Instance.Items[index] switch
+                {
+                    Tool tool => new InvTool(tool, reader),
+                    Item item => new InvItem(item, reader),
+                    _ => throw new ArgumentException()
+                };
+            }
+        });
     }
 
     protected async void DeleteInventory()
     {
-        var fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Storage", GetSaveKey());
+        var fullPath = Path.Combine(GameManager.DataDirPath, "Storage", GetSaveKey());
 
         await Task.Run(() => { File.Delete(Path.Combine(fullPath)); });
     }
 
-    public async void SaveInventory()
+    public void SaveInventory()
     {
-        var save = new InventorySaveData() { inventory = new(invSize) };
+        var dirPath = Path.Combine(GameManager.DataDirPath, "Storage");
+        var dataHandler = new BinaryDataHandler(dirPath, GetSaveKey());
 
-        for (int i = 0; i < inventory.Length; i++)
+        dataHandler.SaveData(writer =>
         {
-            save.inventory.Add(
-                new ItemSaveData
-                {
-                    id = inventory[i].ItemObj.Id,
-                    name = inventory[i].Name,
-                    count = inventory[i].Count
-                });
-        }
-
-        var fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Storage");
-        var dataHandler = new JsonFileDataHandler(fullPath, GetSaveKey());
-
-        await dataHandler.SaveDataAsync(save);
+            foreach (var item in inventory) item.Save(writer);
+        });
     }
 
     public void SetSlot(int index, InvItem item)
@@ -116,7 +113,7 @@ public class InventoryBase : MonoBehaviour
         inventory[index] = item;
     }
 
-    public void UpdateUI()
+    public virtual void UpdateUI()
     {
         ui.GetComponent<InventoryRef>().Inventory = this;
 
@@ -145,18 +142,4 @@ public class InventoryBase : MonoBehaviour
     {
         this.ui = ui;
     }
-}
-
-[Serializable]
-public class InventorySaveData
-{
-    public List<ItemSaveData> inventory = new();
-}
-
-[Serializable]
-public class ItemSaveData
-{
-    public int id;
-    public string name;
-    public int count;
 }

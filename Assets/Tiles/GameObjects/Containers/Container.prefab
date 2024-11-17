@@ -45,8 +45,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b89804e8a4a0b47925c06218eaac8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: []
-  invSize: 0
+  inventory:
+  - item: {fileID: 0}
+    name: 
+    count: 0
+  - item: {fileID: 0}
+    name: 
+    count: 0
+  - item: {fileID: 0}
+    name: 
+    count: 0
+  - item: {fileID: 0}
+    name: 
+    count: 0
+  - item: {fileID: 0}
+    name: 
+    count: 0
+  - item: {fileID: 0}
+    name: 
+    count: 0
+  - item: {fileID: 0}
+    name: 
+    count: 0
+  - item: {fileID: 0}
+    name: 
+    count: 0
+  - item: {fileID: 0}
+    name: 
+    count: 0
   ui: {fileID: 0}
   updateUIOnStart: 0
   lootPool: []

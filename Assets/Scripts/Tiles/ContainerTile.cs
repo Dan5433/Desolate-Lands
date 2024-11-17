@@ -18,7 +18,6 @@ public class ContainerTile : BreakableTile
         script.enabled = true;
 
         script.LootPool = lootPool;
-        script.InvSize = invSize;
 
         return true;
     }

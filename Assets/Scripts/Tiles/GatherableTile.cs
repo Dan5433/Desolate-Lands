@@ -11,8 +11,8 @@ public class GatherableTile : Tile
     [SerializeField] float regenerateTime;
     [SerializeField] DropItem[] drops;
 
-    public GatherableTileSprite[] Sprites { get { return sprites; } }
-    public DropItem[] Drops { get { return drops; } }
+    public GatherableTileSprite[] Sprites => sprites;
+    public DropItem[] Drops => drops;
 
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
     {

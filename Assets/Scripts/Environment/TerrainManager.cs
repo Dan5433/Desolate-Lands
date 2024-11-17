@@ -28,11 +28,14 @@ public class TerrainManager : MonoBehaviour
     SaveTerrain saveTerrain;
     HashSet<Vector2Int> loadedChunks = new();
     static Vector2Int chunkSize = new(32, 32);
-    public const string chunkSaveName = "chunk";
+    static Vector2Int regionSize = new(32, 32);
+    static string dirName = "regions";
 
-    public TileBase[] MasterTiles { get { return masterTiles; } }
-    public static Vector2Int ChunkSize { get { return chunkSize; } }
-    public Vector2Int WorldSize { get { return worldSize; } }
+    public TileBase[] MasterTiles => masterTiles;
+    public static Vector2Int ChunkSize => chunkSize;
+    public static Vector2Int RegionSize => regionSize;
+    public static string DirName => dirName;
+    public Vector2Int WorldSize => worldSize;
 
     void Awake()
     {
@@ -96,7 +99,7 @@ public class TerrainManager : MonoBehaviour
             if (!loadedChunks.Add(chunk) || !ChunkInsideWorldBorder(chunk)) continue;
 
             //load chunk if in render distance and not loaded already
-            string fullPath = Path.Combine(GameManager.Instance.DataDirPath, "Terrain", chunk.ToString());
+            string fullPath = Path.Combine(GameManager.DataDirPath, DirName, chunk.ToString());
             if (File.Exists(fullPath))
             {
                 loadTerrain.LoadTiles(chunk, ground, top, solid);
@@ -168,7 +171,7 @@ public class TerrainManager : MonoBehaviour
 
         GenStructures(tilePos, solid);
 
-        saveTerrain.SaveTilesAsync(chunkIndex, ground, top, solid);
+        saveTerrain.SaveTiles(chunkIndex, ground, top, solid);
     }
 
     void GenStructures(Vector2Int startPos, Tilemap tilemap)
@@ -276,8 +279,8 @@ public struct TerrainGenTiles
     [SerializeField] WeightedTileById[] tiles;
     [SerializeField] int genGap;
 
-    public WeightedTileById[] Tiles { get { return tiles; } }
-    public int GenGap { get { return genGap; } }
+    public WeightedTileById[] Tiles => tiles;
+    public int GenGap => genGap;
 }
 
 [Serializable]

@@ -75,8 +75,19 @@ public class Break : MonoBehaviour
         }
     }
 
+    void UpdateDurability()
+    {
+        var equippedTool = toolInventory.Inventory[0] as InvTool;
+        equippedTool.Durability -= 1;
+
+        if (equippedTool.Durability <= 0) toolInventory.Inventory[0] = ItemManager.Instance.InvItemAir;
+        toolInventory.UpdateUI();
+    }
+
     void OnBreak(Tilemap tilemap)
     {
+        UpdateDurability();
+
         SaveTerrain.RemoveTileSaveData(breakCell, tilemap.name);
 
         var go = tilemap.GetInstantiatedObject(breakCell);

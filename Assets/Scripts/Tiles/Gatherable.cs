@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -9,9 +10,9 @@ public class Gatherable : MonoBehaviour
     Vector3Int tilePosition;
     float resetTimePerState;
     float currentStateTimer;
-    JsonFileDataHandler dataHandler;
+    BinaryDataHandler dataHandler;
 
-    public Vector3Int TilePosition { get { return tilePosition; } }
+    public Vector3Int TilePosition => tilePosition;
     public GatherableTileState State
     {
         set
@@ -27,7 +28,7 @@ public class Gatherable : MonoBehaviour
     public void Init(float resetTime, Vector3Int position)
     {
         string filePath = Path.Combine("Terrain", "Gatherable" + transform.position);
-        dataHandler = new(GameManager.Instance.DataDirPath, filePath);
+        dataHandler = new(GameManager.DataDirPath, filePath);
 
         tilePosition = position;
 
@@ -61,25 +62,24 @@ public class Gatherable : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
-    async void SaveState()
+    void SaveState()
     {
-
-        GatherableStateData data = new()
+        dataHandler.SaveData(writer =>
         {
-            state = state,
-            timer = currentStateTimer
-        };
-
-        await dataHandler.SaveDataAsync(data);
+            writer.Write((int)state);
+            writer.Write(currentStateTimer);
+        });
     }
 
-    async void LoadState()
+    void LoadState()
     {
-        if (!this) return;
+        if (!dataHandler.FileExists()) return;
 
-        var data = await dataHandler.LoadDataAsync<GatherableStateData>();
-        state = data != null ? data.state : GatherableTileState.Replenished;
-        currentStateTimer = data != null ? data.timer : 0;
+        dataHandler.LoadData(reader =>
+        {
+            state = (GatherableTileState)reader.ReadInt32();
+            currentStateTimer = reader.ReadSingle();
+        });
 
         UpdateState();
     }
@@ -88,11 +88,4 @@ public class Gatherable : MonoBehaviour
     {
         if(state != GatherableTileState.Replenished) SaveState();
     }
-}
-
-[Serializable]
-public class GatherableStateData
-{
-    public GatherableTileState state;
-    public float timer;
 }

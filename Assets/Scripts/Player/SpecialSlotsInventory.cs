@@ -1,14 +1,10 @@
-using System.Threading.Tasks;
-using UnityEngine;
-
 public class SpecialSlotsInventory : InventoryBase
 {
-    protected override void InitInventory(InventorySaveData data)
+    protected override void InitInventory()
     {
-        base.InitInventory(data);
-        foreach (var item in inventory) 
+        foreach(var item in inventory)
         {
-            if(item.ItemObj.GetType() == typeof(EquippableItem))
+            if (item.ItemObj is EquippableItem)
             {
                 var equippable = item.ItemObj as EquippableItem;
                 foreach (var effect in equippable.Effects)
@@ -17,5 +13,6 @@ public class SpecialSlotsInventory : InventoryBase
                 }
             }
         }
+    
     }
 }

@@ -9,7 +9,6 @@ public class Container : InventoryBase, IBreakable
     [SerializeField] WeightedItem[] lootPool;
 
     public WeightedItem[] LootPool { set { lootPool = value; } }
-    public int InvSize { set { invSize = value; } }
 
     void OnEnable()
     {

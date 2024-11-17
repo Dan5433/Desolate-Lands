@@ -9,13 +9,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] string worldName;
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
-    string dataDirPath;
+    static string dataDirPath;
 
-    public bool UseJsonEncryption { get { return useJsonEncryption; } }
-    public string WorldName { get { return  worldName; } }
-    public GameObject WorldCanvas { get { return worldCanvas; } }
-    public GameObject Player { get { return player; } }
-    public  string DataDirPath { get { return dataDirPath; } }
+    public bool UseJsonEncryption => useJsonEncryption;
+    public string WorldName => worldName;
+    public GameObject WorldCanvas => worldCanvas;
+    public GameObject Player => player;
+    public static string DataDirPath => dataDirPath;
 
     void Awake()
     {

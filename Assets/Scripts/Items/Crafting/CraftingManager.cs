@@ -14,10 +14,10 @@ public class CraftingManager : MonoBehaviour
     [SerializeField] GameObject craftingUI;
     [SerializeField] GameObject prototypingUI;
 
-    public GameObject CraftingUI { get { return craftingUI; } }
-    public GameObject PrototypingUI { get { return prototypingUI; } }
+    public GameObject CraftingUI => craftingUI;
+    public GameObject PrototypingUI => prototypingUI;
 
-    public CraftingRecipe[] CraftingRecipes { get { return recipes; } }
+    public CraftingRecipe[] CraftingRecipes => recipes;
 
     void Awake()
     {
@@ -100,19 +100,23 @@ public class CraftingManager : MonoBehaviour
         var itemsCount = new Dictionary<Item, int>();
         foreach (var item in availableItems)
         {
-            if (!itemsCount.ContainsKey(item.ItemObj)) itemsCount[item.ItemObj] = 0;
-
-            itemsCount[item.ItemObj] += item.Count;
+            if(!itemsCount.TryAdd(item.ItemObj, item.Count)) 
+                itemsCount[item.ItemObj]+= item.Count;
         }
 
         foreach (var recipe in Instance.crafting.PrototypedRecipes)
         {
+            bool canCraft = true;
             foreach (var item in recipe.cost)
             {
-                if (!itemsCount.ContainsKey(item.item) || itemsCount[item.item] < item.count) break;
-
-                results.Add(recipe);
+                if (!itemsCount.ContainsKey(item.item) || itemsCount[item.item] < item.count)
+                {
+                    canCraft = false; break;
+                }
+                    
             }
+
+            if(canCraft) results.Add(recipe);
         }
         return results;
     }

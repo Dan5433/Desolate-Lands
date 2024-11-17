@@ -11,7 +11,7 @@ public class SwapItem : MonoBehaviour, IPointerDownHandler
     [SerializeField] Sprite placeholderImage;
     [SerializeField] UnityEvent onClick;
 
-    public Sprite Placeholder { get { return placeholderImage;  } }
+    public Sprite Placeholder => placeholderImage;
 
     public void OnPointerDown(PointerEventData eventData)
     {

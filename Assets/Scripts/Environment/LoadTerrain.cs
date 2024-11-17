@@ -32,7 +32,7 @@ public class LoadTerrain : MonoBehaviour
 
     public async void LoadTiles(Vector2Int chunkIndex, params Tilemap[] tilemaps)
     {
-        JsonFileDataHandler handler = new(Path.Combine(GameManager.Instance.DataDirPath, "Terrain"), chunkIndex.ToString());
+        JsonFileDataHandler handler = new(Path.Combine(GameManager.DataDirPath, TerrainManager.DirName), chunkIndex.ToString());
 
         var save = await handler.LoadDataAsync<TerrainSaveData>();
 

@@ -101,7 +101,7 @@ public class SlotCraftStationUI : MonoBehaviour
         {
             foreach (var reward in selectedRecipe.resourceRewards)
             {
-                playerResources.AddResource(reward.type, reward.count * maxOutput);
+                playerResources.ChangeResourceCount(reward.type, reward.count * maxOutput);
             }
 
             currentStation.Inventory[1].Count += maxOutput * selectedRecipe.reward.count;
@@ -111,7 +111,7 @@ public class SlotCraftStationUI : MonoBehaviour
         {
             foreach (var reward in selectedRecipe.resourceRewards)
             {
-                playerResources.AddResource(reward.type, reward.count * currentStation.Inventory[0].Count);
+                playerResources.ChangeResourceCount(reward.type, reward.count * currentStation.Inventory[0].Count);
             }
 
             currentStation.Inventory[1].Count += currentStation.Inventory[0].Count * selectedRecipe.reward.count;

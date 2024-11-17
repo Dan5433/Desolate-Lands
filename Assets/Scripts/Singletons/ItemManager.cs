@@ -14,11 +14,11 @@ public class ItemManager : MonoBehaviour
     [SerializeField] Item air;
     InvItem invItemAir;
     [SerializeField] Item[] items;
-    public Item[] Items { get { return items; } }
-    public Item Air { get { return air; } }
-    public InvItem InvItemAir { get { return invItemAir; } }
-    public GameObject ContainerUI { get { return containerUI; } }
-    public GameObject InvSlot { get { return invSlotPrefab; } }
+    public Item[] Items => items;
+    public Item Air => air;
+    public InvItem InvItemAir => invItemAir;
+    public GameObject ContainerUI => containerUI;
+    public GameObject InvSlot => invSlotPrefab;
     public bool IsHoldingItem { get { return heldItem.Item.ItemObj != Air; } }
 
     void Awake()
@@ -78,9 +78,9 @@ public class ItemManager : MonoBehaviour
             image.sprite = item.ItemObj.Sprite;
         }
 
-        if (item.Count > 1)
+        if (item.CountTxt > 1)
         {
-            countTxt.text = item.Count.ToString();
+            countTxt.text = item.CountTxt.ToString();
         }
         else
         {
@@ -107,7 +107,7 @@ public class ItemManager : MonoBehaviour
         groundItem.transform.position = pos;
     }
 
-    static void DepositItem(ref InvItem slotItem, InvItem selectedItem)
+    static void DepositItem(InvItem slotItem, InvItem selectedItem)
     {
         //add if sum is less or equal to max count
         if (slotItem.Count + selectedItem.Count <= slotItem.ItemObj.MaxCount)
@@ -143,7 +143,8 @@ public class ItemManager : MonoBehaviour
         //add item data if slot is empty
         if (slotItem.ItemObj == Instance.Air)
         {
-            slotItem = new(selectedItem.ItemObj, selectedItem.Name, 0);
+            slotItem = selectedItem.Clone();
+            slotItem.Count = 0;
         }
 
         slotItem.Count++;
@@ -163,8 +164,8 @@ public class ItemManager : MonoBehaviour
         if (!allowDeposit && slotItem.ItemObj == Instance.Air) return false;
         if (!allowWithdraw && selectedItem.ItemObj == Instance.Air) return false;
 
-        Instance.heldItem.Item = new(slotItem);
-        slotItem = new(selectedItem);
+        Instance.heldItem.Item = slotItem.Clone();
+        slotItem = selectedItem.Clone();
         return true;
     }
 
@@ -187,8 +188,8 @@ public class ItemManager : MonoBehaviour
         var slotInventory = slot.parent.GetComponentInParent<InventoryRef>().Inventory;
 
         int index = GetSlotIndex(slot);
-        InvItem slotItem = slotInventory.Inventory[index];
-        InvItem selectedItem = new(Instance.heldItem.Item);
+        var slotItem = slotInventory.Inventory[index];
+        var selectedItem = Instance.heldItem.Item.Clone();
 
         if (selectedItem.ItemObj != Instance.Air && slotType != SlotType.Any && selectedItem.ItemObj.Slot != slotType) return;
 
@@ -198,7 +199,7 @@ public class ItemManager : MonoBehaviour
         {
             if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air)
             {
-                if (allowDeposit) DepositItem(ref slotItem, selectedItem);
+                if (allowDeposit) DepositItem(slotItem, selectedItem);
                 else return;
             }
 

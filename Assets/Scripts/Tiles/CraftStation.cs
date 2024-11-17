@@ -20,7 +20,7 @@ public class CraftStation : InventoryBase, IBreakable
         return base.GetSaveKey() + transform.position;
     }
 
-    public async void UpdateCraftingUI()
+    public void UpdateCraftingUI()
     {
         var title = CraftingUi.transform.Find("Title").GetComponent<TMP_Text>();
 
@@ -28,29 +28,32 @@ public class CraftStation : InventoryBase, IBreakable
 
         var craftingUi = CraftingUi.GetComponent<SlotCraftStationUI>();
         craftingUi.SetStation(this);
-        craftingUi.LoadState(await LoadProgress());
+        craftingUi.LoadState(LoadProgress());
     }
 
-    async Task<float> LoadProgress()
+    float LoadProgress()
     {
         string filePath = Path.Combine("Terrain", name + transform.position);
-        JsonFileDataHandler handler = new(GameManager.Instance.DataDirPath, filePath);
+        BinaryDataHandler dataHandler = new(GameManager.DataDirPath, filePath);
 
-        var progress = await handler.LoadDataAsync<CraftStationSave>();
+        float progress = 0;
+        dataHandler.LoadData(reader =>
+        {
+            progress = reader.ReadSingle();
+        });
 
-        if(progress == null) return 0;
-
-        return progress.progress;
+        return progress;
     }
 
-    public async void SaveProgress(float progress)
+    public void SaveProgress(float progress)
     {
-        CraftStationSave save = new() { progress = progress };
-
         string filePath = Path.Combine("Terrain", name + transform.position);
-        JsonFileDataHandler handler = new(GameManager.Instance.DataDirPath, filePath);
+        BinaryDataHandler dataHandler = new(GameManager.DataDirPath, filePath);
 
-        await handler.SaveDataAsync(save);
+        dataHandler.SaveData(writer =>
+        {
+            writer.Write(progress);
+        });
     }
 
     public void OnBreak()
@@ -63,10 +66,4 @@ public class CraftStation : InventoryBase, IBreakable
 
         DeleteInventory();
     }
-}
-
-[Serializable]
-public class CraftStationSave
-{
-    public float progress;
 }

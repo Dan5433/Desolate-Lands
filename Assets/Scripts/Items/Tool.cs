@@ -4,11 +4,11 @@ using UnityEngine;
 
 [Serializable]
 [CreateAssetMenu(menuName = "Items/Tool")]
-public class Tool : Item
+public class Tool : DepletableItem
 {
     [SerializeField] ToolType type;
     [SerializeField] ItemMaterial material;
 
-    public ToolType Type { get { return type; } }
-    public ItemMaterial Material { get { return material; } }
+    public ToolType Type => type;
+    public ItemMaterial Material => material;
 }
