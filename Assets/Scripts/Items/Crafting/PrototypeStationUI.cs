@@ -104,7 +104,7 @@ public class PrototypeStationUI : MonoBehaviour
                 {
                     int remaining = item.Count - itemsCost[item.ItemObj];
 
-                    InvItem updatedItem = new(item.ItemObj, item.Name, remaining);
+                    var updatedItem = InventoryItemFactory.Create(item.ItemObj, item.Name, remaining);
                     inventory.SetSlot(index, updatedItem);
 
                     itemsCost.Remove(item.ItemObj);
@@ -114,11 +114,9 @@ public class PrototypeStationUI : MonoBehaviour
             index++;
         }
 
-        InvItem reward = selectedPrototype.recipe.reward.item switch
-        {
-            Tool tool => new InvTool(tool, tool.Name, selectedPrototype.recipe.reward.count),
-            _ => new InvItem(selectedPrototype.recipe.reward.item, selectedPrototype.recipe.reward.item.Name, selectedPrototype.recipe.reward.count)
-        };
+        var reward = InventoryItemFactory.Create(
+            selectedPrototype.recipe.reward.item, 
+            selectedPrototype.recipe.reward.count);
 
         int excess = inventory.AddToInventory(reward);
 

@@ -66,7 +66,7 @@ public class PlayerCraftingUI : MonoBehaviour
                 {
                     int remaining = item.Count - itemsCost[item.ItemObj];
 
-                    InvItem updatedItem = new(item.ItemObj, item.Name, remaining);
+                    var updatedItem = InventoryItemFactory.Create(item.ItemObj, item.Name, remaining);
                     inventory.SetSlot(index, updatedItem);
 
                     itemsCost.Remove(item.ItemObj);
@@ -76,11 +76,9 @@ public class PlayerCraftingUI : MonoBehaviour
             index++;
         }
 
-        var reward = selectedRecipe.reward.item switch
-        {
-            Tool tool => new InvTool(tool, tool.Name, selectedRecipe.reward.count),
-            _ => new InvItem(selectedRecipe.reward.item, selectedRecipe.reward.item.Name, selectedRecipe.reward.count)
-        };
+        var reward = InventoryItemFactory.Create(
+            selectedRecipe.reward.item,
+            selectedRecipe.reward.count);
 
         int excess = inventory.AddToInventory(reward);
 

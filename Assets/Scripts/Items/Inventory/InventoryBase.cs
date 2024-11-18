@@ -1,9 +1,6 @@
 using CustomClasses;
 using EditorAttributes;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -33,7 +30,7 @@ public class InventoryBase : MonoBehaviour
     public void AdminAdd(int itemIndex, int count)
     {
         var item = ItemManager.Instance.Items[itemIndex];
-        AddToInventory(new(item,item.name,count));
+        AddToInventory(InventoryItemFactory.Create(item,item.name,count));
     }
     
     public int AddToInventory(InvItem item)
@@ -46,13 +43,15 @@ public class InventoryBase : MonoBehaviour
 
             if (excess + inventory[i].Count <= item.ItemObj.MaxCount)
             {
-                inventory[i] = new InvItem(item.ItemObj, item.Name, inventory[i].Count + excess);
+                inventory[i] = InventoryItemFactory.Create(
+                    item.ItemObj, item.Name, inventory[i].Count + excess);
                 return 0;
             }
             else
             {
                 excess -= item.ItemObj.MaxCount - inventory[i].Count;
-                inventory[i] = new InvItem(item.ItemObj, item.Name, item.ItemObj.MaxCount);
+                inventory[i] = InventoryItemFactory.Create(
+                    item.ItemObj, item.Name, item.ItemObj.MaxCount);
                 continue;
             }
         }
@@ -77,13 +76,7 @@ public class InventoryBase : MonoBehaviour
         {
             for(int i = 0; i < inventory.Length; i++)
             {
-                int index = reader.ReadInt32();
-                inventory[i] = ItemManager.Instance.Items[index] switch
-                {
-                    Tool tool => new InvTool(tool, reader),
-                    Item item => new InvItem(item, reader),
-                    _ => throw new ArgumentException()
-                };
+                inventory[i] = InventoryItemFactory.Create(reader);
             }
         });
     }

@@ -42,7 +42,8 @@ public class Container : InventoryBase, IBreakable
                 randomWeight -= item.weight;
                 if (randomWeight < 0)
                 {
-                    InvItem loot = new(item.item, item.item.Name, item.RandomCount());
+                    var loot = InventoryItemFactory.Create(
+                        item.item, item.item.Name, item.RandomCount());
                     inventory[i] = loot;
                     break;
                 }

@@ -101,7 +101,8 @@ public class Break : MonoBehaviour
             int count = drop.RandomCount();
             if (count == 0) { continue; }
 
-            ItemManager.SpawnGroundItem(new InvItem(drop.item, drop.item.Name, count), breakCell, true);
+            ItemManager.SpawnGroundItem(
+                InventoryItemFactory.Create(drop.item, drop.item.Name, count), breakCell, true);
         }
 
         breakParticles.ChangeColors(tile.Colors[0], tile.Colors[1]);

@@ -95,7 +95,8 @@ public class SlotCraftStationUI : MonoBehaviour
         int maxOutput = (selectedRecipe.reward.item.MaxCount - currentStation.Inventory[1].Count) / 
             selectedRecipe.reward.count;
 
-        currentStation.Inventory[1] = new(selectedRecipe.reward.item, selectedRecipe.reward.item.Name, 0);
+        currentStation.Inventory[1] = InventoryItemFactory.Create(
+            selectedRecipe.reward.item, selectedRecipe.reward.item.Name, 0);
 
         if (maxOutput < currentStation.Inventory[0].Count / selectedRecipe.cost.count)
         {
