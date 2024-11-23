@@ -62,8 +62,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void SavePosition()
     {
-        string dirPath = Path.Combine(GameManager.DataDirPath, "Player");
-        var handler = new BinaryDataHandler(dirPath, saveString);
+        var handler = new BinaryDataHandler(GameManager.PlayerDataDirPath, saveString);
 
         handler.SaveData(writer =>
         {
@@ -74,8 +73,13 @@ public class PlayerMovement : MonoBehaviour
 
     void LoadPosition()
     {
-        string dirPath = Path.Combine(GameManager.DataDirPath, "Player");
-        BinaryDataHandler dataHandler = new(dirPath, saveString);
+        BinaryDataHandler dataHandler = new(GameManager.PlayerDataDirPath, saveString);
+
+        if (!dataHandler.FileExists())
+        {
+            transform.position = Vector3.zero;
+            return;
+        }
 
         dataHandler.LoadData(reader =>
         {

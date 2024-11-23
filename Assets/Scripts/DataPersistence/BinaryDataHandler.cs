@@ -20,15 +20,16 @@ public class BinaryDataHandler
         return File.Exists(Path.Combine(dataDirPath, dataFilePath));
     }
 
-    public void SaveData(Action<BinaryWriter> writeAction)
+    public void SaveData(Action<BinaryWriter> writeAction, FileMode fileMode = FileMode.Create)
     {
         string fullPath = Path.Combine(dataDirPath, dataFilePath);
+        if(!File.Exists(fullPath)) fileMode = FileMode.Create;
 
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
 
-            using var stream = new FileStream(fullPath, FileMode.Create,FileAccess.Write);
+            using var stream = new FileStream(fullPath, fileMode ,FileAccess.Write);
             using var writer = new BinaryWriter(stream);
             writeAction.Invoke(writer);
         }

@@ -10,12 +10,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
     static string dataDirPath;
+    static string playerDataDirPath;
 
     public bool UseJsonEncryption => useJsonEncryption;
     public string WorldName => worldName;
     public GameObject WorldCanvas => worldCanvas;
     public GameObject Player => player;
     public static string DataDirPath => dataDirPath;
+    public static string PlayerDataDirPath => playerDataDirPath;
 
     void Awake()
     {
@@ -25,7 +27,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            dataDirPath = Path.Combine(Application.persistentDataPath, "Saves", worldName);
+            dataDirPath = Path.Combine(Application.persistentDataPath, "saves", worldName);
+            playerDataDirPath = Path.Combine(dataDirPath, "player");
 
             if (!PlayerPrefs.HasKey(worldName))
             {

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -53,6 +55,22 @@ namespace CustomExtensions
 
             source.PlayOneShot(audio[Random.Range(0, audio.Length)]);
         }
+
+        public static void WriteVector2Int(this BinaryWriter writer, Vector2Int v)
+        {
+            writer.Write(v.x);
+            writer.Write(v.y);
+        }
+
+        public static Vector2Int ReadVector2Int(this BinaryReader reader)
+        {
+            return new(reader.ReadInt32(), reader.ReadInt32());
+        }
+
+        //public static void AddOrChange(this Dictionary<T, T> dict)
+        //{
+
+        //}
     }
 
 }

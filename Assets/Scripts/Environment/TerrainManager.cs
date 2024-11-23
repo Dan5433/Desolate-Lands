@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -26,15 +25,16 @@ public class TerrainManager : MonoBehaviour
     WorldBorderManager borderManager;
     LoadTerrain loadTerrain;
     SaveTerrain saveTerrain;
-    HashSet<Vector2Int> loadedChunks = new();
+    Dictionary<Vector2Int, TilemapChunkNodesData> loadedChunks = new();
+    HashSet<Vector2Int> renderedChunks = new();
     static Vector2Int chunkSize = new(32, 32);
     static Vector2Int regionSize = new(32, 32);
-    static string dirName = "regions";
+    static readonly string dataDirName = "regions";
 
     public TileBase[] MasterTiles => masterTiles;
     public static Vector2Int ChunkSize => chunkSize;
     public static Vector2Int RegionSize => regionSize;
-    public static string DirName => dirName;
+    public static string DataDirName => dataDirName;
     public Vector2Int WorldSize => worldSize;
 
     void Awake()
@@ -82,31 +82,49 @@ public class TerrainManager : MonoBehaviour
         var currentChunk = GetChunkIndexFromPosition(player.position);
         var renderedChunks = GetChunksInsideRenderDistance(currentChunk);
 
-        foreach (var chunk in loadedChunks.ToArray())
+        foreach (var chunk in this.renderedChunks.ToArray())
         {
             if (renderedChunks.Contains(chunk)) continue;
 
             //unload chunk if not in render distance but is loaded
             borderManager.UnloadBorder(chunk);
 
-            loadedChunks.Remove(chunk);
+            this.renderedChunks.Remove(chunk);
 
             shrunkTilemap = true;
         }
 
         foreach (var chunk in renderedChunks)
         {
-            if (!loadedChunks.Add(chunk) || !ChunkInsideWorldBorder(chunk)) continue;
+            if (!this.renderedChunks.Add(chunk) || !ChunkInsideWorldBorder(chunk)) continue;
 
             //load chunk if in render distance and not loaded already
-            string fullPath = Path.Combine(GameManager.DataDirPath, DirName, chunk.ToString());
+            Vector2Int region = new(chunk.x / RegionSize.x,
+                chunk.y / RegionSize.y);
+
+            string fullPath = Path.Combine(GameManager.DataDirPath, DataDirName, region.ToString());
             if (File.Exists(fullPath))
             {
-                loadTerrain.LoadTiles(chunk, ground, top, solid);
+                if(!loadedChunks.ContainsKey(chunk)) 
+                    loadedChunks = loadTerrain.LoadRegionFile(loadedChunks, region, ground, top, solid);
+
+                if (!loadedChunks.ContainsKey(chunk))
+                {
+                    GenChunk(chunk * chunkSize, chunk, region);
+                }
+                else
+                {
+                    foreach (var tilemapNodesPair in loadedChunks[chunk].data)
+                    {
+                        loadTerrain.SetTilemapChunk(
+                            tilemapNodesPair.Key, tilemapNodesPair.Value,
+                            chunk.x * ChunkSize.x, chunk.y * ChunkSize.y);
+                    }
+                }
             }
             else
             {
-                GenChunk(chunk * chunkSize, chunk);
+                GenChunk(chunk * chunkSize, chunk, region);
             }
 
             LoadBorderIfEndOfWorld(chunk);
@@ -161,7 +179,7 @@ public class TerrainManager : MonoBehaviour
         return true;
     }
 
-    void GenChunk(Vector2Int tilePos, Vector2Int chunkIndex)
+    void GenChunk(Vector2Int tilePos, Vector2Int chunkIndex, Vector2Int region)
     {
         GenBoxTiles(ground, grTiles, tilePos);
         foreach (var genTiles in topTiles)
@@ -171,7 +189,7 @@ public class TerrainManager : MonoBehaviour
 
         GenStructures(tilePos, solid);
 
-        saveTerrain.SaveTiles(chunkIndex, ground, top, solid);
+        saveTerrain.SaveTiles(region, chunkIndex, ground, top, solid);
     }
 
     void GenStructures(Vector2Int startPos, Tilemap tilemap)

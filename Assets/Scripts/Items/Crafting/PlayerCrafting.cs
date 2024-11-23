@@ -62,9 +62,8 @@ public class PlayerCrafting : MonoBehaviour
     }
 
     void LoadCraftingData()
-    {
-        string dirPath = Path.Combine(GameManager.DataDirPath, "Player");   
-        BinaryDataHandler dataHandler = new(dirPath, saveString);
+    { 
+        BinaryDataHandler dataHandler = new(GameManager.PlayerDataDirPath, saveString);
 
         if (!dataHandler.FileExists()) return;
 
@@ -88,8 +87,7 @@ public class PlayerCrafting : MonoBehaviour
 
     void SaveCraftingData()
     {
-        string dirPath = Path.Combine(GameManager.DataDirPath, "Player");
-        BinaryDataHandler dataHandler = new(dirPath, saveString);
+        BinaryDataHandler dataHandler = new(GameManager.PlayerDataDirPath, saveString);
 
         dataHandler.SaveData(writer =>
         {

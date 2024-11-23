@@ -9,12 +9,19 @@ public class InventoryBase : MonoBehaviour
     [SerializeField] protected InvItem[] inventory;
     [SerializeField] protected Transform ui;
     [SerializeField] protected bool updateUIOnStart = false;
+    static string dataDirPath;
 
     public Transform UI => ui;
     public InvItem[] Inventory => inventory;
 
+    private void Awake()
+    {
+        dataDirPath = Path.Combine(GameManager.DataDirPath, "storage");
+    }
+
     void Start()
     {
+
         for (int i = 0; i < inventory.Length; i++)
         {
             inventory[i] = ItemManager.Instance.InvItemAir;
@@ -61,7 +68,7 @@ public class InventoryBase : MonoBehaviour
 
     protected bool IsInventorySaved()
     {
-        var fullPath = Path.Combine(GameManager.DataDirPath, "Storage", GetSaveKey());
+        var fullPath = Path.Combine(dataDirPath, GetSaveKey());
         return File.Exists(fullPath);
     }
 
@@ -69,8 +76,7 @@ public class InventoryBase : MonoBehaviour
 
     void LoadInventory()
     {
-        var dirPath = Path.Combine(GameManager.DataDirPath, "Storage");
-        var dataHandler = new BinaryDataHandler(dirPath, GetSaveKey());
+        var dataHandler = new BinaryDataHandler(dataDirPath, GetSaveKey());
 
         dataHandler.LoadData(reader =>
         {
@@ -83,15 +89,14 @@ public class InventoryBase : MonoBehaviour
 
     protected async void DeleteInventory()
     {
-        var fullPath = Path.Combine(GameManager.DataDirPath, "Storage", GetSaveKey());
+        var fullPath = Path.Combine(dataDirPath, GetSaveKey());
 
-        await Task.Run(() => { File.Delete(Path.Combine(fullPath)); });
+        await Task.Run(() => { File.Delete(fullPath); });
     }
 
     public void SaveInventory()
     {
-        var dirPath = Path.Combine(GameManager.DataDirPath, "Storage");
-        var dataHandler = new BinaryDataHandler(dirPath, GetSaveKey());
+        var dataHandler = new BinaryDataHandler(dataDirPath, GetSaveKey());
 
         dataHandler.SaveData(writer =>
         {

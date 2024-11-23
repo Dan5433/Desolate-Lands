@@ -1,6 +1,8 @@
+using CustomExtensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -13,43 +15,69 @@ public class SaveTerrain : MonoBehaviour
         main = GetComponent<TerrainManager>();
     }
 
-    public void SaveTiles(Vector2Int chunkIndex, params Tilemap[] tilemaps)
+    /*
+    Chunk Save Format:
+        vector2int chunkIndex;
+        foreach tilemap
+        {
+            string tilemapName;
+            int nodeCount;
+            List<TilemapSaveNode> nodes; 
+        }
+    */
+    public void SaveTiles(Vector2Int region, Vector2Int chunkIndex, params Tilemap[] tilemaps)
     {
-        Vector2Int region = new(chunkIndex.x/TerrainManager.RegionSize.x, 
-            chunkIndex.y / TerrainManager.RegionSize.y);
-
-        var dirPath = Path.Combine(GameManager.DataDirPath, TerrainManager.DirName);
+        var dirPath = Path.Combine(GameManager.DataDirPath, TerrainManager.DataDirName);
         BinaryDataHandler dataHandler = new(dirPath, region.ToString());
         
         dataHandler.SaveData(writer =>
         {
-            TerrainSaveNode node = new();
+            writer.WriteVector2Int(chunkIndex);
+
+            int startX = chunkIndex.x * TerrainManager.ChunkSize.x;
+            int startY = chunkIndex.y * TerrainManager.ChunkSize.y;
 
             foreach (var tilemap in tilemaps)
             {
                 writer.Write(tilemap.name);
 
-                for (int x = chunkIndex.x * TerrainManager.ChunkSize.x; x < chunkIndex.x * TerrainManager.ChunkSize.x + TerrainManager.ChunkSize.x; x++)
+                TilemapSaveNode currentNode = new();
+                var nodes = new LinkedList<TilemapSaveNode>();
+
+                for (int x = startX; x < startX + TerrainManager.ChunkSize.x; x++)
                 {
-                    for (int y = chunkIndex.y * TerrainManager.ChunkSize.y; y < chunkIndex.y * TerrainManager.ChunkSize.y + TerrainManager.ChunkSize.y; y++)
+                    for (int y = startY; y < startY + TerrainManager.ChunkSize.y; y++)
                     {
-                        TileBase tile = tilemap.GetTile<TileBase>(new(x, y));
+                        //get tile and its respective id
+                        var tile = tilemap.GetTile<TileBase>(new(x, y));
                         int id = Array.FindIndex(main.MasterTiles, t => t == tile);
 
                         //write current node and make new node if different tile encountered
-                        if(node.tileID != id)
+                        if(currentNode.tileID != id)
                         {
-                            writer.Write(node.tileID);
-                            writer.Write(node.length);
+                            if (currentNode.length > 0) nodes.AddLast(currentNode);
 
-                            node = new() { tileID = id };
+                            currentNode = new() { tileID = id };
                         }
 
-                        node.length++;
+                        currentNode.length++;
                     }
                 }
+
+                //write last node if not empty
+                if (currentNode.length > 0) nodes.AddLast(currentNode);
+
+                //write node count for data alignment
+                writer.Write(nodes.Count);
+
+                //write the nodes
+                foreach (var node in nodes)
+                {
+                    node.Write(writer);
+                }
             }
-        });
+
+        }, FileMode.Append);
     }
 
     public static async void RemoveTileSaveData(Vector3Int tilePosition, string tilemapName)
@@ -71,10 +99,26 @@ public class SaveTerrain : MonoBehaviour
 }
 
 [Serializable]
-public struct TerrainSaveNode
+public struct TilemapSaveNode
 {
     public int tileID;
     public int length;
+
+    public readonly void Write(BinaryWriter writer)
+    {
+        writer.Write(tileID);
+        writer.Write(length);
+    }
+    public TilemapSaveNode(BinaryReader reader)
+    {
+        tileID = reader.ReadInt32();
+        length = reader.ReadInt32();
+    }
+}
+
+public struct TilemapChunkNodesData
+{
+    public Dictionary<Tilemap, LinkedList<TilemapSaveNode>> data;
 }
 
 [Serializable]
