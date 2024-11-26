@@ -10,6 +10,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField] GameObject groundItemPrefab;
     [SerializeField] GameObject invSlotPrefab;
     [SerializeField] GameObject containerUI;
+    [SerializeField] GameObject itemTooltip;
     [SerializeField] ItemRef heldItem;
     [SerializeField] Item air;
     InvItem invItemAir;
@@ -18,6 +19,7 @@ public class ItemManager : MonoBehaviour
     public Item Air => air;
     public InvItem InvItemAir => invItemAir;
     public GameObject ContainerUI => containerUI;
+    public GameObject ItemTooltip => itemTooltip;
     public GameObject InvSlot => invSlotPrefab;
     public bool IsHoldingItem { get { return heldItem.Item.ItemObj != Air; } }
 
@@ -169,7 +171,7 @@ public class ItemManager : MonoBehaviour
         return true;
     }
 
-    static int GetSlotIndex(Transform slot)
+    public static int GetSlotIndex(Transform slot)
     {
         int index = 0;
         var parent = slot.parent;

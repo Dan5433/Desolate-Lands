@@ -58,6 +58,8 @@ namespace CustomClasses
 
         public virtual int CountTxt => count;
 
+        public virtual string ExtraInfo() => item.ExtraInfo();
+
         public virtual void Save(BinaryWriter writer)
         {
             writer.Write(item.Id);

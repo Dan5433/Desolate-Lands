@@ -16,6 +16,11 @@ public class Item : ScriptableObject
     public int MaxCount => maxCount;
     public Sprite Sprite => sprite;
     public SlotType Slot => slot;
+
+    public virtual string ExtraInfo()
+    {
+        return defaultName;
+    }
 }
 
 [Serializable]
