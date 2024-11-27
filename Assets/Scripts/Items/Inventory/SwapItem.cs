@@ -56,7 +56,28 @@ public class SwapItem : MonoBehaviour, IPointerDownHandler, IPointerExitHandler,
 
     public void OnPointerMove(PointerEventData eventData)
     {
-        ItemManager.Instance.ItemTooltip.transform.position = 
-            Input.mousePosition + new Vector3(5f,5f);
+        Vector3 offset = new(5f, 5f);
+        Vector2 position = Input.mousePosition + offset;
+
+        var tooltipTransform = ItemManager.Instance.ItemTooltip.GetComponent<RectTransform>();
+
+        tooltipTransform.position = position;
+
+        //Use anchored position for canvas related calculations
+        Vector2 anchoredPosition = tooltipTransform.anchoredPosition;
+        var canvasSize = tooltipTransform.parent.GetComponent<RectTransform>().sizeDelta;
+
+        //Force inside of canvas
+        if (tooltipTransform.anchoredPosition.x + tooltipTransform.sizeDelta.x > canvasSize.x)
+        {
+            anchoredPosition.x -= tooltipTransform.sizeDelta.x + offset.x * 3;
+        }
+
+        if (tooltipTransform.anchoredPosition.y + tooltipTransform.sizeDelta.y > canvasSize.y)
+        {
+            anchoredPosition.y -= tooltipTransform.sizeDelta.y + offset.y * 3;
+        }
+
+        tooltipTransform.anchoredPosition = anchoredPosition;
     }
 }
