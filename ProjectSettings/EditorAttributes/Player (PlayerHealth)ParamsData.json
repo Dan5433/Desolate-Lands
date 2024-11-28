@@ -1,0 +1,14 @@
+{
+  "foldouts": {
+    "Player (PlayerHealth)_Damage_Int32": true,
+    "Player (PlayerHealth)_Heal_Int32": true
+  },
+  "parameterValues": {
+    "Player (PlayerHealth)_Damage_Int32": [
+      null
+    ],
+    "Player (PlayerHealth)_Heal_Int32": [
+      10
+    ]
+  }
+}

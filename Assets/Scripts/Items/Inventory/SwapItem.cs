@@ -70,12 +70,12 @@ public class SwapItem : MonoBehaviour, IPointerDownHandler, IPointerExitHandler,
         //Force inside of canvas
         if (tooltipTransform.anchoredPosition.x + tooltipTransform.sizeDelta.x > canvasSize.x)
         {
-            anchoredPosition.x -= tooltipTransform.sizeDelta.x + offset.x * 3;
+            anchoredPosition.x -= tooltipTransform.sizeDelta.x + offset.x * 4;
         }
 
         if (tooltipTransform.anchoredPosition.y + tooltipTransform.sizeDelta.y > canvasSize.y)
         {
-            anchoredPosition.y -= tooltipTransform.sizeDelta.y + offset.y * 3;
+            anchoredPosition.y -= tooltipTransform.sizeDelta.y + offset.y * 4;
         }
 
         tooltipTransform.anchoredPosition = anchoredPosition;

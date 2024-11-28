@@ -77,6 +77,7 @@ public class TerrainManager : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(loadedChunks.Count);
         //TODO: only save user change data to tiles and generate chunks using the seed each time 
         bool shrunkTilemap = false;
         var currentChunk = GetChunkIndexFromPosition(player.position);
@@ -90,6 +91,7 @@ public class TerrainManager : MonoBehaviour
             borderManager.UnloadBorder(chunk);
 
             this.renderedChunks.Remove(chunk);
+            loadedChunks.Remove(chunk);
 
             shrunkTilemap = true;
         }

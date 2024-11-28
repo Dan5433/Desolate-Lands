@@ -22,6 +22,12 @@ public class Landmine : MonoBehaviour
             Destroy(gameObject);
         }
 
+        if(collision.TryGetComponent<LivingBase>(out var living) || 
+            collision.transform.parent.TryGetComponent(out living))
+        {
+            living.Damage(50);
+        }
+
         var tilemap = transform.parent.GetComponent<Tilemap>();
         var tilePosition = tilemap.WorldToCell(transform.position);
 
