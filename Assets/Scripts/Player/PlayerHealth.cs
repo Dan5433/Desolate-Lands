@@ -10,7 +10,8 @@ public class PlayerHealth : LivingBase
     [SerializeField] Image barImage;
     [SerializeField] Color damageColor;
     [SerializeField] Color healColor;
-    [SerializeField] float animationSpeed;
+    [SerializeField] float colorLerpSpeed;
+    [SerializeField] float healthLerpSpeed;
     Color normalColor;
 
     override protected void Start()
@@ -21,65 +22,70 @@ public class PlayerHealth : LivingBase
 
         healthBar.maxValue = maxHealth;
         healthBar.value = health;
+
+        UpdateDisplay();
     }
 
-    IEnumerator DamageAnimation()
+    public override void Damage(float damageAmount)
     {
-        float time = 0;
-        while(barImage.color != damageColor)
-        {
-            time += Time.deltaTime * animationSpeed;
-            barImage.color = Color.Lerp(normalColor, damageColor, time);
-            yield return null;
+        base.Damage(damageAmount);
 
-        };
+        if (health <= 0) return;
 
-        while (barImage.color != normalColor)
-        {
-            time -= Time.deltaTime * animationSpeed;
-            barImage.color = Color.Lerp(normalColor, damageColor, time);
-            yield return null;
+        StopAllCoroutines();
 
-        };
+        UpdateDisplay();
+        StartCoroutine(LerpBarColor(damageColor));
     }
 
-    IEnumerator HealAnimation()
+
+    public override bool Heal(float healAmount)
     {
-        float time = 0;
-        while (barImage.color != healColor)
-        {
-            time += Time.deltaTime * animationSpeed;
-            barImage.color = Color.Lerp(normalColor, healColor, time);
-            yield return null;
+        if (!base.Heal(healAmount)) return false;
 
-        };
+        StopAllCoroutines();
 
-        while (barImage.color != normalColor)
-        {
-            time -= Time.deltaTime * animationSpeed;
-            barImage.color = Color.Lerp(normalColor, healColor, time);
-            yield return null;
+        UpdateDisplay();
+        StartCoroutine(LerpBarColor(healColor));
 
-        };
+        return true;
     }
 
     void UpdateDisplay()
     {
-        healthBar.value = health;
-        healthText.text = health.ToString();
+        StartCoroutine(LerpBarValue(health));
+        healthText.text = Mathf.RoundToInt(health).ToString();
     }
 
-    public override void Damage(int damageAmount)
+    IEnumerator LerpBarValue(float targetHealth)
     {
-        base.Damage(damageAmount); 
-        UpdateDisplay();
-        StartCoroutine(DamageAnimation());
+        float time = 0;
+        while (healthBar.value != targetHealth)
+        {
+            time += Time.deltaTime * healthLerpSpeed;
+            healthBar.value = Mathf.Lerp(healthBar.value, targetHealth, time);
+            yield return null;
+        };
     }
 
-    public override void Heal(int damageAmount)
+    IEnumerator LerpBarColor(Color targetColor)
     {
-        base.Heal(damageAmount); 
-        UpdateDisplay();
-        StartCoroutine(HealAnimation());
+        float time = 0;
+        while (barImage.color != targetColor)
+        {
+            time += Time.deltaTime * colorLerpSpeed;
+            barImage.color = Color.Lerp(normalColor, targetColor, time);
+            yield return null;
+
+        };
+
+        time = 0;
+        while (barImage.color != normalColor)
+        {
+            time += Time.deltaTime * colorLerpSpeed;
+            barImage.color = Color.Lerp(barImage.color, normalColor, time);
+            yield return null;
+
+        };
     }
 }

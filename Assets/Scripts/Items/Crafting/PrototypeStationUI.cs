@@ -12,6 +12,7 @@ public class PrototypeStationUI : MonoBehaviour
     [SerializeField] Transform selectedPrototypeUI;
     [SerializeField] Transform costUI;
     [SerializeField] Image itemImage;
+    [SerializeField] TMP_Text itemName;
     CraftingPrototype selectedPrototype;
     PrototypeStation currentStation;
 
@@ -70,6 +71,7 @@ public class PrototypeStationUI : MonoBehaviour
         if (selectedPrototype == null) ToggleTooltip();
 
         itemImage.sprite = prototype.recipe.reward.item.Sprite;
+        itemName.text = prototype.recipe.reward.item.Name;
 
         UpdateMaterialsUI(prototype.recipe.cost);
         UpdateResourcesUI(prototype.resourceCost);

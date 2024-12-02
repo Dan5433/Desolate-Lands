@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67d1c099254746445bc6794b36f5ef57, type: 3}
-  m_Name: Wooden Pickaxe
+  m_Name: Wooden Axe
   m_EditorClassIdentifier: 
-  recipe: {fileID: 11400000, guid: b6fa9234a20bbe948b1c4dfdfcace2f7, type: 2}
+  recipe: {fileID: 11400000, guid: 1f92aac93595ad348bd74fbd62e5ea91, type: 2}
   resourceCost:
   - resource: {fileID: 11400000, guid: 0bdb615ec776aeb488d7e0e216a4837e, type: 2}
-    count: 3
+    count: 2

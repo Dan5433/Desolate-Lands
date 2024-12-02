@@ -35,6 +35,8 @@ public class CraftStation : InventoryBase, IBreakable
         BinaryDataHandler dataHandler = new(GameManager.DataDirPath, filePath);
 
         float progress = 0;
+        if (!dataHandler.FileExists()) return progress;
+
         dataHandler.LoadData(reader =>
         {
             progress = reader.ReadSingle();

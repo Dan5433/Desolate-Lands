@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.MaterialProperty;
 
 public class PlayerCraftingUI : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class PlayerCraftingUI : MonoBehaviour
     [SerializeField] Transform selectedPrototypeUI;
     [SerializeField] Transform materialCostUI;
     [SerializeField] Image itemImage;
+    [SerializeField] TMP_Text itemName;
     CraftingRecipe selectedRecipe;
 
     void UpdateCostUI(CraftItem[] cost)
@@ -38,6 +40,7 @@ public class PlayerCraftingUI : MonoBehaviour
         if (selectedRecipe == null) ToggleTooltip();
 
         itemImage.sprite = recipe.reward.item.Sprite;
+        itemName.text = recipe.reward.item.Name;
 
         UpdateCostUI(recipe.cost);
 

@@ -1,6 +1,7 @@
 using EditorAttributes;
 using System;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
@@ -19,7 +20,7 @@ namespace CustomClasses
     {
         public Item item;
         public int weight;
-        [MinMaxSlider(1,99)] public Vector2Int minMax;
+        public Vector2Int minMax;
         public AnimationCurve quantityDistribution;
 
         public int RandomCount()

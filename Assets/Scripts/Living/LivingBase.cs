@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class LivingBase : MonoBehaviour
 {
-    [SerializeField] protected int health;
-    [SerializeField] protected int maxHealth;
+    [SerializeField] protected float health;
+    [SerializeField] protected float maxHealth;
 
     protected virtual void Start()
     {
@@ -14,7 +14,7 @@ public class LivingBase : MonoBehaviour
     }
 
     [Button("Damage",30)]
-    public virtual void Damage(int damageAmount)
+    public virtual void Damage(float damageAmount)
     {
         health -= damageAmount;
 
@@ -22,9 +22,12 @@ public class LivingBase : MonoBehaviour
     }
 
     [Button("Heal", 30)]
-    public virtual void Heal(int healAmount)
+    public virtual bool Heal(float healAmount)
     {
+        if (health == maxHealth) return false;
+
         health = Mathf.Clamp(health + healAmount, 0, maxHealth);
+        return true;
     }
 
     protected virtual void OnDeath() { }
