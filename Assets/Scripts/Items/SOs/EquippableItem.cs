@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EquippableItem : Item
 {
-    [SerializeField] ItemEffect[] effects;
+    [SerializeField] EquippableItemEffect[] effects;
 
-    public ItemEffect[] Effects => effects;
+    public EquippableItemEffect[] Effects => effects;
 }

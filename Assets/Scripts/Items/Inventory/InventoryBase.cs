@@ -37,12 +37,13 @@ public class InventoryBase : MonoBehaviour
     public void AdminAdd(int itemIndex, int count)
     {
         var item = ItemManager.Instance.Items[itemIndex];
-        AddToInventory(InventoryItemFactory.Create(item,item.name,count));
+        AddToInventory(InventoryItemFactory.Create(item,count));
     }
     
     public int AddToInventory(InvItem item)
     {
         int excess = item.Count;
+
         for (int i = 0; i < inventory.Length; i++)
         {
             if ((inventory[i].Count == inventory[i].ItemObj.MaxCount || inventory[i].ItemObj != item.ItemObj)
@@ -62,6 +63,10 @@ public class InventoryBase : MonoBehaviour
                 continue;
             }
         }
+
+        ItemManager.SpawnGroundItem(
+            InventoryItemFactory.Create(item.ItemObj,excess), 
+            gameObject.transform.position, false);
 
         return excess;
     }

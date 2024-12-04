@@ -120,13 +120,7 @@ public class PrototypeStationUI : MonoBehaviour
             selectedPrototype.recipe.reward.item, 
             selectedPrototype.recipe.reward.count);
 
-        int excess = inventory.AddToInventory(reward);
-
-        if(excess > 0)
-        {
-            reward.Count = excess;
-            ItemManager.SpawnGroundItem(reward, GameManager.Instance.Player.transform.position, false);
-        }
+        inventory.AddToInventory(reward);
 
         inventory.UpdateUI();
 

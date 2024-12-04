@@ -1,5 +1,8 @@
+using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +12,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] string worldName;
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
+    [SerializeField] CursorTexture[] cursors;
+
+    static CursorState cursorState;
     static string dataDirPath;
     static string playerDataDirPath;
 
@@ -18,6 +24,15 @@ public class GameManager : MonoBehaviour
     public GameObject Player => player;
     public static string DataDirPath => dataDirPath;
     public static string PlayerDataDirPath => playerDataDirPath;
+    public static CursorState CursorState {  
+        get { return cursorState; } 
+        set 
+        {
+            cursorState = value;
+            Cursor.SetCursor(Instance.cursors.First(t => t.state == cursorState).texture,
+                new(16f,16f), CursorMode.ForceSoftware);
+        } 
+    }
 
     void Awake()
     {
@@ -44,4 +59,23 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
     }
+
+    private void Start()
+    {
+        CursorState = CursorState.Default;
+    }
+}
+
+[Serializable]
+struct CursorTexture
+{
+    public CursorState state;
+    public Texture2D texture;
+}
+
+public enum CursorState
+{
+    Default = 0,
+    Use = 1,
+    Drop = 2
 }

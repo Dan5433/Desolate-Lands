@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 9
   defaultName: Canned Food
-  maxCount: 0
+  maxCount: 4
   sprite: {fileID: 21300000, guid: 1b2cc1f9955130f43bb9f647a627e808, type: 3}
   slot: 0
-  consume:
-    m_PersistentCalls:
-      m_Calls: []
+  useEffects:
+  - {fileID: 11400000, guid: c7c05a5ea77429b4ca2eb49beb37f207, type: 2}

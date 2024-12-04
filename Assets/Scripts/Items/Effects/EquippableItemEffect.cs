@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public abstract class ItemEffect : ScriptableObject
+public abstract class EquippableItemEffect : ScriptableObject
 {
     [SerializeField] protected UnityEvent<GameObject> whenEquipped;
     [SerializeField] protected UnityEvent<GameObject> whileEquipped;
@@ -13,7 +13,7 @@ public abstract class ItemEffect : ScriptableObject
     {
         whenEquipped.Invoke(player);
     }
-    public void Equipped(GameObject player)
+    public void WhileEquipped(GameObject player)
     {
         whileEquipped.Invoke(player);
     }

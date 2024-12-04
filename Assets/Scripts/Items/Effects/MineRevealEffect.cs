@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 
 [Serializable]
-[CreateAssetMenu(menuName = "Items/Mine Reaveal Effect")]
-public class MineRevealEffect : ItemEffect
+[CreateAssetMenu(menuName = "Items/Equippable Item Effects/Landmine Reveal")]
+public class MineRevealEffect : EquippableItemEffect
 {
     [SerializeField] float distance;
 

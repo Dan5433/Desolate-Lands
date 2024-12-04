@@ -58,7 +58,10 @@ public class Container : InventoryBase, IBreakable
         var tilePosition = transform.parent.GetComponent<Tilemap>().WorldToCell(transform.position);
         foreach (var item in inventory)
         {
-            ItemManager.SpawnGroundItem(item, tilePosition, true);
+            var dropItem = InventoryItemFactory.Create(
+                item.ItemObj, item.Name, item.Count);
+
+            ItemManager.SpawnGroundItem(dropItem, tilePosition, true);
         }
 
         DeleteInventory();

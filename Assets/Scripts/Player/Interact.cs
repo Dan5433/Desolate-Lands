@@ -83,28 +83,16 @@ public class Interact : MonoBehaviour
 
                 GatherableTile tile = gatherable.GetComponentInParent<Tilemap>()
                     .GetTile<GatherableTile>(gatherable.TilePosition);
-
-                Dictionary<Item, int> excess = new();
                 foreach (var drop in tile.Drops)
                 {
                     int count = drop.RandomCount();
                     if (count == 0) { continue; }
 
-                    InvItem item = new(drop.item, drop.item.Name, count);
-
-                    int leftover = inventory.AddToInventory(item);
-                    if (leftover > 0) excess.Add(drop.item, leftover);
+                    inventory.AddToInventory(InventoryItemFactory.Create(drop.item, count));
                 }
 
                 inventory.UpdateUI();
                 inventory.SaveInventory();
-
-                foreach (KeyValuePair<Item, int> item in excess)
-                {
-                    InvItem dropItem = new(item.Key, item.Key.Name, item.Value);
-
-                    ItemManager.SpawnGroundItem(dropItem, transform.position, true);
-                }
 
                 return;
             }

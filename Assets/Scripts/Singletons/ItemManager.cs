@@ -48,7 +48,9 @@ public class ItemManager : MonoBehaviour
 
         if (hit) spawnPos = hit.point;
 
-        SpawnGroundItem(Instance.heldItem.Item, spawnPos, false);
+
+        SpawnGroundItem(Instance.heldItem.Item.Clone(), spawnPos, false);
+
         Instance.heldItem.Item = Instance.InvItemAir;
         UpdateItemUI(Instance.heldItem.transform, Instance.heldItem.Item);
     }
@@ -57,6 +59,35 @@ public class ItemManager : MonoBehaviour
     {
         if (gameObject.GetComponent<SwapItem>() != null) return true;
         return false;
+    }
+
+    public static bool IsHeldItemUsable()
+    {
+        if (Instance.heldItem.Item.ItemObj is UsableItem) return true;
+        return false;
+    }
+
+    public static void UseHeldItem(GameObject user)
+    {
+        if (!IsHeldItemUsable()) return;
+
+        var item = Instance.heldItem.Item.ItemObj as UsableItem;
+
+        foreach(var effect in item.Effects)
+        {
+            effect.Use(user);
+        }
+
+        if(Instance.heldItem.Item.Count > 1)
+        {
+            Instance.heldItem.Item.Count--;
+        }
+        else
+        {
+            Instance.heldItem.Item = Instance.InvItemAir;
+        }
+
+        UpdateItemUI(Instance.heldItem.gameObject.transform, Instance.heldItem.Item);
     }
 
     public static void UpdateItemUI(Transform slot, InvItem item)
@@ -128,7 +159,8 @@ public class ItemManager : MonoBehaviour
     static void SplitSlot(ref InvItem slotItem)
     {
         int half = slotItem.Count / 2;
-        Instance.heldItem.Item = new(slotItem.ItemObj, slotItem.Name, half);
+        Instance.heldItem.Item = InventoryItemFactory.Create(
+            slotItem.ItemObj, slotItem.Name, half);
 
         if (slotItem.Count >= 2)
         {

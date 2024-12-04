@@ -1,4 +1,5 @@
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerInventory : InventoryBase
@@ -9,13 +10,8 @@ public class PlayerInventory : InventoryBase
         {
             case "Item":
                 var item = collision.GetComponent<GroundItem>();
-                int excess = AddToInventory(item.InvItem);
 
-                if (excess > 0)
-                {
-                    item.InvItem.Count = excess;
-                }
-                else
+                if(AddToInventory(item.InvItem.Clone()) <= 0)
                 {
                     Destroy(collision.gameObject);
                 }
