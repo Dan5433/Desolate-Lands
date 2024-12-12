@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -66,11 +66,13 @@ namespace CustomExtensions
         {
             return new(reader.ReadInt32(), reader.ReadInt32());
         }
-
-        //public static void AddOrChange(this Dictionary<T, T> dict)
-        //{
-
-        //}
+        
+        public static void PlayOneShot(this ParticleSystem system, Vector3 position, Quaternion rotation)
+        {
+            var instance = UnityEngine.Object.Instantiate(system, position, rotation);
+            instance.Play();
+            UnityEngine.Object.Destroy(instance.gameObject, instance.main.duration);
+        }
     }
 
 }

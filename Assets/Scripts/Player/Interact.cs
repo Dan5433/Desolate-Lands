@@ -136,7 +136,6 @@ public class Interact : MonoBehaviour
                 return;
             }
         }
-        //TODO: Fix breaking collision (1 block off)
         if (Input.GetMouseButton(0))
         {
             if (tilemap == null) return;

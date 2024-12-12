@@ -40,6 +40,7 @@ public class ItemManager : MonoBehaviour
     public static void DropHeldItem(Vector3 position, Vector3 direction, float distance)
     {
         if (Instance.heldItem.Item.ItemObj == Instance.Air) return;
+        GameManager.CursorState = CursorState.Default;
 
         Vector3 spawnPos = position + direction * distance;
 
@@ -88,6 +89,7 @@ public class ItemManager : MonoBehaviour
         }
 
         UpdateItemUI(Instance.heldItem.gameObject.transform, Instance.heldItem.Item);
+        if(!Instance.IsHoldingItem) GameManager.CursorState = CursorState.Default;
     }
 
     public static void UpdateItemUI(Transform slot, InvItem item)

@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 336f3f32fcd87e340b550d7f9a9b2913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileReference: {fileID: 11400000, guid: da3f69ac9c2cb2d42a77a24a1f1ac889, type: 2}
 --- !u!58 &74471235329626986
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -1,12 +1,11 @@
 using CustomClasses;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GroundItem : MonoBehaviour
 {
     [SerializeField] InvItem item;
-    float groupDistance = 0.8f;
+    [SerializeField] float groupDistance = 0.8f;
     Image image;
 
     public InvItem InvItem { get { return item; } set { item = value; } }
@@ -17,18 +16,21 @@ public class GroundItem : MonoBehaviour
         image.sprite = item.ItemObj.Sprite;
 
         Invoke(nameof(GroupItems), 0.1f);
+        if(item is InvTool tool)
+        {
+            Debug.Log(tool.Durability);
+        }
     }
 
     void GroupItems()
     {
         int mask = LayerMask.GetMask("Item");
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, groupDistance, mask);
+        var nearbyItems = Physics2D.OverlapCircleAll(transform.position, groupDistance, mask);
 
-        foreach (Collider2D collider in colliders)
+        foreach (Collider2D collider in nearbyItems)
         {
-            var otherScript = collider.GetComponent<GroundItem>();
-            var otherItem = otherScript.InvItem;
+            var otherItem = collider.GetComponent<GroundItem>().InvItem;
 
             if (item.Count == item.ItemObj.MaxCount) { return; }
             if (collider.gameObject == gameObject || otherItem.Count == otherItem.ItemObj.MaxCount) { continue; }
@@ -39,7 +41,6 @@ public class GroundItem : MonoBehaviour
                 {
                     item.Count += otherItem.Count;
                     Destroy(collider.gameObject);
-                    otherScript.CancelInvoke(nameof(GroupItems));
                 }
                 else
                 {

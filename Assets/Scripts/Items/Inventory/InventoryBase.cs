@@ -51,15 +51,14 @@ public class InventoryBase : MonoBehaviour
 
             if (excess + inventory[i].Count <= item.ItemObj.MaxCount)
             {
-                inventory[i] = InventoryItemFactory.Create(
-                    item.ItemObj, item.Name, inventory[i].Count + excess);
+                item.Count = inventory[i].Count + excess;
+                inventory[i] = item;
                 return 0;
             }
             else
             {
                 excess -= item.ItemObj.MaxCount - inventory[i].Count;
-                inventory[i] = InventoryItemFactory.Create(
-                    item.ItemObj, item.Name, item.ItemObj.MaxCount);
+                inventory[i] = item;
                 continue;
             }
         }

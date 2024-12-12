@@ -8,17 +8,5 @@ using UnityEngine.Tilemaps;
 public class ContainerTile : BreakableTile
 {
     [SerializeField] WeightedItem[] lootPool;
-    [SerializeField] int invSize;
-
-    public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
-    {
-        if (go == null) return false;
-
-        var script = go.GetComponent<Container>();
-        script.enabled = true;
-
-        script.LootPool = lootPool;
-
-        return true;
-    }
+    public WeightedItem[] LootPool => lootPool;
 }

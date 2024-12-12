@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fae7446dcd34414faedcfc9d4c7c486, type: 3}
+  m_Script: {fileID: 11500000, guid: 60e629defd44e55419c1e8f54a0715c9, type: 3}
   m_Name: Mine
   m_EditorClassIdentifier: 
   m_AnimatedSprites:
@@ -30,3 +30,5 @@ MonoBehaviour:
   m_TileColliderType: 0
   m_TileAnimationFlags: 0
   instancedGameobject: {fileID: 7115283593347744808, guid: 50c110d8575f4304da1dd525aacd96a2, type: 3}
+  explosionRadius: 1.7
+  damage: 50

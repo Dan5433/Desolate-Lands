@@ -1,8 +1,7 @@
 using EditorAttributes;
-using System.Collections;
 using UnityEngine;
 
-public class LivingBase : MonoBehaviour
+public class LivingBase : MonoBehaviour, IDamageable
 {
     [SerializeField] protected float health;
     [SerializeField] protected float maxHealth;

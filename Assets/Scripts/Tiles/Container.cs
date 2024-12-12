@@ -1,20 +1,13 @@
 using CustomClasses;
-using EditorAttributes;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static UnityEditor.Progress;
 
 public class Container : InventoryBase, IBreakable
 {
-    [SerializeField] WeightedItem[] lootPool;
-
-    public WeightedItem[] LootPool { set { lootPool = value; } }
-
-    void OnEnable()
+    private void Awake()
     {
         ui = ItemManager.Instance.ContainerUI.transform;
     }
-
 
     protected override string GetSaveKey()
     {
@@ -25,7 +18,10 @@ public class Container : InventoryBase, IBreakable
     {
         if (IsInventorySaved()) return;
 
-        GenLoot(lootPool);
+        var tilemap = GetComponentInParent<Tilemap>();
+
+        GenLoot(tilemap.GetTile<ContainerTile>(
+            tilemap.WorldToCell(transform.position)).LootPool);
         SaveInventory();
     }
 
@@ -53,15 +49,18 @@ public class Container : InventoryBase, IBreakable
 
     public void OnBreak()
     {
-        if (!IsInventorySaved()) GenLoot(lootPool);
+        var tilemap = GetComponentInParent<Tilemap>();
 
-        var tilePosition = transform.parent.GetComponent<Tilemap>().WorldToCell(transform.position);
+        if (!IsInventorySaved())
+            GenLoot(tilemap.GetTile<ContainerTile>(
+            tilemap.WorldToCell(transform.position)).LootPool);
+
         foreach (var item in inventory)
         {
             var dropItem = InventoryItemFactory.Create(
                 item.ItemObj, item.Name, item.Count);
 
-            ItemManager.SpawnGroundItem(dropItem, tilePosition, true);
+            ItemManager.SpawnGroundItem(dropItem, transform.position, true);
         }
 
         DeleteInventory();

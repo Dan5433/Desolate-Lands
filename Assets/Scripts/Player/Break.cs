@@ -81,6 +81,7 @@ public class Break : MonoBehaviour
         equippedTool.Durability -= 1;
 
         if (equippedTool.Durability <= 0) toolInventory.Inventory[0] = ItemManager.Instance.InvItemAir;
+        toolInventory.SaveInventory();
         toolInventory.UpdateUI();
     }
 
@@ -112,10 +113,10 @@ public class Break : MonoBehaviour
 
     void ApplyPenalties(Tool tool)
     {
-        if (!tile) return;
+        //if (!tile) return;
 
-        breakingTime = tile.BreakingTime - breakTimeReduction * (tool.Material - tile.MinMaterial);
+        //breakingTime = tile.BreakingTime - breakTimeReduction * (tool.Material - tile.MinMaterial);
 
-        if (tile.Tool != tool.Type && tile.Tool != ToolType.None) breakingTime *= wrongToolPenalty;
+        //if (tile.Tool != tool.Type && tile.Tool != ToolType.None) breakingTime *= wrongToolPenalty;
     }
 }
