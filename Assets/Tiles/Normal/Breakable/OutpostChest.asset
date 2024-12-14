@@ -16,7 +16,7 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 5557921506770125580, guid: 3ae7c2add328b154e92aedfc8285a5aa, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  breakingTime: 5
+  hardness: 1
   drops:
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
     minMax: {x: 0, y: 0}
@@ -162,4 +162,3 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  invSize: 9

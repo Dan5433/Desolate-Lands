@@ -1,6 +1,7 @@
 using EditorAttributes;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
 
 public class Breakable : MonoBehaviour, IDamageable
 {
@@ -28,7 +29,11 @@ public class Breakable : MonoBehaviour, IDamageable
     {
         float percentBroken = (100f - health) / 100f;
 
-        if (percentBroken == 0) return;
+        if (percentBroken == 0)
+        {
+            GetComponentInChildren<SpriteRenderer>().sprite = null;
+            return;
+        }
 
         for (int i = 0; i < BreakingManager.Instance.BreakSprites.Length; i++)
         {
@@ -37,7 +42,7 @@ public class Breakable : MonoBehaviour, IDamageable
 
             if (percentBroken >= lowRange && percentBroken <= highRange)
             {
-                GetComponent<SpriteRenderer>().sprite = BreakingManager.Instance.BreakSprites[i];
+                GetComponentInChildren<SpriteRenderer>().sprite = BreakingManager.Instance.BreakSprites[i];
                 break;
             }
         }
@@ -51,6 +56,23 @@ public class Breakable : MonoBehaviour, IDamageable
 
     public void OnBreak()
     {
-        Debug.Log(GetComponents<IBreakable>().Length);
+        foreach (var breakable in GetComponents<IBreakable>()) breakable.OnBreak();
+
+        var tilemap = GetComponentInParent<Tilemap>();
+        var tilePosition = tilemap.WorldToCell(transform.position);
+        var tile = tilemap.GetTile<BreakableTile>(tilePosition);
+
+        foreach (var drop in tile.Drops)
+        {
+            int count = drop.RandomCount();
+            if (count == 0) { continue; }
+
+            ItemManager.SpawnGroundItem(
+                InventoryItemFactory.Create(drop.item, count), 
+                transform.position, true);
+        }
+
+        tilemap.SetTile(tilePosition, null);
+        //SaveTerrain.RemoveTileSaveData(breakCell, tilemap.name);
     }
 }

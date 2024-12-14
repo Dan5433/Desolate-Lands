@@ -11,5 +11,5 @@ PresetManager:
       m_ManagedTypeFallback: 
     second:
     - m_Preset: {fileID: 2655988077585873504, guid: 0aff4fdba5d7e98439291d0b67740cbd, type: 2}
-      m_Filter: path:Textures
+      m_Filter: 
       m_Disabled: 0

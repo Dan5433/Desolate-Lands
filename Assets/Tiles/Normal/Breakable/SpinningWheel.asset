@@ -16,7 +16,7 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 7134427891682201430, guid: c667e14e786c982448e09ca8c3ef74f1, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  breakingTime: 4
+  hardness: 1.2
   drops:
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
     minMax: {x: 1, y: 1}
@@ -108,6 +108,7 @@ MonoBehaviour:
   colors:
   - {r: 0.4528302, g: 0.32544208, b: 0.10466359, a: 1}
   - {r: 0.7075472, g: 0.5442102, b: 0.3037113, a: 1}
+  breakingAudio: []
   tool: 1
   minMaterial: 3
   type: 1

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -17,7 +18,7 @@ public class Landmine : MonoBehaviour
             Destroy(collision.gameObject);
         }
 
-        Destroy(gameObject);
+        Explode();
 
         var tilemap = transform.parent.GetComponent<Tilemap>();
         var tilePosition = tilemap.WorldToCell(transform.position);
@@ -26,15 +27,22 @@ public class Landmine : MonoBehaviour
         SaveTerrain.RemoveTileSaveData(tilePosition, transform.parent.name);
     }
 
-    void OnDestroy()
+    void Explode()
     {
-        foreach (var applyDamage in Physics2D.OverlapCircleAll(transform.position, tileReference.ExplosionRadius))
+        foreach (var applyDamage in Physics2D.OverlapCircleAll(
+            transform.position, tileReference.ExplosionRadius))
         {
-            if (!applyDamage.TryGetComponent<IDamageable>(out var damageable) &&
-                !applyDamage.transform.parent.TryGetComponent(out damageable)) 
+            if (!applyDamage.TryGetComponent<IDamageable>(out var damageable)) 
                 continue;
 
-            damageable.Damage(tileReference.Damage);
+            float damageMagnitude = 
+                (tileReference.ExplosionRadius - 
+                Vector3.Distance(transform.position, applyDamage.transform.position)) /
+                tileReference.ExplosionRadius;
+
+            Debug.Log($"Damage magnitude for {applyDamage.gameObject.name}: {damageMagnitude}");
+
+            damageable.Damage(Mathf.Lerp(0, tileReference.Damage, damageMagnitude));
         }
 
         var terrainManager = GameObject.Find("TerrainManager");

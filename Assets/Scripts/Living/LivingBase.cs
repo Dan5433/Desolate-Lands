@@ -12,7 +12,6 @@ public class LivingBase : MonoBehaviour, IDamageable
         health = maxHealth;
     }
 
-    [Button("Damage",30)]
     public virtual void Damage(float damageAmount)
     {
         health -= damageAmount;
@@ -20,7 +19,6 @@ public class LivingBase : MonoBehaviour, IDamageable
         if(health <= 0) OnDeath();
     }
 
-    [Button("Heal", 30)]
     public virtual bool Heal(float healAmount)
     {
         if (health == maxHealth) return false;

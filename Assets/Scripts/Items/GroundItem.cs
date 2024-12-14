@@ -16,10 +16,6 @@ public class GroundItem : MonoBehaviour
         image.sprite = item.ItemObj.Sprite;
 
         Invoke(nameof(GroupItems), 0.1f);
-        if(item is InvTool tool)
-        {
-            Debug.Log(tool.Durability);
-        }
     }
 
     void GroupItems()

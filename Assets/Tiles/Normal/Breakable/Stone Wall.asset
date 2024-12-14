@@ -16,6 +16,22 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 628338776450109615, guid: f7541f3341c10d842a26c42cac8b070c, type: 3}
   m_DefaultColliderType: 0
   m_TilingRules:
+  - m_Id: 5
+    m_Sprites:
+    - {fileID: 21300000, guid: 685ee5e87dedc834ca86e676ecb75c6c, type: 3}
+    m_GameObject: {fileID: 628338776450109615, guid: ffbd5ccb826750242b14adf936aef5d3, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 020000000100000001000000
+    m_NeighborPositions:
+    - {x: 0, y: 1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 0, y: -2, z: 0}
+    m_RuleTransform: 0
   - m_Id: 0
     m_Sprites:
     - {fileID: 21300000, guid: 685ee5e87dedc834ca86e676ecb75c6c, type: 3}
@@ -26,10 +42,11 @@ MonoBehaviour:
     m_Output: 0
     m_ColliderType: 2
     m_RandomTransform: 0
-    m_Neighbors: 0100000001000000
+    m_Neighbors: 010000000100000001000000
     m_NeighborPositions:
     - {x: 0, y: -1, z: 0}
     - {x: 0, y: -2, z: 0}
+    - {x: 0, y: 1, z: 0}
     m_RuleTransform: 0
   - m_Id: 4
     m_Sprites:
@@ -41,9 +58,25 @@ MonoBehaviour:
     m_Output: 0
     m_ColliderType: 1
     m_RandomTransform: 0
-    m_Neighbors: 01000000
+    m_Neighbors: 0100000002000000
     m_NeighborPositions:
     - {x: 0, y: -1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 1
+    m_Sprites:
+    - {fileID: 21300000, guid: ff37e3e0c21402644b0f78a3ccbec703, type: 3}
+    m_GameObject: {fileID: 628338776450109615, guid: ffbd5ccb826750242b14adf936aef5d3, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 2
+    m_RandomTransform: 0
+    m_Neighbors: 0100000001000000
+    m_NeighborPositions:
+    - {x: 0, y: -1, z: 0}
+    - {x: 0, y: 1, z: 0}
     m_RuleTransform: 0
   - m_Id: 3
     m_Sprites:
@@ -53,14 +86,14 @@ MonoBehaviour:
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
     m_Output: 0
-    m_ColliderType: 0
+    m_ColliderType: 2
     m_RandomTransform: 0
     m_Neighbors: 0200000001000000
     m_NeighborPositions:
     - {x: 0, y: -1, z: 0}
     - {x: 0, y: 1, z: 0}
     m_RuleTransform: 0
-  breakingTime: 5
+  hardness: 2
   drops:
   - item: {fileID: 11400000, guid: a2a3b5474aa760143b3ea6272e3780ad, type: 2}
     minMax: {x: 1, y: 3}
@@ -109,5 +142,6 @@ MonoBehaviour:
   colors:
   - {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
   - {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 1}
+  breakingAudio: []
   tool: 2
   minMaterial: 4
