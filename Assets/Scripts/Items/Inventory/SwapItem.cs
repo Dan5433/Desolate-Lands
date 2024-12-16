@@ -9,11 +9,19 @@ public class SwapItem : MonoBehaviour, IPointerDownHandler, IPointerExitHandler,
     [SerializeField] bool detectClicks = true;
     [SerializeField] bool allowDeposit = true;
     [SerializeField] bool allowWithdraw = true;
+    [SerializeField] bool locked = false;
     [SerializeField] SlotType slotType;
     [SerializeField] Sprite placeholderImage;
     [SerializeField] UnityEvent onClick;
 
     public Sprite Placeholder => placeholderImage;
+    public bool Locked {  get { return locked; } 
+        set 
+        {  
+            locked = value; 
+            transform.Find("Locked").gameObject.SetActive(value);
+        } 
+    }
 
     private void Awake()
     {
@@ -22,7 +30,7 @@ public class SwapItem : MonoBehaviour, IPointerDownHandler, IPointerExitHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (!detectClicks) return;
+        if (!detectClicks || locked) return;
 
         ItemManager.GrabItem(transform, (int)eventData.button, slotType, allowDeposit, allowWithdraw);
         onClick?.Invoke();

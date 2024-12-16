@@ -7,8 +7,7 @@ public class SlotCraftStationUI : MonoBehaviour
     [SerializeField] PlayerCrafting playerResources;
     [SerializeField] CraftStation currentStation;
     [SerializeField] Image progressBar;
-    [SerializeField] Image output;
-    [SerializeField] GameObject previewPanel;
+    [SerializeField] GameObject output;
     SlotCraftingRecipe selectedRecipe = null;
     float progress;
     bool buttonHeld;
@@ -41,8 +40,8 @@ public class SlotCraftStationUI : MonoBehaviour
         progressBar.fillAmount = 0;
         progress = 0;
 
-        output.sprite = ItemManager.Instance.Air.Sprite;
-        previewPanel.SetActive(false);
+        output.GetComponentInChildren<Image>().sprite = ItemManager.Instance.Air.Sprite;
+        output.GetComponent<SwapItem>().Locked = false;
     }
     public void PressButton()
     {
@@ -70,10 +69,13 @@ public class SlotCraftStationUI : MonoBehaviour
             currentStation.Inventory[1].Count + recipeOutput.count <= currentStation.Inventory[1].ItemObj.MaxCount);
     }
 
+    //TODO: output item into inventory when switching input but lock output before completion
     void PreviewOutput(SlotCraftingRecipe craftingRecipe)  
     {
-        output.sprite = craftingRecipe.reward.item.Sprite;
-        previewPanel.SetActive(true);
+        output.GetComponentInChildren<Image>().sprite = 
+            craftingRecipe.reward.item.Sprite;
+
+        output.GetComponent<SwapItem>().Locked = true;
 
         progressBar.fillAmount = progress / selectedRecipe.craftTime;
     }

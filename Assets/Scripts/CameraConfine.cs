@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class CameraConfine : MonoBehaviour
 {
-    [SerializeField] TerrainManager genTerrain;
+    [SerializeField] TerrainManager terrainManager;
     [SerializeField] CinemachineConfiner confiner;
 
     void Awake()
     {
         var collider = GetComponent<PolygonCollider2D>();
-        var worldSize = genTerrain.WorldSize;
+        var worldSize = terrainManager.WorldSize;
         var chunkSize = TerrainManager.ChunkSize;
 
         Vector2[] points = {
@@ -20,6 +20,6 @@ public class CameraConfine : MonoBehaviour
         
         collider.SetPath(0,points);
 
-        //confiner.InvalidatePathCache();
+        confiner.InvalidatePathCache();
     }
 }

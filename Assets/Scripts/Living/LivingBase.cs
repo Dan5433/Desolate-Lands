@@ -1,4 +1,3 @@
-using EditorAttributes;
 using UnityEngine;
 
 public class LivingBase : MonoBehaviour, IDamageable

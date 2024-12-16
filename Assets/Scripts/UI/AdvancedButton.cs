@@ -1,34 +1,39 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class AdvancedButton : MonoBehaviour, 
-    IPointerDownHandler, IPointerUpHandler, IPointerExitHandler 
-    //IPointerEnterHandler
+
+public class AdvancedButton : Button
 {
-    [SerializeField] Color normal;
-    [SerializeField] Color hover;
-    [SerializeField] Color held;
     [SerializeField] UnityEvent onMouseDown;
     [SerializeField] UnityEvent onMouseUp;
 
-    public void OnPointerDown(PointerEventData eventData)
+    public override void OnPointerDown(PointerEventData eventData)
     {
+        base.OnPointerDown(eventData);
+
+        if (!IsActive() || !IsInteractable())
+            return;
+
         onMouseDown?.Invoke();
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public override void OnPointerExit(PointerEventData eventData)
     {
+        base.OnPointerExit(eventData);
         onMouseUp?.Invoke();
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public override void OnPointerUp(PointerEventData eventData)
     {
+        base.OnPointerUp(eventData);
         onMouseUp?.Invoke();
     }
 
-    void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         onMouseUp?.Invoke();
     }
 }
