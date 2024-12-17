@@ -88,4 +88,12 @@ public class SwapItem : MonoBehaviour, IPointerDownHandler, IPointerExitHandler,
 
         tooltipTransform.anchoredPosition = anchoredPosition;
     }
+
+    private void OnDisable()
+    {
+        if (!ItemManager.Instance.ItemTooltip.activeSelf)
+            return;
+
+        ItemManager.Instance.ItemTooltip.SetActive(false);
+    }
 }

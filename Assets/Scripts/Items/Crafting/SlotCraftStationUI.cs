@@ -7,7 +7,7 @@ public class SlotCraftStationUI : MonoBehaviour
     [SerializeField] PlayerCrafting playerResources;
     [SerializeField] CraftStation currentStation;
     [SerializeField] Image progressBar;
-    [SerializeField] GameObject output;
+    [SerializeField] SwapItem output;
     SlotCraftingRecipe selectedRecipe = null;
     float progress;
     bool buttonHeld;
@@ -16,7 +16,7 @@ public class SlotCraftStationUI : MonoBehaviour
     {
         currentStation = station;
 
-        ResetUI();
+        //ResetUI();
     }
 
     public void LoadState(float progress)
@@ -28,9 +28,23 @@ public class SlotCraftStationUI : MonoBehaviour
 
     public void OnInputChanged()
     {
-        if (selectedRecipe != null) ResetUI();
+        if (selectedRecipe != null)
+        {
+            ResetUI(); ResetOutput();
+        }
 
         UpdateRecipe();
+    }
+
+    void ResetOutput()
+    {
+        if (!IsOutputEmpty())
+            return;
+
+        output.Locked = false;
+        currentStation.Inventory[1] = ItemManager.Instance.InvItemAir;
+        currentStation.UpdateUI();
+        currentStation.SaveInventory();
     }
 
     void ResetUI()
@@ -39,10 +53,9 @@ public class SlotCraftStationUI : MonoBehaviour
         buttonHeld = false;
         progressBar.fillAmount = 0;
         progress = 0;
-
-        output.GetComponentInChildren<Image>().sprite = ItemManager.Instance.Air.Sprite;
-        output.GetComponent<SwapItem>().Locked = false;
+        currentStation.SaveProgress(progress);
     }
+
     public void PressButton()
     {
         if (selectedRecipe == null || !IsOutputAvailable(selectedRecipe.reward)) return;
@@ -62,22 +75,34 @@ public class SlotCraftStationUI : MonoBehaviour
         return currentStation.Inventory[0].ItemObj == ItemManager.Instance.Air;
     }
 
+    bool IsOutputEmpty()
+    {
+        return output.Locked || currentStation.Inventory[1].ItemObj == ItemManager.Instance.Air;
+    }
+
     bool IsOutputAvailable(CraftItem recipeOutput)
     {
-        return currentStation.Inventory[1].ItemObj == ItemManager.Instance.Air ||
-            (currentStation.Inventory[1].ItemObj == recipeOutput.item &&
-            currentStation.Inventory[1].Count + recipeOutput.count <= currentStation.Inventory[1].ItemObj.MaxCount);
+        return IsOutputEmpty() || (currentStation.Inventory[1].ItemObj == recipeOutput.item &&
+            currentStation.Inventory[1].Count + recipeOutput.count <= 
+            currentStation.Inventory[1].ItemObj.MaxCount);
     }
 
     //TODO: output item into inventory when switching input but lock output before completion
-    void PreviewOutput(SlotCraftingRecipe craftingRecipe)  
+    void PreviewOutput(SlotCraftingRecipe craftingRecipe)
     {
-        output.GetComponentInChildren<Image>().sprite = 
-            craftingRecipe.reward.item.Sprite;
-
-        output.GetComponent<SwapItem>().Locked = true;
+        if (!IsOutputEmpty()) return;
 
         progressBar.fillAmount = progress / selectedRecipe.craftTime;
+
+        int outputCount = Mathf.Clamp(currentStation.Inventory[0].Count * craftingRecipe.cost.count,
+            1, craftingRecipe.reward.item.MaxCount);
+
+        currentStation.Inventory[1] = InventoryItemFactory.Create(
+            selectedRecipe.reward.item, selectedRecipe.reward.item.Name, outputCount);
+
+        output.Locked = true;
+
+        currentStation.UpdateUI();
     }
 
     void UpdateRecipe()
@@ -94,37 +119,25 @@ public class SlotCraftStationUI : MonoBehaviour
 
     void OutputReward()
     {
-        int maxOutput = (selectedRecipe.reward.item.MaxCount - currentStation.Inventory[1].Count) / 
-            selectedRecipe.reward.count;
+        int recipesMade = currentStation.Inventory[1].Count / selectedRecipe.reward.count;
 
-        currentStation.Inventory[1] = InventoryItemFactory.Create(
-            selectedRecipe.reward.item, selectedRecipe.reward.item.Name, 0);
-
-        if (maxOutput < currentStation.Inventory[0].Count / selectedRecipe.cost.count)
+        currentStation.Inventory[0].Count -= recipesMade * selectedRecipe.cost.count;
+        if(currentStation.Inventory[0].Count <= 0)
         {
-            foreach (var reward in selectedRecipe.resourceRewards)
-            {
-                playerResources.ChangeResourceCount(reward.type, reward.count * maxOutput);
-            }
-
-            currentStation.Inventory[1].Count += maxOutput * selectedRecipe.reward.count;
-            currentStation.Inventory[0].Count -= maxOutput * selectedRecipe.cost.count;
-        }
-        else
-        {
-            foreach (var reward in selectedRecipe.resourceRewards)
-            {
-                playerResources.ChangeResourceCount(reward.type, reward.count * currentStation.Inventory[0].Count);
-            }
-
-            currentStation.Inventory[1].Count += currentStation.Inventory[0].Count * selectedRecipe.reward.count;
             currentStation.Inventory[0] = ItemManager.Instance.InvItemAir;
         }
 
+        foreach (var reward in selectedRecipe.resourceRewards)
+        {
+            playerResources.ChangeResourceCount(reward.type, reward.count * recipesMade);
+        }
+
+        output.Locked = false;
         ResetUI();
 
         currentStation.SaveProgress(progress);
         currentStation.UpdateUI();
+        currentStation.SaveInventory();
     }
 
     void Update()

@@ -238,7 +238,6 @@ public class ItemManager : MonoBehaviour
                 if (allowDeposit) DepositItem(slotItem, selectedItem);
                 else return;
             }
-
             else
             {
                 if (!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw)) return;
@@ -252,7 +251,8 @@ public class ItemManager : MonoBehaviour
                 if (allowWithdraw) SplitSlot(ref slotItem);
                 else return;
             }
-            else if (slotItem.ItemObj == Instance.Air || slotItem.ItemObj == selectedItem.ItemObj)
+            else if (slotItem.ItemObj == Instance.Air || 
+                (slotItem.ItemObj == selectedItem.ItemObj && slotItem.Count < slotItem.ItemObj.MaxCount))
             {
                 if (allowDeposit) IncrementSlot(ref slotItem, selectedItem);
                 else return;
