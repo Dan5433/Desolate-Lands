@@ -3,12 +3,13 @@ using CustomExtensions;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
 
 public class Interact : MonoBehaviour
 {
     GameObject activeUI;
     GameObject activeTile;
-    Break breakScript;
+    PlayerDamage damageScript;
     [SerializeField] float reach;
     [SerializeField] Transform origin;
     [SerializeField] InventoryBase inventory;
@@ -17,7 +18,7 @@ public class Interact : MonoBehaviour
 
     void Awake()
     {
-        breakScript = GetComponent<Break>();
+        damageScript = GetComponent<PlayerDamage>();
     }
 
     public void DisableUI()
@@ -121,18 +122,15 @@ public class Interact : MonoBehaviour
         }
         if (Input.GetMouseButton(0))
         {
-            if (!hit.collider.TryGetComponent<IDamageable>(out var damageable)) 
+            if (!hit.collider.TryGetComponent<IDamageable>(out var damageable) ||
+                ItemManager.Instance.IsHoldingItem)
                 return;
 
-            if(hit.transform.TryGetComponent<Tilemap>(out var tilemap))
-                breakScript.Breaking(damageable, 
-                    tilemap.GetTile<BreakableTile>(
-                        tilemap.WorldToCell(hit.collider.transform.position)));
-
+            damageScript.DealDamage(hit, damageable);
         }
         else
         {
-            breakScript.ResetBreaking();
+            damageScript.ResetCooldown();
         }
     }
 

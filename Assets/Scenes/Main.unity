@@ -3210,7 +3210,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 807.7349, y: 0}
+  m_AnchoredPosition: {x: 826.5437, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &452009548
@@ -11141,7 +11141,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1046.7349, y: 0}
+  m_AnchoredPosition: {x: 1065.5437, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1087214259
@@ -20435,15 +20435,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 219476dff8afc9244a6622ef009e65ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  breakEffects:
-  - {fileID: 11400000, guid: c92d9e978374d224f9c7a964cd3b79c8, type: 2}
-  - {fileID: 11400000, guid: 048653e1aec4bb54ebaa4bb1baf85ddc, type: 2}
-  - {fileID: 11400000, guid: bebc8646153ace94f905cc3ce494fc66, type: 2}
-  breakParticles: {fileID: 953168185}
-  effects: {fileID: 1852077160}
+  breakCooldown: 1
   toolInventory: {fileID: 1087214264}
-  breakTimeReduction: 0.25
-  wrongToolPenalty: 1.5
+  correctToolBonus: 5
 --- !u!114 &2136044637
 MonoBehaviour:
   m_ObjectHideFlags: 0

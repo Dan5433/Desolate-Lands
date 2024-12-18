@@ -8,21 +8,22 @@ namespace CustomClasses
     [Serializable]
     public enum ToolType
     {
-        None,
-        Axe,
-        Pickaxe,
-        Shovel
+        None = 0,
+        Axe = 1,
+        Pickaxe = 2,
+        Shovel = 3,
+        Sword = 4,
     }
 
     [Serializable]
     public enum ItemMaterial
     {
-        Wood,
-        Stone,
-        RustedIron,
-        Copper,
-        Iron,
-        Aluminium
+        Wood = 0,
+        Stone = 1,
+        RustedIron = 2,
+        Copper = 3,
+        Iron = 4,
+        Aluminium = 5
     }
 
     [Serializable]
