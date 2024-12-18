@@ -17,7 +17,6 @@ namespace CustomClasses
     [Serializable]
     public enum ItemMaterial
     {
-        None,
         Wood,
         Stone,
         RustedIron,

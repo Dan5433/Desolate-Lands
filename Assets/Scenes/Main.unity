@@ -178,10 +178,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 50
-    m_Right: 50
-    m_Top: 50
-    m_Bottom: 50
+    m_Left: 60
+    m_Right: 60
+    m_Top: 60
+    m_Bottom: 60
   m_ChildAlignment: 4
   m_Spacing: 25
   m_ChildForceExpandWidth: 1
@@ -802,8 +802,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 189.57692, y: -65.365}
-  m_SizeDelta: {x: 349.15384, y: 30.73}
+  m_AnchoredPosition: {x: 186.3077, y: -65.365}
+  m_SizeDelta: {x: 342.6154, y: 30.73}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &275578615
 MonoBehaviour:
@@ -2739,11 +2739,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366780310}
   m_CullTransparentMesh: 1
---- !u!1 &367898557 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1326875235087318632, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
-  m_PrefabInstance: {fileID: 1583619386}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &380802361
 GameObject:
   m_ObjectHideFlags: 0
@@ -3147,7 +3142,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2
+    m_Bits: 66
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -3215,7 +3210,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 855.6019, y: 0}
+  m_AnchoredPosition: {x: 807.7349, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &452009548
@@ -3906,7 +3901,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1097129467}
   m_HandleRect: {fileID: 1097129466}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -11146,7 +11141,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1094.6019, y: 0}
+  m_AnchoredPosition: {x: 1046.7349, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1087214259
@@ -11774,7 +11769,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 405, y: -221.45999}
+  m_AnchoredPosition: {x: 415, y: -231.45999}
   m_SizeDelta: {x: 710, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1220398115
@@ -11816,19 +11811,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
+  m_Color: {r: 0.9716981, g: 0.9716981, b: 0.9716981, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fa51ff02e2cca6f4897a2e0300205a76, type: 3}
-  m_Type: 3
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 0}
+  m_Type: 1
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -11893,8 +11888,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 409.42307, y: -344.25}
-  m_SizeDelta: {x: 718.8461, y: 588.5}
+  m_AnchoredPosition: {x: 412.69232, y: -344.25}
+  m_SizeDelta: {x: 705.38464, y: 568.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1239096683
 MonoBehaviour:
@@ -12612,10 +12607,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 50
-    m_Right: 50
-    m_Top: 50
-    m_Bottom: 50
+    m_Left: 60
+    m_Right: 60
+    m_Top: 60
+    m_Bottom: 60
   m_ChildAlignment: 4
   m_Spacing: 25
   m_ChildForceExpandWidth: 1
@@ -13041,7 +13036,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 405, y: -50}
+  m_AnchoredPosition: {x: 415, y: -60}
   m_SizeDelta: {x: 710, y: 61.46}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1467818575
@@ -13922,6 +13917,34 @@ PrefabInstance:
       propertyPath: allowDeposit
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3535593580573081468, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: onClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3535593580573081468, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: onClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3535593580573081468, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: onClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2003840439}
+    - target: {fileID: 3535593580573081468, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: onClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3535593580573081468, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: onClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnInputChanged
+      objectReference: {fileID: 0}
+    - target: {fileID: 3535593580573081468, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: onClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SlotCraftStationUI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3535593580573081468, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+      propertyPath: onClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6004490701239809528, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
       propertyPath: m_text
       value: 
@@ -13936,6 +13959,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2037556800742507089, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
   m_PrefabInstance: {fileID: 1583619386}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1583619388 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3535593580573081468, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
+  m_PrefabInstance: {fileID: 1583619386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf76728d5bb3b54d9f3a878358d7a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1642192951
 GameObject:
   m_ObjectHideFlags: 0
@@ -13975,8 +14009,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 983.42303, y: -344.25}
-  m_SizeDelta: {x: 379.15384, y: 588.5}
+  m_AnchoredPosition: {x: 976.6923, y: -344.25}
+  m_SizeDelta: {x: 372.6154, y: 568.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1642192953
 MonoBehaviour:
@@ -14934,7 +14968,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 810, y: 331.46}
+  m_SizeDelta: {x: 830, y: 351.46}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2003840433
 MonoBehaviour:
@@ -15001,10 +15035,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 50
-    m_Right: 50
-    m_Top: 50
-    m_Bottom: 50
+    m_Left: 60
+    m_Right: 60
+    m_Top: 60
+    m_Bottom: 60
   m_ChildAlignment: 1
   m_Spacing: 50
   m_ChildForceExpandWidth: 1
@@ -15029,7 +15063,7 @@ MonoBehaviour:
   playerResources: {fileID: 2136044642}
   currentStation: {fileID: 0}
   progressBar: {fileID: 1220398117}
-  output: {fileID: 367898557}
+  output: {fileID: 1583619388}
 --- !u!1 &2027034076
 GameObject:
   m_ObjectHideFlags: 0
@@ -20546,7 +20580,7 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 64

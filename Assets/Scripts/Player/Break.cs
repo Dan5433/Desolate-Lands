@@ -1,78 +1,41 @@
 using CustomClasses;
-using CustomExtensions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Break : MonoBehaviour
 {
-    float breakingTime;
-    float curBreakTime;
-    bool breaking;
-    Vector3Int breakCell;
-    BreakableTile tile;
+    float cooldown = 0;
 
-    [SerializeField] Tile[] breakEffects;
-    [SerializeField] ParticleSystem breakParticles;
-    [SerializeField] Tilemap effects;
+    [SerializeField][Tooltip("In Seconds")] float breakCooldown;
     [SerializeField] InventoryBase toolInventory;
-    [SerializeField][Tooltip("In Seconds")] float breakTimeReduction;
-    [SerializeField][Tooltip("Mutiplier")] float wrongToolPenalty;
+    [SerializeField][Tooltip("Mutiplier")] float correctToolBonus;
+
     public void ResetBreaking()
     {
-        breaking = false;
-        if (breakCell.z != -1)
-        {
-            effects.SetTile(breakCell, null);
-            breakCell.z = -1;
-        }
+        cooldown = 0;
     }
 
-    public void Breaking(BreakableTile breakTile, Vector3Int cell, Tilemap tilemap, AudioSource interactAudio)
+    public void Breaking(IDamageable damageable, BreakableTile tile)
     {
-        tile = breakTile;
-        breakCell = cell;
+        if (cooldown > 0)
+        {
+            cooldown -= Time.deltaTime;
+            return;
+        }
 
         var equippedTool = toolInventory.Inventory[0].ItemObj as Tool;
-        if (equippedTool == null /*|| tile.MinMaterial > equippedTool.Material*/) return;
+        if (equippedTool == null /*|| 
+            * tile.MinMaterial > equippedTool.Material*/ ||
+            ItemManager.Instance.IsHoldingItem)
+            return;
 
-        if (!breaking)
-        {
-            ApplyPenalties(equippedTool);
-
-            curBreakTime = breakingTime;
-            breaking = true;
-        }
-
-        if (curBreakTime > 0 && breaking)
-        {
-            curBreakTime -= Time.deltaTime;
-
-            interactAudio.PlayRandomClip(tile.BreakingAudio);
-            UpdateEffect();
-        }
-
-        else if (curBreakTime <= 0 && breaking)
-        {
-            OnBreak(tilemap);
-            breakCell.z = -1;
-        }
+        damageable.Damage(CalculateDamage((int)equippedTool.Material, equippedTool.Type == tile.Tool));
+        cooldown = breakCooldown;
     }
 
-    void UpdateEffect()
+    float CalculateDamage(int damage, bool isCorrectTool)
     {
-        float percentBroken = (breakingTime - curBreakTime) / breakingTime;
-
-        for (int i = 0; i < breakEffects.Length; i++)
-        {
-            float highRange = (float)(i + 1) / breakEffects.Length;
-            float lowRange = (float)i / breakEffects.Length;
-
-            if (percentBroken >= lowRange && percentBroken <= highRange)
-            {
-                effects.SetTile(breakCell, breakEffects[i]);
-                break;
-            }
-        }
+        return isCorrectTool ? damage * correctToolBonus : damage;
     }
 
     void UpdateDurability()
@@ -83,40 +46,5 @@ public class Break : MonoBehaviour
         if (equippedTool.Durability <= 0) toolInventory.Inventory[0] = ItemManager.Instance.InvItemAir;
         toolInventory.SaveInventory();
         toolInventory.UpdateUI();
-    }
-
-    void OnBreak(Tilemap tilemap)
-    {
-        UpdateDurability();
-
-        SaveTerrain.RemoveTileSaveData(breakCell, tilemap.name);
-
-        var go = tilemap.GetInstantiatedObject(breakCell);
-        if (go.TryGetComponent<IBreakable>(out var breakable)) breakable.OnBreak();
-
-        tilemap.SetTile(breakCell, null);
-        effects.SetTile(breakCell, null);
-
-        foreach (var drop in tile.Drops)
-        {
-            int count = drop.RandomCount();
-            if (count == 0) { continue; }
-
-            ItemManager.SpawnGroundItem(
-                InventoryItemFactory.Create(drop.item, count), breakCell, true);
-        }
-
-        breakParticles.ChangeColors(tile.Colors[0], tile.Colors[1]);
-        breakParticles.transform.position = breakCell;
-        breakParticles.Play();
-    }
-
-    void ApplyPenalties(Tool tool)
-    {
-        //if (!tile) return;
-
-        //breakingTime = tile.BreakingTime - breakTimeReduction * (tool.Material - tile.MinMaterial);
-
-        //if (tile.Tool != tool.Type && tile.Tool != ToolType.None) breakingTime *= wrongToolPenalty;
     }
 }

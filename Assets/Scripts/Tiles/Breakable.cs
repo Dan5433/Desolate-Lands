@@ -1,7 +1,5 @@
-using EditorAttributes;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
 
 public class Breakable : MonoBehaviour, IDamageable
 {

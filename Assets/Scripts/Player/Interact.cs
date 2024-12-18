@@ -6,10 +6,8 @@ using UnityEngine.Tilemaps;
 
 public class Interact : MonoBehaviour
 {
-    Vector3Int targetedCell;
     GameObject activeUI;
     GameObject activeTile;
-    const float offsetForCell = 0.01f;
     Break breakScript;
     [SerializeField] float reach;
     [SerializeField] Transform origin;
@@ -34,9 +32,11 @@ public class Interact : MonoBehaviour
         if(activeTile == null) return false;
 
         if ((Input.GetKeyDown(KeyCode.Escape) ||
-            Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2)) return true;
+            Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2)) 
+            return true;
 
-        if(!ItemManager.Instance.IsHoldingItem && Input.GetMouseButtonDown(1)) return true;
+        if(!ItemManager.Instance.IsHoldingItem && Input.GetMouseButtonDown(1)) 
+            return true;
 
         return false;
     }
@@ -48,29 +48,13 @@ public class Interact : MonoBehaviour
 
         Debug.DrawRay(origin.position, origin.up, Color.green, reach);
 
+        if (!hit)
+            return;
+
         if (CanDisableUI())
         {
             DisableUI();
             return;
-        }
-
-        if (!hit)
-        {
-            breakScript.ResetBreaking();
-            return;
-        }
-
-        if (hit.transform.TryGetComponent<Tilemap>(out var tilemap))
-        {
-            var newCell = tilemap.WorldToCell(hit.collider.transform.position);
-            if (targetedCell != newCell && targetedCell.z != -1)
-            {
-                breakScript.ResetBreaking();
-                targetedCell.z = -1;
-                return;
-            }
-
-            targetedCell = newCell;
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -103,7 +87,6 @@ public class Interact : MonoBehaviour
                 {
                     craftStation.UpdateCraftingUI();
                     craftStation.CraftingUi.SetActive(true);
-                    craftStation.CraftingUi.GetComponent<SlotCraftStationUI>().SetStation(craftStation);
                     craftStation.UpdateUI();
 
                     UpdateUI(craftStation.gameObject, craftStation.CraftingUi);
@@ -138,21 +121,21 @@ public class Interact : MonoBehaviour
         }
         if (Input.GetMouseButton(0))
         {
-            if (tilemap == null) return;
-            if (ItemManager.Instance.IsHoldingItem || activeUI != null)
-            {
-                breakScript.ResetBreaking();
+            if (!hit.collider.TryGetComponent<IDamageable>(out var damageable)) 
                 return;
-            }
 
-            BreakableTile tile = tilemap.GetTile<BreakableTile>(targetedCell);
-            breakScript.Breaking(tile, targetedCell, tilemap, interactAudio);
+            if(hit.transform.TryGetComponent<Tilemap>(out var tilemap))
+                breakScript.Breaking(damageable, 
+                    tilemap.GetTile<BreakableTile>(
+                        tilemap.WorldToCell(hit.collider.transform.position)));
+
         }
         else
         {
             breakScript.ResetBreaking();
         }
     }
+
 
     public void UpdateUI(GameObject tile, GameObject ui)
     {

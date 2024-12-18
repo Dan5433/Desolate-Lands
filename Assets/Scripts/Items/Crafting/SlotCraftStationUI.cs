@@ -16,7 +16,7 @@ public class SlotCraftStationUI : MonoBehaviour
     {
         currentStation = station;
 
-        //ResetUI();
+        ResetUI();
     }
 
     public void LoadState(float progress)
@@ -31,6 +31,7 @@ public class SlotCraftStationUI : MonoBehaviour
         if (selectedRecipe != null)
         {
             ResetUI(); ResetOutput();
+            currentStation.SaveProgress(progress);
         }
 
         UpdateRecipe();
@@ -53,7 +54,6 @@ public class SlotCraftStationUI : MonoBehaviour
         buttonHeld = false;
         progressBar.fillAmount = 0;
         progress = 0;
-        currentStation.SaveProgress(progress);
     }
 
     public void PressButton()
@@ -87,7 +87,6 @@ public class SlotCraftStationUI : MonoBehaviour
             currentStation.Inventory[1].ItemObj.MaxCount);
     }
 
-    //TODO: output item into inventory when switching input but lock output before completion
     void PreviewOutput(SlotCraftingRecipe craftingRecipe)
     {
         if (!IsOutputEmpty()) return;
