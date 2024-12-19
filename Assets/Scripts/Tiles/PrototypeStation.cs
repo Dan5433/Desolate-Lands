@@ -39,6 +39,9 @@ public class PrototypeStation : MonoBehaviour
             prototypeUI.GetComponent<Button>().onClick.AddListener(
                 () => uiScript.SelectPrototype(prototype));
 
+            prototypeUI.transform.Find("NewPulse").gameObject.SetActive(
+                !CraftingManager.HasPrototypedBefore(prototype.recipe));
+
             index++;
         }
         for (int i = content.childCount - 1; i >= availablePrototypes.Count; i--)

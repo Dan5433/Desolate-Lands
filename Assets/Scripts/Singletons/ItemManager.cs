@@ -10,7 +10,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField] GameObject groundItemPrefab;
     [SerializeField] GameObject invSlotPrefab;
     [SerializeField] GameObject containerUI;
-    [SerializeField] GameObject itemTooltip;
+    [SerializeField] Tooltip tooltip;
     [SerializeField] ItemRef heldItem;
     [SerializeField] Item air;
     InvItem invItemAir;
@@ -19,7 +19,7 @@ public class ItemManager : MonoBehaviour
     public Item Air => air;
     public InvItem InvItemAir => invItemAir;
     public GameObject ContainerUI => containerUI;
-    public GameObject ItemTooltip => itemTooltip;
+    public Tooltip Tooltip => tooltip;
     public GameObject InvSlot => invSlotPrefab;
     public bool IsHoldingItem { get { return heldItem.Item.ItemObj != Air; } }
 
@@ -37,9 +37,9 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public static void DropHeldItem(Vector3 position, Vector3 direction, float distance)
+    public static bool DropHeldItem(Vector3 position, Vector3 direction, float distance)
     {
-        if (Instance.heldItem.Item.ItemObj == Instance.Air) return;
+        if (!Instance.IsHoldingItem) return false;
         GameManager.CursorState = CursorState.Default;
 
         Vector3 spawnPos = position + direction * distance;
@@ -54,6 +54,7 @@ public class ItemManager : MonoBehaviour
 
         Instance.heldItem.Item = Instance.InvItemAir;
         UpdateItemUI(Instance.heldItem.transform, Instance.heldItem.Item);
+        return true;
     }
 
     public static bool IsInvSlot(GameObject gameObject)

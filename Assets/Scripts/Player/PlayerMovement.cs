@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float speed = 0.015f;
     [SerializeField] PlayerSprites sprites;
     [SerializeField] SpriteRenderer gfx;
+    [SerializeField] Animator playerAnimator;
     const string saveString = "Position.bin";
 
     void Start()
@@ -42,15 +43,6 @@ public class PlayerMovement : MonoBehaviour
 
     void UpdateSprite(float vertInput, float horInput)
     {
-        if (vertInput > 0)
-        {
-            gfx.sprite = sprites.north;
-        }
-        if (vertInput < 0)
-        {
-            gfx.sprite = sprites.south;
-        }
-
         if (horInput > 0)
         {
             gfx.sprite = sprites.east;
@@ -58,6 +50,16 @@ public class PlayerMovement : MonoBehaviour
         if (horInput < 0)
         {
             gfx.sprite = sprites.west;
+        }
+
+        //check vertical last to prioritize sprite
+        if (vertInput > 0)
+        {
+            gfx.sprite = sprites.north;
+        }
+        if (vertInput < 0)
+        {
+            gfx.sprite = sprites.south;
         }
     }
     void SavePosition()
@@ -94,9 +96,10 @@ public class PlayerMovement : MonoBehaviour
         public Sprite east;
         public Sprite south;
         public Sprite west;
-        public Sprite ne;
-        public Sprite se;
-        public Sprite sw;
-        public Sprite nw;
+        //public Sprite ne;
+        //public Sprite se;
+        //public Sprite sw;
+        //public Sprite nw;
+        //TODO: add diagonal movement sprites
     }
 }

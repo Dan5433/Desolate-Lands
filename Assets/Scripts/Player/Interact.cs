@@ -1,9 +1,5 @@
-using CustomClasses;
-using CustomExtensions;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
 
 public class Interact : MonoBehaviour
 {
@@ -14,7 +10,6 @@ public class Interact : MonoBehaviour
     [SerializeField] Transform origin;
     [SerializeField] InventoryBase inventory;
     [SerializeField] PlayerCrafting crafting;
-    [SerializeField] AudioSource interactAudio;
 
     void Awake()
     {
@@ -120,10 +115,11 @@ public class Interact : MonoBehaviour
                 return;
             }
         }
+
         if (Input.GetMouseButton(0))
         {
             if (!hit.collider.TryGetComponent<IDamageable>(out var damageable) ||
-                ItemManager.Instance.IsHoldingItem)
+                ItemManager.Instance.IsHoldingItem || activeUI)
                 return;
 
             damageScript.DealDamage(hit, damageable);

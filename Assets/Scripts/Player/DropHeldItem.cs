@@ -20,9 +20,8 @@ public class DropHeldItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
             return;
         }
 
-        ItemManager.DropHeldItem(origin.position, origin.up, throwDistance);
-
-        origin.GetComponentInParent<Interact>().DisableUI();
+        if(ItemManager.DropHeldItem(origin.position, origin.up, throwDistance))
+            origin.GetComponentInParent<Interact>().DisableUI();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

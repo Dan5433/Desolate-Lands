@@ -53,6 +53,8 @@ namespace CustomExtensions
         {
             if (source.isPlaying || audio.Length == 0) return;
 
+            source.pitch = Random.Range(0.9f,1.1f);
+
             source.PlayOneShot(audio[Random.Range(0, audio.Length)]);
         }
 
@@ -67,11 +69,12 @@ namespace CustomExtensions
             return new(reader.ReadInt32(), reader.ReadInt32());
         }
         
-        public static void PlayOneShot(this ParticleSystem system, Vector3 position, Quaternion rotation)
+        public static ParticleSystem PlayOneShot(this ParticleSystem system, Vector3 position, Quaternion rotation)
         {
             var instance = UnityEngine.Object.Instantiate(system, position, rotation);
             instance.Play();
             UnityEngine.Object.Destroy(instance.gameObject, instance.main.duration);
+            return instance;
         }
     }
 

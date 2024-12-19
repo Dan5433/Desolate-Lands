@@ -1,13 +1,14 @@
 using CustomClasses;
-using Unity.Burst.CompilerServices;
+using CustomExtensions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class PlayerDamage : MonoBehaviour
 {
-    [SerializeField][Tooltip("In Seconds")] float breakCooldown;
+    [SerializeField][Tooltip("In Seconds")] float baseCooldown;
     [SerializeField] InventoryBase toolInventory;
     [SerializeField][Tooltip("Mutiplier")] float correctToolBonus;
+    [SerializeField] AudioSource audioSource;
     float cooldown = 0;
 
     public void ResetCooldown()
@@ -17,7 +18,6 @@ public class PlayerDamage : MonoBehaviour
 
     public void DealDamage(RaycastHit2D hit, IDamageable damageable)
     {
-
         if (cooldown > 0)
         {
             cooldown -= Time.deltaTime;
@@ -49,9 +49,12 @@ public class PlayerDamage : MonoBehaviour
             * tile.MinMaterial > equippedTool.Material*/)
             return;
 
+        audioSource.PlayRandomClip(tile.BreakingAudio);
+
         damageable.Damage(CalculateDamage(equippedTool.Material, equippedTool.Type == tile.Tool));
         UpdateDurability();
-        cooldown = breakCooldown;
+
+        cooldown = baseCooldown;
     }
 
     float CalculateDamage(ItemMaterial material, bool isCorrectTool)

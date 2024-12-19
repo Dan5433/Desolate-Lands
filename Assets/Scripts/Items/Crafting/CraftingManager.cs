@@ -31,6 +31,11 @@ public class CraftingManager : MonoBehaviour
         }
     }
 
+    public static bool HasPrototypedBefore(CraftingRecipe recipe)
+    {
+        return Instance.crafting.PrototypedRecipes.Contains(recipe);
+    }
+
     public static SlotCraftingRecipe GetSingleSlotRecipe(CraftItem input, CraftingStationType type)
     {
         var matching = Array.Find(Instance.slotRecipes, r => r.type == type);

@@ -1,3 +1,4 @@
+using CustomExtensions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -68,6 +69,14 @@ public class Breakable : MonoBehaviour, IDamageable
             ItemManager.SpawnGroundItem(
                 InventoryItemFactory.Create(drop.item, count), 
                 transform.position, true);
+        }
+
+        foreach (var particle in BreakingManager.Instance.BreakParticles)
+        {
+            var instance = particle.PlayOneShot(transform.position,
+                new Vector3(0,0,90f).AnglesToQuaternion());
+
+            instance.ChangeColors(tile.Colors[0], tile.Colors[1]);
         }
 
         tilemap.SetTile(tilePosition, null);

@@ -55,7 +55,6 @@ public class CraftStation : InventoryBase, IBreakable
             writer.Write(progress);
         });
     }
-
     public void OnBreak()
     {
         var tilePosition = transform.parent.GetComponent<Tilemap>().WorldToCell(transform.position);

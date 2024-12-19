@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class SwapItem : MonoBehaviour, IPointerDownHandler, IPointerExitHandler, IPointerEnterHandler, IPointerMoveHandler
+public class SwapItem : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] bool detectClicks = true;
     [SerializeField] bool allowDeposit = true;
@@ -36,64 +36,19 @@ public class SwapItem : MonoBehaviour, IPointerDownHandler, IPointerExitHandler,
         onClick?.Invoke();
     }
 
-    public void OnPointerEnter(PointerEventData eventData) => UpdateTooltip();
-
-    void UpdateTooltip()
+    public void UpdateTooltip()
     {
         int index = ItemManager.GetSlotIndex(transform);
         var slotItem = transform.parent.GetComponentInParent<InventoryRef>().Inventory.Inventory[index];
 
-        var tooltip = ItemManager.Instance.ItemTooltip;
-
         if (slotItem.ItemObj == ItemManager.Instance.Air)
         {
-            tooltip.SetActive(false);
+            ItemManager.Instance.Tooltip.Hide();
             return;
         }
 
-        tooltip.GetComponentInChildren<TMP_Text>().text =
-            $"{slotItem.Name} (x{slotItem.Count})\n<color=#777>{slotItem.ExtraInfo()}";
-
-        tooltip.SetActive(true);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        ItemManager.Instance.ItemTooltip.SetActive(false);
-    }
-
-    public void OnPointerMove(PointerEventData eventData)
-    {
-        Vector3 offset = new(5f, 5f);
-        Vector2 position = Input.mousePosition + offset;
-
-        var tooltipTransform = ItemManager.Instance.ItemTooltip.GetComponent<RectTransform>();
-
-        tooltipTransform.position = position;
-
-        //Use anchored position for canvas related calculations
-        Vector2 anchoredPosition = tooltipTransform.anchoredPosition;
-        var canvasSize = tooltipTransform.parent.GetComponent<RectTransform>().sizeDelta;
-
-        //Force inside of canvas
-        if (tooltipTransform.anchoredPosition.x + tooltipTransform.sizeDelta.x > canvasSize.x)
-        {
-            anchoredPosition.x -= tooltipTransform.sizeDelta.x + offset.x * 4;
-        }
-
-        if (tooltipTransform.anchoredPosition.y + tooltipTransform.sizeDelta.y > canvasSize.y)
-        {
-            anchoredPosition.y -= tooltipTransform.sizeDelta.y + offset.y * 4;
-        }
-
-        tooltipTransform.anchoredPosition = anchoredPosition;
-    }
-
-    private void OnDisable()
-    {
-        if (!ItemManager.Instance.ItemTooltip.activeSelf)
-            return;
-
-        ItemManager.Instance.ItemTooltip.SetActive(false);
+        ItemManager.Instance.Tooltip.ShowMessage(
+            $"{slotItem.Name} (x{slotItem.Count})", 
+            slotItem.ExtraInfo());
     }
 }
