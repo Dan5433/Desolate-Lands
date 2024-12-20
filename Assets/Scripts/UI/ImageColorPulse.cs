@@ -1,3 +1,4 @@
+using CustomExtensions;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,27 +20,36 @@ public class ImageColorPulse : MonoBehaviour
         StopCoroutine(PulseColor());
     }
 
+    public void ResetPulse()
+    {
+        StopAllCoroutines();
+        StartCoroutine(PulseColor());
+    }
+
     IEnumerator PulseColor()
     {
+        Debug.Log("started pulse");
         var image = GetComponent<Image>();
+        image.color = startColor;
 
+        float time = 0;
         while (true)
         {
-            float time = 0;
             while (image.color != endColor)
             {
                 time += Time.deltaTime * speed;
                 image.color = Color.Lerp(startColor, endColor, time);
                 yield return null;
             };
-
             time = 0;
+
             while (image.color != startColor)
             {
                 time += Time.deltaTime * speed;
                 image.color = Color.Lerp(endColor, startColor, time);
                 yield return null;
             };
+            time = 0;
         }
     }
 }

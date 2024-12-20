@@ -1,7 +1,9 @@
 using CustomClasses;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class CraftingManager : MonoBehaviour
 {
@@ -38,28 +40,21 @@ public class CraftingManager : MonoBehaviour
 
     public static SlotCraftingRecipe GetSingleSlotRecipe(CraftItem input, CraftingStationType type)
     {
-        var matching = Array.Find(Instance.slotRecipes, r => r.type == type);
+        var station = Array.Find(Instance.slotRecipes, r => r.type == type);
 
-        foreach(var recipe in matching.recipes)
+        foreach (var recipe in station.recipes)
         {
-            if(recipe.cost.item == input.item 
+            if (recipe.cost.item == input.item
                 && recipe.cost.count <= input.count) return recipe;
         }
         return null;
     }
 
-    public static HashSet<CraftingPrototype> GetCraftablePrototypes(InvItem[] availableItems, PlayerResource[] availableResources, PrototypingStationType type)
+    public static Dictionary<CraftingPrototype, MissingRequirements> GetPrototypesAndMissing(InvItem[] availableItems, PlayerResource[] availableResources, PrototypeStationType type)
     {
-        var results = new HashSet<CraftingPrototype>();
-        
-        //initialize dictionary for easy lookup
-        var itemsCount = new Dictionary<Item, int>();
-        foreach(var item in availableItems)
-        {
-            if(!itemsCount.ContainsKey(item.ItemObj)) itemsCount[item.ItemObj] = 0;
+        Dictionary<CraftingPrototype, MissingRequirements> results = new();
 
-            itemsCount[item.ItemObj] += item.Count; 
-        }
+        var itemsCount = GetAvailableItemsDict(availableItems);
 
         var resourcesCount = new Dictionary<Resource, int>();
         foreach (var resource in availableResources)
@@ -67,33 +62,33 @@ public class CraftingManager : MonoBehaviour
             resourcesCount[resource.type] = resource.count;
         }
 
-        var matching = Array.Find(Instance.prototypes, p => p.type == type);
+        var station = Array.Find(Instance.prototypes, p => p.type == type);
 
-        foreach(var recipe in matching.prototypes)
+        foreach (var prototype in station.prototypes)
         {
-            bool available = true;
-            foreach (var item in recipe.recipe.cost)
+            if (HasPrototypedBefore(prototype.recipe))
+                continue;
+
+            results.Add(prototype, new() { missingItems = new(), missingResources = new()});
+
+            foreach (var item in prototype.recipe.cost)
             {
-                if (!itemsCount.ContainsKey(item.item) || itemsCount[item.item] < item.count)
-                {
-                    available = false;
-                    break;
-                }
+                if (itemsCount.ContainsKey(item.item) &&
+                    itemsCount[item.item] >= item.count)
+                    continue;
+
+                results[prototype].missingItems.Add(item.item);
             }
 
-            foreach (var resource in recipe.resourceCost)
+            foreach (var resource in prototype.resourceCost)
             {
-                if (!available) break;
+                if (resourcesCount[resource.resource.type] >= resource.count)
+                    continue;
 
-                if (resourcesCount[resource.resource.type] < resource.count)
-                {
-                    available = false;
-                    break;
-                }
+                results[prototype].missingResources.Add(resource.resource.type);
             }
-
-            if (available) results.Add(recipe);
         }
+
         return results;
     }
 
@@ -101,29 +96,36 @@ public class CraftingManager : MonoBehaviour
     {
         var results = new HashSet<CraftingRecipe>();
 
-        //initialize dictionary for easy lookup
-        var itemsCount = new Dictionary<Item, int>();
-        foreach (var item in availableItems)
-        {
-            if(!itemsCount.TryAdd(item.ItemObj, item.Count)) 
-                itemsCount[item.ItemObj]+= item.Count;
-        }
+        var itemsCount = GetAvailableItemsDict(availableItems);
 
         foreach (var recipe in Instance.crafting.PrototypedRecipes)
         {
             bool canCraft = true;
             foreach (var item in recipe.cost)
             {
-                if (!itemsCount.ContainsKey(item.item) || itemsCount[item.item] < item.count)
-                {
-                    canCraft = false; break;
-                }
-                    
+                if (itemsCount.ContainsKey(item.item) &&
+                    itemsCount[item.item] >= item.count)
+                    continue;
+
+                canCraft = false; break;
             }
 
-            if(canCraft) results.Add(recipe);
+            if (canCraft) results.Add(recipe);
         }
         return results;
+    }
+
+    static Dictionary<Item, int> GetAvailableItemsDict(InvItem[] availableItems)
+    {
+        //initialize dictionary for easy lookup
+        var itemsCount = new Dictionary<Item, int>();
+        foreach (var item in availableItems)
+        {
+            if (!itemsCount.ContainsKey(item.ItemObj)) itemsCount[item.ItemObj] = 0;
+
+            itemsCount[item.ItemObj] += item.Count;
+        }
+        return itemsCount;
     }
 
     [Serializable]
@@ -136,7 +138,7 @@ public class CraftingManager : MonoBehaviour
     [Serializable]
     struct Prototypes
     {
-        public PrototypingStationType type;
+        public PrototypeStationType type;
         public CraftingPrototype[] prototypes;
     }
 }
@@ -150,7 +152,7 @@ public enum CraftingStationType
 }
 
 [Serializable]
-public enum PrototypingStationType
+public enum PrototypeStationType
 {
     Workbench = 0,
 }
@@ -166,4 +168,11 @@ public struct CraftItem
         this.item = item;
         this.count = count;
     }
+}
+
+[Serializable]
+public struct MissingRequirements
+{
+    public HashSet<Item> missingItems;
+    public HashSet<Resource> missingResources;
 }

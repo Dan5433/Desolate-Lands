@@ -1,4 +1,6 @@
 using CustomClasses;
+using CustomExtensions;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,8 +8,16 @@ using UnityEngine.UI;
 public class PrototypeStation : MonoBehaviour
 {
     [SerializeField] GameObject prototypePrefab;
-    public PrototypingStationType Type;
-    public GameObject CraftingUi;
+    PrototypeStationType type;
+    GameObject craftingUi;
+
+    public GameObject CraftingUi => craftingUi;
+
+    public void StartUp(PrototypeStationType type, GameObject ui)
+    {
+        this.type = type;
+        craftingUi = ui;
+    }
 
     public void UpdateAvailablePrototypesUI(InvItem[] inventory, PlayerResource[] resources)
     {
@@ -17,34 +27,48 @@ public class PrototypeStation : MonoBehaviour
         var scrollView = CraftingUi.GetComponentInChildren<ScrollRect>().transform;
         var content = scrollView.GetComponentInChildren<GridLayoutGroup>().transform;
 
-        var availablePrototypes = CraftingManager.GetCraftablePrototypes(inventory, resources, Type);
+        var prototypesAndMissing = CraftingManager.GetPrototypesAndMissing(inventory, resources, type);
 
-        if(availablePrototypes.Count > 0) uiScript.Tooltip.text = "Choose an item to prototype";
-        else uiScript.Tooltip.text = "You don't have enough resources to prototype";
-
+        GameObject prototypeUI;
         int index = 0;
-        foreach(var prototype in availablePrototypes)
+        foreach (var prototype in prototypesAndMissing)
         {
-            GameObject prototypeUI;
+            if (uiScript.OnlyShowCraftable &&
+                (prototype.Value.missingItems.Count > 0 ||
+                prototype.Value.missingResources.Count > 0))
+                continue;
 
             if (index < content.childCount) prototypeUI = content.GetChild(index).gameObject;
             else prototypeUI = Instantiate(prototypePrefab, content);
 
             var image = prototypeUI.transform.Find("Image");
-            image.GetComponent<Image>().sprite = prototype.recipe.reward.item.Sprite;
+            image.GetComponent<Image>().sprite = prototype.Key.recipe.reward.item.Sprite;
 
-            int count = prototype.recipe.reward.count;
-            if(count > 1) prototypeUI.GetComponentInChildren<TMP_Text>().text = count.ToString();
+            int count = prototype.Key.recipe.reward.count;
+            var countText = prototypeUI.GetComponentInChildren<TMP_Text>();
+            if (count > 1) countText.text = count.ToString();
+            else countText.text = string.Empty;
 
-            prototypeUI.GetComponent<Button>().onClick.AddListener(
-                () => uiScript.SelectPrototype(prototype));
+            var chooseEvent = prototypeUI.GetComponent<Button>().onClick;
+            chooseEvent.RemoveAllListeners();
+            chooseEvent.AddListener(
+                    () => uiScript.SelectPrototype(prototype.Key, prototype.Value));
 
-            prototypeUI.transform.Find("NewPulse").gameObject.SetActive(
-                !CraftingManager.HasPrototypedBefore(prototype.recipe));
+            var newPulse = prototypeUI.transform.Find("NewPulse").gameObject;
+            if(newPulse.activeInHierarchy) 
+                newPulse.GetComponent<ImageColorPulse>().ResetPulse();
+
+            newPulse.SetActive(
+                prototype.Value.missingItems.Count == 0 && 
+                prototype.Value.missingResources.Count == 0);
 
             index++;
         }
-        for (int i = content.childCount - 1; i >= availablePrototypes.Count; i--)
+
+        if (index > 0) uiScript.Tooltip.text = "Choose an item to prototype";
+        else uiScript.Tooltip.text = "You don't have enough resources to prototype something new";
+
+        for (int i = content.childCount - 1; i >= index; i--)
         {
             Destroy(content.GetChild(i).gameObject);
         }

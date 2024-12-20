@@ -6,16 +6,13 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(menuName = "2D/Tiles/Prototype Station Tile")]
 public class PrototypeStationTile : BreakableTile
 {
-    [SerializeField] PrototypingStationType type;
+    [SerializeField] PrototypeStationType type;
 
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
     {
         if(go == null) return false;
 
-        var script = go.GetComponent<PrototypeStation>();
-
-        script.Type = type;
-        script.CraftingUi = CraftingManager.Instance.PrototypingUI;
+        go.GetComponent<PrototypeStation>().StartUp(type, CraftingManager.Instance.PrototypingUI);
 
         return true;
     }

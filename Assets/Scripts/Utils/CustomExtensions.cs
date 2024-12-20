@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor.Tilemaps;
 using UnityEngine;
@@ -75,6 +77,12 @@ namespace CustomExtensions
             instance.Play();
             UnityEngine.Object.Destroy(instance.gameObject, instance.main.duration);
             return instance;
+        }
+
+        public static Coroutine RestartCoroutine(this MonoBehaviour mono, IEnumerator routine)
+        {
+            mono.StopCoroutine(routine);
+            return mono.StartCoroutine(routine);
         }
     }
 

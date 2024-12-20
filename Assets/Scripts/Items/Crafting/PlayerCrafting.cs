@@ -19,7 +19,7 @@ public class PlayerCrafting : MonoBehaviour
 
     void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.E)) return;
+        if (!Input.GetKeyDown(KeyCode.Tab)) return;
 
         if (!ui.gameObject.activeSelf)
         {

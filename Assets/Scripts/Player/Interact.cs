@@ -44,14 +44,14 @@ public class Interact : MonoBehaviour
 
         Debug.DrawRay(origin.position, origin.up, Color.green, reach);
 
-        if (!hit)
-            return;
-
         if (CanDisableUI())
         {
             DisableUI();
             return;
         }
+
+        if (!hit)
+            return;
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -119,7 +119,8 @@ public class Interact : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             if (!hit.collider.TryGetComponent<IDamageable>(out var damageable) ||
-                ItemManager.Instance.IsHoldingItem || activeUI)
+                ItemManager.Instance.IsHoldingItem || activeUI || 
+                ItemManager.Instance.IsTooltipActive)
                 return;
 
             damageScript.DealDamage(hit, damageable);

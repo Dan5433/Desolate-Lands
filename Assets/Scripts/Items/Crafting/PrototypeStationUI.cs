@@ -1,8 +1,10 @@
-using CustomClasses;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.MaterialProperty;
+using static UnityEditor.Progress;
 
 public class PrototypeStationUI : MonoBehaviour
 {
@@ -13,10 +15,14 @@ public class PrototypeStationUI : MonoBehaviour
     [SerializeField] Transform costUI;
     [SerializeField] Image itemImage;
     [SerializeField] TMP_Text itemName;
+    [SerializeField] ToggleCraftableView craftableView;
+    [SerializeField] Button prototypeButton;
+    [SerializeField] Color missingColor;
     CraftingPrototype selectedPrototype;
     PrototypeStation currentStation;
 
-    public TMP_Text Tooltip { get { return selectedPrototypeUI.GetChild(0).GetComponent<TMP_Text>(); } }
+    public TMP_Text Tooltip => selectedPrototypeUI.GetChild(0).GetComponent<TMP_Text>();
+    public bool OnlyShowCraftable => craftableView.OnlyShowCraftable;
 
     public void SetStation(PrototypeStation station)
     {
@@ -25,7 +31,12 @@ public class PrototypeStationUI : MonoBehaviour
         ResetUI();
     }
 
-    void UpdateMaterialsUI(CraftItem[] cost)
+    public void UpdateUI()
+    {
+        currentStation.UpdateAvailablePrototypesUI(inventory.Inventory, crafting.Resources);
+    }
+
+    void UpdateMaterialsUI(CraftItem[] cost, HashSet<Item> missing)
     {
         var materialsUI = costUI.Find("Materials");
 
@@ -37,15 +48,21 @@ public class PrototypeStationUI : MonoBehaviour
             else itemUI = Instantiate(resourcePrefab, materialsUI);
 
             itemUI.GetComponentInChildren<Image>().sprite = cost[i].item.Sprite;
-            itemUI.GetComponentInChildren<TMP_Text>().text = cost[i].count.ToString();
+
+            var text = itemUI.GetComponentInChildren<TMP_Text>();
+            if (missing.Contains(cost[i].item))
+                text.text = 
+                    $"<color=#{ColorUtility.ToHtmlStringRGB(missingColor)}>" + 
+                    cost[i].count;
+            else
+                text.text = cost[i].count.ToString();
         }
         for (int i = materialsUI.childCount - 1; i >= cost.Length; i--)
         {
             Destroy(materialsUI.GetChild(i).gameObject);
         }
     }
-
-    void UpdateResourcesUI(ResourceCost[] cost)
+    void UpdateResourcesUI(ResourceCost[] cost, HashSet<Resource> missing)
     {
         var resourcesUI = costUI.Find("Resources");
 
@@ -57,7 +74,14 @@ public class PrototypeStationUI : MonoBehaviour
             else resourceCost = Instantiate(resourcePrefab, resourcesUI);
 
             resourceCost.GetComponentInChildren<Image>().sprite = cost[i].resource.sprite;
-            resourceCost.GetComponentInChildren<TMP_Text>().text = cost[i].count.ToString();
+
+            var text = resourceCost.GetComponentInChildren<TMP_Text>();
+            if (missing.Contains(cost[i].resource.type))
+                text.text = 
+                    $"<color=#{ColorUtility.ToHtmlStringRGB(missingColor)}>" +
+                    cost[i].count;
+            else
+                text.text = cost[i].count.ToString();
         }
 
         for (int i = resourcesUI.childCount - 1; i >= cost.Length; i--)
@@ -66,17 +90,28 @@ public class PrototypeStationUI : MonoBehaviour
         }
     }
 
-    public void SelectPrototype(CraftingPrototype prototype)
+    public void SelectPrototype(CraftingPrototype prototype, MissingRequirements missing)
     {
-        if (selectedPrototype == null) ToggleTooltip();
+        Debug.Log(prototype.name);
+        if(selectedPrototype == prototype) 
+            return;
+
+        if (selectedPrototype == null)
+            ToggleTooltip();
+
+        selectedPrototype = prototype;
 
         itemImage.sprite = prototype.recipe.reward.item.Sprite;
         itemName.text = prototype.recipe.reward.item.Name;
 
-        UpdateMaterialsUI(prototype.recipe.cost);
-        UpdateResourcesUI(prototype.resourceCost);
+        UpdateMaterialsUI(prototype.recipe.cost, missing.missingItems);
+        UpdateResourcesUI(prototype.resourceCost, missing.missingResources);
 
-        selectedPrototype = prototype;
+        if(missing.missingResources.Count > 0 || missing.missingItems.Count > 0)
+            prototypeButton.interactable = false;
+        else
+            prototypeButton.interactable = true;
+
     }
 
     public void Prototype()
@@ -144,4 +179,5 @@ public class PrototypeStationUI : MonoBehaviour
             child.gameObject.SetActive(!child.gameObject.activeSelf);
         }
     }
+    
 }

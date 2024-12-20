@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cost:
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
-    count: 1
+    count: 2
   reward:
     item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
-    count: 1
+    count: 2

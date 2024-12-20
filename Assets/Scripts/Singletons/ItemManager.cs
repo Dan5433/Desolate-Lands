@@ -21,7 +21,8 @@ public class ItemManager : MonoBehaviour
     public GameObject ContainerUI => containerUI;
     public Tooltip Tooltip => tooltip;
     public GameObject InvSlot => invSlotPrefab;
-    public bool IsHoldingItem { get { return heldItem.Item.ItemObj != Air; } }
+    public bool IsHoldingItem => heldItem.Item.ItemObj != Air;
+    public bool IsTooltipActive => tooltip.gameObject.activeSelf;
 
     void Awake()
     {
