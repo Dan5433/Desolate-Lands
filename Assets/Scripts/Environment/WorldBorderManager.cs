@@ -2,14 +2,30 @@ using CustomExtensions;
 using EditorAttributes;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
 public class WorldBorderManager : MonoBehaviour
 {
+    public static WorldBorderManager Instance { get; private set; }
+
+    [SerializeField][Tooltip("How far away the effects start")] float effectRange;
     [SerializeField] ParticleSystem gasBorder;
     [SerializeField] DefaultPositions[] startingPositions;
     Dictionary<Vector2Int,LinkedList<GameObject>> loadedBorders = new();
+
+    public float EffectRange => effectRange;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     [Button("Unload Border", 25, true)]
     public void UnloadBorder(Vector2Int chunk)
@@ -36,6 +52,7 @@ public class WorldBorderManager : MonoBehaviour
         var shape = border.shape;
         var main = border.main;
         var emission = border.emission;
+        var damageTrigger = border.GetComponent<BoxCollider2D>();
 
         int size = direction == Direction.Up || direction == Direction.Down ? 
             TerrainManager.ChunkSize.x / 2 : TerrainManager.ChunkSize.y / 2;
@@ -43,6 +60,8 @@ public class WorldBorderManager : MonoBehaviour
         shape.radius *= size;
         main.maxParticles *= size;
         emission.rateOverTimeMultiplier *= size;
+        damageTrigger.size = new(damageTrigger.size.x * size / 2, effectRange);
+        damageTrigger.offset = new(0, effectRange / 2);
 
         border.Restart();
 

@@ -36,6 +36,7 @@ public class PlayerHealth : LivingBase
 
         UpdateDisplay();
         StartCoroutine(LerpBarColor(damageColor));
+        GetComponent<PlayerAudio>().Hurt();
     }
 
 
@@ -87,5 +88,10 @@ public class PlayerHealth : LivingBase
             yield return null;
 
         };
+    }
+
+    protected override void OnDeath()
+    {
+        //TODO: add game over functionality
     }
 }

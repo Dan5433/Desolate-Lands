@@ -3,10 +3,10 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class WorldBorderEffect : MonoBehaviour
 {
-    [SerializeField][Tooltip("How far from the border the effects start")] float effectRange;
     [SerializeField] float[] postProcessMaxIntensities;
     [SerializeField] PostProcessProfile postProcessEffect;
     [SerializeField] TerrainManager genTerrain;
+    [SerializeField] WorldBorderManager borderManager;
     Vector2Int totalWorldSize;
     bool effectEnabled;
 
@@ -20,11 +20,12 @@ public class WorldBorderEffect : MonoBehaviour
         float xProximity = totalWorldSize.x - Mathf.Abs(transform.position.x);
         float yProximity = totalWorldSize.y - Mathf.Abs(transform.position.y);
 
-        if (xProximity <= effectRange || yProximity <= effectRange)
+        if (xProximity <= borderManager.EffectRange || 
+            yProximity <= borderManager.EffectRange)
         {
             effectEnabled = true;
             float proximity = Mathf.Min(xProximity, yProximity);
-            float effectStrength = Mathf.InverseLerp(effectRange, 0, proximity);
+            float effectStrength = Mathf.InverseLerp(borderManager.EffectRange, 0, proximity);
 
             foreach (var effect in postProcessEffect.settings)
             {
