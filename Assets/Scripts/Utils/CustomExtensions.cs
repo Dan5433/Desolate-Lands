@@ -53,7 +53,8 @@ namespace CustomExtensions
 
         public static void PlayRandomClip(this AudioSource source, AudioClip[] audio)
         {
-            if (source.isPlaying || audio.Length == 0) return;
+            if (audio.Length == 0) 
+                return;
 
             source.pitch = Random.Range(0.9f,1.1f);
 

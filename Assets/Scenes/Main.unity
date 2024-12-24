@@ -7704,7 +7704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0165ceeb7fbd9f45b6ae807b2ce980f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectRange: 13.5
+  effectRange: 12.5
   gasBorder: {fileID: 6665088582763855686, guid: 11b2b17792415b94aa5302e4789e6dc8, type: 3}
   startingPositions:
   - direction: 2

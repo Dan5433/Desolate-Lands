@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -25,7 +26,6 @@ public class TerrainManager : MonoBehaviour
     WorldBorderManager borderManager;
     LoadTerrain loadTerrain;
     SaveTerrain saveTerrain;
-    Dictionary<Vector2Int, TilemapChunkNodesData> loadedChunks = new();
     HashSet<Vector2Int> renderedChunks = new();
     static Vector2Int chunkSize = new(32, 32);
     static Vector2Int regionSize = new(32, 32);
@@ -44,7 +44,13 @@ public class TerrainManager : MonoBehaviour
         borderManager = GetComponent<WorldBorderManager>(); 
     }
 
-    void Start()
+    private void Start()
+    {
+        //0 second delay causes the compress to happen after player is loaded (idk why)
+        Invoke(nameof(CompressOnStart),0);
+    }
+
+    void CompressOnStart()
     {
         CompressTilemaps(GetChunkIndexFromPosition(player.position), ground, top, solid);
     }
@@ -77,62 +83,63 @@ public class TerrainManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(loadedChunks.Count);
-        //TODO: only save user change data to tiles and generate chunks using the seed each time 
+        //TODO: only save user change data to tiles and generate chunks using the seed each time
+        //treat previously saved region data as user modified to make data persistent after seed update
         bool shrunkTilemap = false;
         var currentChunk = GetChunkIndexFromPosition(player.position);
-        var renderedChunks = GetChunksInsideRenderDistance(currentChunk);
+        var chunksInRender = GetChunksInsideRenderDistance(currentChunk);
 
-        foreach (var chunk in this.renderedChunks.ToArray())
+        foreach (var chunk in renderedChunks.ToArray())
         {
-            if (renderedChunks.Contains(chunk)) continue;
+            if (chunksInRender.Contains(chunk)) 
+                continue;
 
             //unload chunk if not in render distance but is loaded
             borderManager.UnloadBorder(chunk);
 
-            this.renderedChunks.Remove(chunk);
-            loadedChunks.Remove(chunk);
+            renderedChunks.Remove(chunk);
 
             shrunkTilemap = true;
         }
 
-        foreach (var chunk in renderedChunks)
+        HashSet<Vector2Int> parsedRegions = new();
+        Dictionary<Vector2Int, TilemapChunkNodesData> parsedChunks = null;
+
+        foreach (var chunk in chunksInRender)
         {
-            if (!this.renderedChunks.Add(chunk) || !ChunkInsideWorldBorder(chunk)) continue;
+            if (!renderedChunks.Add(chunk) || !ChunkInsideWorldBorder(chunk)) 
+                continue;
 
             //load chunk if in render distance and not loaded already
             Vector2Int region = new(chunk.x / RegionSize.x,
                 chunk.y / RegionSize.y);
 
             string fullPath = Path.Combine(GameManager.DataDirPath, DataDirName, region.ToString());
-            if (File.Exists(fullPath))
+            if (File.Exists(fullPath) && !parsedRegions.Contains(region))
             {
-                if(!loadedChunks.ContainsKey(chunk)) 
-                    loadedChunks = loadTerrain.LoadRegionFile(loadedChunks, region, ground, top, solid);
+                parsedChunks = loadTerrain.ParseRegionFile(region, chunksInRender, ground, top, solid);
+                parsedRegions.Add(region);
+            }
 
-                if (!loadedChunks.ContainsKey(chunk))
-                {
-                    GenChunk(chunk * chunkSize, chunk, region);
-                }
-                else
-                {
-                    foreach (var tilemapNodesPair in loadedChunks[chunk].data)
-                    {
-                        loadTerrain.SetTilemapChunk(
-                            tilemapNodesPair.Key, tilemapNodesPair.Value,
-                            chunk.x * ChunkSize.x, chunk.y * ChunkSize.y);
-                    }
-                }
+            if (!parsedChunks.ContainsKey(chunk))
+            {
+                GenChunk(chunk * chunkSize, chunk, region);
             }
             else
             {
-                GenChunk(chunk * chunkSize, chunk, region);
+                foreach (var tilemapNodesPair in parsedChunks[chunk].data)
+                {
+                    loadTerrain.SetTilemapChunk(
+                        tilemapNodesPair.Key, tilemapNodesPair.Value,
+                        chunk.x * ChunkSize.x, chunk.y * ChunkSize.y);
+                }
             }
 
             LoadBorderIfEndOfWorld(chunk);
         }
 
-        if (shrunkTilemap) CompressTilemaps(currentChunk, ground, top, solid);
+        if (shrunkTilemap) 
+            CompressTilemaps(currentChunk, ground, top, solid);
     }
 
     bool ChunkInsideWorldBorder(Vector2Int chunk)

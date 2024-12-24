@@ -36,8 +36,10 @@ public class LoadTerrain : MonoBehaviour
         tilemap.SetTiles(genCoords, tiles);
     }
 
-    public Dictionary<Vector2Int, TilemapChunkNodesData> LoadRegionFile(Dictionary<Vector2Int, TilemapChunkNodesData> loadedChunks, Vector2Int region, params Tilemap[] tilemaps)
+    public Dictionary<Vector2Int, TilemapChunkNodesData> ParseRegionFile(Vector2Int region, LinkedList<Vector2Int> chunksToLoad, params Tilemap[] tilemaps)
     {
+        Dictionary<Vector2Int, TilemapChunkNodesData> parsedChunks = new();
+
         BinaryDataHandler dataHandler = new(
             Path.Combine(GameManager.DataDirPath, TerrainManager.DataDirName), region.ToString());
 
@@ -60,22 +62,23 @@ public class LoadTerrain : MonoBehaviour
 
                     int nodeCount = reader.ReadInt32();
 
-                    //skip chunk if already loaded
-                    if (loadedChunks.TryGetValue(currentChunk, out var chunkData) 
-                        && chunkData.data.ContainsKey(tilemap))
+                    //skip chunk if not in request range or already loaded
+                    if (!chunksToLoad.Contains(currentChunk) ||
+                    (parsedChunks.TryGetValue(currentChunk, out var chunkData)
+                    && chunkData.data.ContainsKey(tilemap)))
                     {
                         reader.BaseStream.Seek(sizeof(int) * 2 * nodeCount, SeekOrigin.Current);
                         continue;
                     }
 
-                    loadedChunks.TryAdd(currentChunk, new() { data = new()});
+                    parsedChunks.TryAdd(currentChunk, new() { data = new()});
 
-                    loadedChunks[currentChunk].data[tilemap] = ParseTilemapNodes(reader, nodeCount);
+                    parsedChunks[currentChunk].data[tilemap] = ParseTilemapNodes(reader, nodeCount);
                 }
             }
         });
 
-        return loadedChunks;
+        return parsedChunks;
     }
 
     LinkedList<TilemapSaveNode> ParseTilemapNodes(BinaryReader reader, int nodeCount)
