@@ -1,12 +1,13 @@
 using CustomExtensions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class Breakable : MonoBehaviour, IDamageable
 {
     [SerializeField] float health = 100f;
 
-    private void Awake()
+    private void Start()
     {
         //TODO: save and load health
         UpdateSprite();
@@ -27,24 +28,9 @@ public class Breakable : MonoBehaviour, IDamageable
     void UpdateSprite()
     {
         float percentBroken = (100f - health) / 100f;
+        var position = GetComponentInParent<Tilemap>().WorldToCell(transform.position);
 
-        if (percentBroken == 0)
-        {
-            GetComponentInChildren<SpriteRenderer>().sprite = null;
-            return;
-        }
-
-        for (int i = 0; i < BreakingManager.Instance.BreakSprites.Length; i++)
-        {
-            float highRange = (float)(i + 1) / BreakingManager.Instance.BreakSprites.Length;
-            float lowRange = (float)i / BreakingManager.Instance.BreakSprites.Length;
-
-            if (percentBroken >= lowRange && percentBroken <= highRange)
-            {
-                GetComponentInChildren<SpriteRenderer>().sprite = BreakingManager.Instance.BreakSprites[i];
-                break;
-            }
-        }
+        BreakingManager.UpdateBreakStage(position, percentBroken);
     }
 
     public bool Heal(float healAmount)
@@ -55,11 +41,14 @@ public class Breakable : MonoBehaviour, IDamageable
 
     public void OnBreak()
     {
-        foreach (var breakable in GetComponents<IBreakable>()) breakable.OnBreak();
+        foreach (var breakable in GetComponents<IBreakable>()) 
+            breakable.OnBreak();
 
         var tilemap = GetComponentInParent<Tilemap>();
         var tilePosition = tilemap.WorldToCell(transform.position);
         var tile = tilemap.GetTile<BreakableTile>(tilePosition);
+
+        BreakingManager.UpdateBreakStage(tilePosition, 0);
 
         foreach (var drop in tile.Drops)
         {

@@ -52,7 +52,7 @@ public class TerrainManager : MonoBehaviour
 
     void CompressOnStart()
     {
-        CompressTilemaps(GetChunkIndexFromPosition(player.position), ground, top, solid);
+        CompressTilemaps(GetChunkIndexFromPosition(player.position), ground, top, solid, BreakingManager.Instance.Tilemap);
     }
 
     LinkedList<Vector2Int> GetChunksInsideRenderDistance(Vector2Int currentChunk)
@@ -139,7 +139,7 @@ public class TerrainManager : MonoBehaviour
         }
 
         if (shrunkTilemap) 
-            CompressTilemaps(currentChunk, ground, top, solid);
+            CompressTilemaps(currentChunk, ground, top, solid, BreakingManager.Instance.Tilemap);
     }
 
     bool ChunkInsideWorldBorder(Vector2Int chunk)
