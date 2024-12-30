@@ -2,7 +2,6 @@ using CustomExtensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -42,30 +41,36 @@ public class SaveTerrain : MonoBehaviour
                 writer.Write(tilemap.name);
 
                 TilemapSaveNode currentNode = new();
-                var nodes = new LinkedList<TilemapSaveNode>();
+                List<TilemapSaveNode> nodes = new();
 
+                BoundsInt bounds = new(startX, startY, 0, 
+                    TerrainManager.ChunkSize.x, TerrainManager.ChunkSize.y, 1);
+
+                var tiles = tilemap.GetTilesBlock(bounds);
+
+                int index = 0;
                 for (int x = startX; x < startX + TerrainManager.ChunkSize.x; x++)
                 {
                     for (int y = startY; y < startY + TerrainManager.ChunkSize.y; y++)
                     {
-                        //get tile and its respective id
-                        var tile = tilemap.GetTile<TileBase>(new(x, y));
-                        int id = Array.FindIndex(main.MasterTiles, t => t == tile);
+                        int id = tiles[index] != null ? main.TileLookup[tiles[index]] : -1;
 
                         //write current node and make new node if different tile encountered
                         if(currentNode.tileID != id)
                         {
-                            if (currentNode.length > 0) nodes.AddLast(currentNode);
+                            if (currentNode.length > 0) nodes.Add(currentNode);
 
                             currentNode = new() { tileID = id };
                         }
 
                         currentNode.length++;
+                        index++;
                     }
                 }
 
                 //write last node if not empty
-                if (currentNode.length > 0) nodes.AddLast(currentNode);
+                if (currentNode.length > 0) 
+                    nodes.Add(currentNode);
 
                 //write node count for data alignment
                 writer.Write(nodes.Count);
@@ -83,7 +88,7 @@ public class SaveTerrain : MonoBehaviour
     public static async void RemoveTileSaveData(Vector3Int tilePosition, string tilemapName)
     {
         JsonFileDataHandler dataHandler = new(Path.Combine(GameManager.DataDirPath, "Terrain"), 
-            TerrainManager.GetChunkIndexFromPosition(tilePosition + new Vector3(0.5f,0.5f,0)).ToString());
+            TerrainManager.GetChunkIndex(tilePosition + new Vector3(0.5f,0.5f,0)).ToString());
 
         var save = await dataHandler.LoadDataAsync<TerrainSaveData>();
 

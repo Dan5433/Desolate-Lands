@@ -1,9 +1,7 @@
 using CustomClasses;
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class CraftingManager : MonoBehaviour
 {

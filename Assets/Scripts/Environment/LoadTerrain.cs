@@ -1,12 +1,9 @@
 using CustomExtensions;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
-using UnityEngine.WSA;
 
 public class LoadTerrain : MonoBehaviour
 {

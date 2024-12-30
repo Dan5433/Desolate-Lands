@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
     [Button("Get Chunk Index", 36)]
     void PrintCurrentChunk()
     {
-        Debug.Log(TerrainManager.GetChunkIndexFromPosition(transform.position));
+        Debug.Log(TerrainManager.GetChunkIndex(transform.position));
     }
 
     void OnDestroy()
