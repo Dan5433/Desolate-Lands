@@ -1,3 +1,4 @@
+using CustomExtensions;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -8,7 +9,7 @@ public class Landmine : MonoBehaviour
     void Start()
     {
         var animManager = GameObject.Find("TerrainManager").GetComponent<MineAnimationManager>();
-        animManager.AddMine(transform.position);
+        animManager.AddMine(transform.position.ToVector3Int());
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -48,7 +49,7 @@ public class Landmine : MonoBehaviour
         var terrainManager = GameObject.Find("TerrainManager");
         if(terrainManager && terrainManager.TryGetComponent<MineAnimationManager>(out var animManager))
         {
-            animManager.DeleteMine(transform.position);
+            animManager.DeleteMine(transform.position.ToVector3Int());
         }
     }
 }

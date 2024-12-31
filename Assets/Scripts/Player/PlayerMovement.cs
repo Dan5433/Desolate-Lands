@@ -2,7 +2,6 @@ using EditorAttributes;
 using System.IO;
 using System;
 using UnityEngine;
-using System.Runtime.Serialization.Formatters.Binary;
 
 public class PlayerMovement : MonoBehaviour
 {
