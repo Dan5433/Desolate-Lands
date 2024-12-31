@@ -46,7 +46,8 @@ public class LoadTerrain : MonoBehaviour
             {
                 var currentChunk = reader.ReadVector2Int();
 
-                for (int i = 0; i < tilemaps.Length; i++)
+                int tilemapCount = reader.ReadInt32();
+                for (int i = 0; i < tilemapCount; i++)
                 {
                     string tilemapName = reader.ReadString();
                     var tilemap = tilemaps.FirstOrDefault(t => t.name == tilemapName);
@@ -80,7 +81,7 @@ public class LoadTerrain : MonoBehaviour
 
     LinkedList<TilemapSaveNode> ParseTilemapNodes(BinaryReader reader, int nodeCount)
     {
-        var nodes = new LinkedList<TilemapSaveNode>();
+        LinkedList<TilemapSaveNode> nodes = new();
 
         for (int i = 0; i < nodeCount; i++)
             nodes.AddLast(new TilemapSaveNode(reader));

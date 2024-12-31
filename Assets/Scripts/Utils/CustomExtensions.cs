@@ -59,7 +59,7 @@ namespace CustomExtensions
             source.PlayOneShot(audio[Random.Range(0, audio.Length)]);
         }
 
-        public static void WriteVector2Int(this BinaryWriter writer, Vector2Int v)
+        public static void Write(this BinaryWriter writer, Vector2Int v)
         {
             writer.Write(v.x);
             writer.Write(v.y);

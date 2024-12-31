@@ -69,6 +69,6 @@ public class Breakable : MonoBehaviour, IDamageable
         }
 
         tilemap.SetTile(tilePosition, null);
-        //SaveTerrain.RemoveTileSaveData(breakCell, tilemap.name);
+        SaveTerrain.RemoveTileData(tilePosition, tilemap.name);
     }
 }

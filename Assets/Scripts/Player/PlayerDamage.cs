@@ -51,13 +51,13 @@ public class PlayerDamage : MonoBehaviour
 
         audioSource.PlayRandomClip(tile.BreakingAudio);
 
-        damageable.Damage(CalculateDamage(equippedTool.Material, equippedTool.Type == tile.Tool));
+        damageable.Damage(CalculateStructureDamage(equippedTool.Material, equippedTool.Type == tile.Tool));
         UpdateDurability();
 
         cooldown = baseCooldown;
     }
 
-    float CalculateDamage(ItemMaterial material, bool isCorrectTool)
+    float CalculateStructureDamage(ItemMaterial material, bool isCorrectTool)
     {
         int baseDamage = (int)material * 2 + 1;
         return isCorrectTool ? baseDamage * correctToolBonus : baseDamage;

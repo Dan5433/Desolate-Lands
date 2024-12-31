@@ -24,7 +24,7 @@ public class Landmine : MonoBehaviour
         var tilePosition = tilemap.WorldToCell(transform.position);
 
         tilemap.SetTile(tilePosition, null);
-        SaveTerrain.RemoveTileSaveData(tilePosition, transform.parent.name);
+        SaveTerrain.RemoveTileData(tilePosition, transform.parent.name);
     }
 
     void Explode()

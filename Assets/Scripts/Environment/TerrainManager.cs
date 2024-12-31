@@ -113,7 +113,7 @@ public class TerrainManager : MonoBehaviour
                 continue;
 
             //load chunk if in render distance and not loaded already
-            Vector2Int region = GetRegion(chunk);
+            Vector2Int region = GetRegionIndex(chunk);
 
             string fullPath = Path.Combine(GameManager.DataDirPath, DataDirName, region.ToString());
             if (File.Exists(fullPath) && (parsedChunks == null || region != currRegion))
@@ -284,27 +284,41 @@ public class TerrainManager : MonoBehaviour
 
         tilemap.SetTiles(positions, tiles);
     }
-    public static Vector2Int GetRegion(Vector2Int chunk)
+    public static Vector2Int GetRegionIndex(Vector2Int chunk)
     {
         Vector2Int region = new(chunk.x / RegionSize.x, chunk.y / RegionSize.y);
+
         if (chunk.x < 0)
             region.x -= 1;
         if(chunk.y < 0)
             region.y -= 1;
+
         return region;
     }
 
     public static Vector2Int GetChunkIndex(Vector3 position)
     {
-        Vector2Int chunkPos = new();
+        Vector2Int chunk = new();
 
-        if (position.x < 0) chunkPos.x = Mathf.FloorToInt(position.x / chunkSize.x);
-        else chunkPos.x = Mathf.CeilToInt(position.x / chunkSize.x) - 1;
+        if (position.x < 0) chunk.x = Mathf.FloorToInt(position.x / chunkSize.x);
+        else chunk.x = Mathf.CeilToInt(position.x / chunkSize.x) - 1;
 
-        if (position.y < 0) chunkPos.y = Mathf.FloorToInt(position.y / chunkSize.y);
-        else chunkPos.y = Mathf.CeilToInt(position.y / chunkSize.y) - 1;
+        if (position.y < 0) chunk.y = Mathf.FloorToInt(position.y / chunkSize.y);
+        else chunk.y = Mathf.CeilToInt(position.y / chunkSize.y) - 1;
 
-        return chunkPos;
+        return chunk;
+    }
+
+    public static Vector2Int GetChunkIndex(Vector3Int position)
+    {
+        Vector2Int chunk = new(position.x / RegionSize.x, position.y / RegionSize.y);
+
+        if (position.x < 0)
+            chunk.x -= 1;
+        if (position.y < 0)
+            chunk.y -= 1;
+
+        return chunk;
     }
 }
 

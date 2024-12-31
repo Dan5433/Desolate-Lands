@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class SaveTerrain : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class SaveTerrain : MonoBehaviour
     /*
     Chunk Save Format:
         vector2int chunkIndex;
+        int tilemapCount;
         foreach tilemap
         {
             string tilemapName;
@@ -31,11 +33,12 @@ public class SaveTerrain : MonoBehaviour
         
         dataHandler.SaveData(writer =>
         {
-            writer.WriteVector2Int(chunkIndex);
+            writer.Write(chunkIndex);
 
             int startX = chunkIndex.x * TerrainManager.ChunkSize.x;
             int startY = chunkIndex.y * TerrainManager.ChunkSize.y;
 
+            writer.Write(tilemaps.Length);
             foreach (var tilemap in tilemaps)
             {
                 writer.Write(tilemap.name);
@@ -85,21 +88,85 @@ public class SaveTerrain : MonoBehaviour
         }, FileMode.Append);
     }
 
-    public static async void RemoveTileSaveData(Vector3Int tilePosition, string tilemapName)
+    public static void RemoveTileData(Vector3Int tilePosition, string tilemapName)
     {
-        JsonFileDataHandler dataHandler = new(Path.Combine(GameManager.DataDirPath, "Terrain"), 
-            TerrainManager.GetChunkIndex(tilePosition + new Vector3(0.5f,0.5f,0)).ToString());
+        Vector2Int chunkIndex = TerrainManager.GetChunkIndex(tilePosition);
 
-        var save = await dataHandler.LoadDataAsync<TerrainSaveData>();
+        var dirPath = Path.Combine(GameManager.DataDirPath, TerrainManager.DataDirName);
+        BinaryDataHandler dataHandler = new(dirPath, TerrainManager.GetRegionIndex(chunkIndex).ToString());
 
-        var tilemapIndex = save.tilemapNames.IndexOf(tilemapName);
-        var tilemapSaveData = save.data[tilemapIndex];
-        var index = tilemapSaveData.positions.FindIndex(position => position == (Vector2Int)tilePosition);
+        dataHandler.ModifyData((reader, writer) =>
+        {
+            while (reader.BaseStream.Position + sizeof(int) * 2 < reader.BaseStream.Length)
+            {
+                Vector2Int currentChunk = reader.ReadVector2Int();
+                writer.Write(currentChunk);
 
-        tilemapSaveData.indexes.RemoveAt(index);
-        tilemapSaveData.positions.Remove((Vector2Int)tilePosition);
+                //process tilemap if chunk matches
+                if (currentChunk == chunkIndex)
+                {
+                    int tilemapCount = reader.ReadInt32();
+                    writer.Write(tilemapCount);
 
-        await dataHandler.SaveDataAsync(save);
+                    for (int i = 0; i < tilemapCount; i++)
+                    {
+                        string currentTilemap = reader.ReadString();
+                        writer.Write(currentTilemap);
+
+                        int nodeCount = reader.ReadInt32();
+
+                        //write nodes as-is if tilemap doesn't match
+                        if (currentTilemap != tilemapName)
+                        {
+                            writer.Write(nodeCount);
+
+                            byte[] nodes = reader.ReadBytes(sizeof(int) * 2 * nodeCount);
+                            writer.Write(nodes);
+                            continue;
+                        }
+
+                        TilemapSaveNode[] tilemapNodes = new TilemapSaveNode[nodeCount];
+                        for (int j = 0; j < nodeCount; j++)
+                        {
+                            tilemapNodes[j] = new(reader);
+                        }
+
+                        Vector2Int localOffset = new(
+                            tilePosition.x - TerrainManager.ChunkSize.x * chunkIndex.x, 
+                            tilePosition.y - TerrainManager.ChunkSize.y * chunkIndex.y);
+
+                        int tileIndex = localOffset.y + TerrainManager.ChunkSize.y * localOffset.x;
+
+                        var modifiedNodes = TilemapSaveNode.DeleteTile(tileIndex, tilemapNodes);
+                        
+                        writer.Write(modifiedNodes.Count);
+                        foreach(var node in modifiedNodes)
+                        {
+                            node.Write(writer);
+                        }
+                    }
+                }
+                else
+                {
+                    //copy unrelated chunks as-is
+                    int tilemapCount = reader.ReadInt32();
+                    writer.Write(tilemapCount);
+
+                    for(int i = 0;i < tilemapCount; i++)
+                    {
+                        string tilemapName = reader.ReadString();
+                        writer.Write(tilemapName);
+
+                        int nodeCount = reader.ReadInt32();
+                        writer.Write(nodeCount);
+
+                        //write all nodes
+                        byte[] nodes = reader.ReadBytes(sizeof(int) * 2 * nodeCount);
+                        writer.Write(nodes);
+                    }
+                }
+            }
+        });
     }
 }
 
@@ -118,6 +185,85 @@ public struct TilemapSaveNode
     {
         tileID = reader.ReadInt32();
         length = reader.ReadInt32();
+    }
+
+    public static LinkedList<TilemapSaveNode> DeleteTile(int tileIndex, TilemapSaveNode[] nodes)
+    {
+        LinkedList<TilemapSaveNode> results = new();
+
+        //length: 10, id: -1
+        //length: 3, id: 1
+        //length: 10, id: -1
+        //tile index: 12 (the middle one in id 1)
+        //index in node: 2
+
+        int currentIndex = 0;
+        for(int i = 0; i < nodes.Length; i++)
+        {
+            var node = nodes[i];
+
+            if (tileIndex < currentIndex || tileIndex >= currentIndex + node.length)
+            {
+                results.AddLast(node);
+                currentIndex += node.length;
+                continue;
+            }
+
+            int indexInNode = tileIndex - currentIndex;
+            bool mergedWithOtherEmpty = false;
+
+            //add tiles up to target if tile is not first in node
+            if(indexInNode > 0)
+            {
+                results.AddLast(new TilemapSaveNode()
+                {
+                    length = indexInNode,
+                    tileID = node.tileID
+                });
+            }
+            else
+            {
+                if (i > 0 && nodes[i - 1].tileID == -1 && !mergedWithOtherEmpty)
+                {
+                    //merge with the previous empty node if possible
+                    results.Last.Value = new()
+                    {
+                        length = results.Last.Value.length+1,
+                        tileID = -1
+                    };
+                    mergedWithOtherEmpty = true;
+                }
+                else
+                {
+                    //add a new empty node otherwise
+                    results.AddLast(new TilemapSaveNode
+                    {
+                        length = 1,
+                        tileID = -1
+                    });
+                }
+            }
+
+            //add the part of the node after the tile being removed (if it exists)
+            int remainingLength = node.length - indexInNode - 1;
+            if (remainingLength > 0)
+            {
+                results.AddLast(new TilemapSaveNode
+                {
+                    length = remainingLength,
+                    tileID = node.tileID
+                });
+            }
+            else if (i < nodes.Length - 1 && nodes[i + 1].tileID == -1 && !mergedWithOtherEmpty)
+            {
+                //merge with the next empty node if possible
+                nodes[i + 1].length++;
+            }
+
+            currentIndex += node.length; //update the current index
+        }
+
+        return results;
     }
 }
 
