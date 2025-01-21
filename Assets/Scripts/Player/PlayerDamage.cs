@@ -1,5 +1,6 @@
 using CustomClasses;
 using CustomExtensions;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -40,6 +41,7 @@ public class PlayerDamage : MonoBehaviour
     void Attack(IDamageable damageable)
     {
         //TODO: add zombie hurt code here
+        Debug.Log("hit living"+damageable);
     }
 
     void Break(IDamageable damageable, BreakableTile tile)

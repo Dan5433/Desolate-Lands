@@ -3,7 +3,7 @@ using UnityEngine;
 public class LivingBase : MonoBehaviour, IDamageable
 {
     [SerializeField] protected float health;
-    [SerializeField] protected float maxHealth;
+    [SerializeField] protected float maxHealth = 100f;
 
     protected virtual void Start()
     {

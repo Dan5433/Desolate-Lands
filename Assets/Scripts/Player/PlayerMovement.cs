@@ -11,10 +11,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] PlayerSprites sprites;
     [SerializeField] SpriteRenderer gfx;
     [SerializeField] Animator playerAnimator;
+    Rigidbody2D rb;
     const string saveString = "Position.bin";
 
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         Cursor.lockState = CursorLockMode.Confined;
 
         LoadPosition();
@@ -25,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
         vertInput = Input.GetAxis("Vertical");
         horInput = Input.GetAxis("Horizontal");
 
-        transform.Translate(new Vector2(horInput, vertInput).normalized * speed);
+        rb.velocity = new Vector2(horInput, vertInput).normalized * speed;
         UpdateSprite(vertInput, horInput);
     }
 

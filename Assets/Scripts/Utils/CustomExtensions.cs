@@ -83,6 +83,27 @@ namespace CustomExtensions
             mono.StopCoroutine(routine);
             return mono.StartCoroutine(routine);
         }
+
+        public static RaycastHit2D RaycastTo(this Vector3 self, Vector3 target, float distance, int layerMask, Color color)
+        {
+            var direction = target - self;
+            #if UNITY_EDITOR
+                        Debug.DrawRay(self, direction, color);
+            #endif
+            return Physics2D.Raycast(self, direction, distance, layerMask);
+        }
+        public static void DrawDiamond(this Vector3 center, float radius, Color color, float duration)
+        {
+            Vector3 top = new(center.x, center.y + radius);
+            Vector3 bottom = new(center.x,center.y - radius);
+            Vector3 left = new(center.x - radius, center.y);
+            Vector3 right = new(center.x + radius, center.y);
+
+            Debug.DrawLine(top, right, color, duration);
+            Debug.DrawLine(right, bottom, color, duration);
+            Debug.DrawLine(bottom, left, color, duration);
+            Debug.DrawLine(left, top, color, duration);
+        }
     }
 
 }
