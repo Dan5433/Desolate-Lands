@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     static CursorState cursorState;
     static string dataDirPath;
     static string playerDataDirPath;
+    static string loadWorldName = null;
 
     public bool UseJsonEncryption => useJsonEncryption;
     public string WorldName => worldName;
@@ -24,6 +26,7 @@ public class GameManager : MonoBehaviour
     public GameObject Player => player;
     public static string DataDirPath => dataDirPath;
     public static string PlayerDataDirPath => playerDataDirPath;
+    public static string LoadWorldName { get { return loadWorldName; } set { loadWorldName = value; } }
     public static CursorState CursorState {  
         get { return cursorState; } 
         set 
@@ -42,6 +45,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            if(loadWorldName != null)
+                worldName = loadWorldName;
+            Debug.Log("Loaded world: " + worldName);
+
             dataDirPath = Path.Combine(Application.persistentDataPath, "saves", worldName);
             playerDataDirPath = Path.Combine(dataDirPath, "player");
 
