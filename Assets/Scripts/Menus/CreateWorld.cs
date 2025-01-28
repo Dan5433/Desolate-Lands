@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using TMPro;
 using UnityEngine;
@@ -10,18 +11,7 @@ public class CreateWorld : MonoBehaviour
 
     public void Create()
     {
-        string saveDirectory = Path.Combine(Application.persistentDataPath, "saves");
-
-        string name = worldName.text != string.Empty ? worldName.text : "New World";
-
-        int existingCounter = 0;
-        foreach (var dir in Directory.GetDirectories(saveDirectory, $"*{name}*"))
-            existingCounter++;
-
-        Debug.Log($"Found {existingCounter} existing worlds with same name");
-
-        if (existingCounter > 0)
-            name += $" ({existingCounter})";
+        string name = ParseName();
 
         if (int.TryParse(worldSeed.text,out int seed))
         {
@@ -29,7 +19,38 @@ public class CreateWorld : MonoBehaviour
             PlayerPrefs.SetInt(name, seed);
         }
 
-        GameManager.LoadWorldName = name;
+        CreateStatsFile(name);
+
+        GameManager.PendingWorldName = name;
         SceneManager.LoadScene("Game");
+    }
+
+    void CreateStatsFile(string worldName)
+    {
+        var date = DateTime.Now;
+        WorldStats stats = new(){ 
+            creationDate = new(date.Year, date.Month, date.Day) 
+        };
+
+        var worldPath = Path.Combine(MainMenuManager.SavesDirPath,worldName);
+
+        BinaryDataHandler handler = new(worldPath, MainMenuManager.StatsFileName);
+        handler.SaveData(writer => stats.Write(writer));
+    }
+
+    string ParseName()
+    {
+        string name = worldName.text != string.Empty ? worldName.text : "New World";
+
+        int existingCounter = 0;
+        foreach (var dir in Directory.GetDirectories(MainMenuManager.SavesDirPath, $"*{name}*"))
+            existingCounter++;
+
+        Debug.Log($"Found {existingCounter} existing worlds with same name");
+
+        if (existingCounter > 0)
+            name += $" ({existingCounter})";
+
+        return name;
     }
 }

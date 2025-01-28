@@ -1,3 +1,4 @@
+using EditorAttributes;
 using System;
 using System.IO;
 using System.Linq;
@@ -16,17 +17,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] CursorTexture[] cursors;
 
     static CursorState cursorState;
-    static string dataDirPath;
+    static string worldDirPath;
     static string playerDataDirPath;
-    static string loadWorldName = null;
+    static string pendingWorldName = null;
 
     public bool UseJsonEncryption => useJsonEncryption;
     public string WorldName => worldName;
     public GameObject WorldCanvas => worldCanvas;
     public GameObject Player => player;
-    public static string DataDirPath => dataDirPath;
+    public static string DataDirPath => worldDirPath;
     public static string PlayerDataDirPath => playerDataDirPath;
-    public static string LoadWorldName { get { return loadWorldName; } set { loadWorldName = value; } }
+    public static string PendingWorldName { get { return pendingWorldName; } set { pendingWorldName = value; } }
     public static CursorState CursorState {  
         get { return cursorState; } 
         set 
@@ -45,12 +46,12 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if(loadWorldName != null)
-                worldName = loadWorldName;
+            if(pendingWorldName != null)
+                worldName = pendingWorldName;
             Debug.Log("Loaded world: " + worldName);
 
-            dataDirPath = Path.Combine(Application.persistentDataPath, "saves", worldName);
-            playerDataDirPath = Path.Combine(dataDirPath, "player");
+            worldDirPath = Path.Combine(Application.persistentDataPath, "saves", worldName);
+            playerDataDirPath = Path.Combine(worldDirPath, "player");
 
             if (!PlayerPrefs.HasKey(worldName))
             {
@@ -70,6 +71,55 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         CursorState = CursorState.Default;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            SceneManager.LoadScene("Main Menu");
+    }
+
+    private void OnDestroy()
+    {
+        UpdatePlaytime();
+    }
+
+    void UpdatePlaytime()
+    {
+        BinaryDataHandler handler = new(worldDirPath,MainMenuManager.StatsFileName);
+
+        WorldStats stats = new();
+        handler.LoadData(reader => stats = new(reader));
+
+        Playtime playtime = stats.playtime;
+        /*
+        1h,10m,24s playtime
+        1h,50m,50s time in scene (6650s)
+         
+        add seconds together => 6674s
+        divide by 60 to get minutes => 111m
+        mod by 60 to get remaining secs => 14s
+
+        add minutes together => 121m
+        divide by 60 to get hours => 2h
+        mod by 60 to get remaining minutes => 1m
+
+        add hours together => 3h
+
+        join together => 3h, 1m, 14s
+         */
+
+        int totalSeconds = playtime.seconds + (int)Time.timeSinceLevelLoad;
+        int minutesInScene = totalSeconds / 60;
+        stats.playtime.seconds = totalSeconds % 60;
+
+        int totalMinutes = playtime.minutes + minutesInScene;
+        int hoursInScene = totalMinutes / 60;
+        stats.playtime.minutes = totalMinutes % 60;
+
+        stats.playtime.hours = playtime.hours + hoursInScene;
+
+        handler.SaveData(writer => stats.Write(writer));
     }
 }
 
