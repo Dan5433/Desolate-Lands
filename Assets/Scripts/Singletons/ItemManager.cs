@@ -162,18 +162,15 @@ public class ItemManager : MonoBehaviour
 
     static void SplitSlot(ref InvItem slotItem)
     {
-        int half = slotItem.Count / 2;
+        int half = slotItem.Count > 1 ? Mathf.RoundToInt(slotItem.Count / 2f) : 1;
+
         Instance.heldItem.Item = InventoryItemFactory.Create(
             slotItem.ItemObj, slotItem.Name, half);
 
-        if (slotItem.Count >= 2)
-        {
-            slotItem.Count -= half;
-        }
-        else
-        {
+        slotItem.Count -= half;
+
+        if(slotItem.Count <= 0)
             slotItem = Instance.InvItemAir;
-        }
     }
 
     static void IncrementSlot(ref InvItem slotItem, InvItem selectedItem)

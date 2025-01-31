@@ -34,7 +34,7 @@ public class MineAnimationManager : MonoBehaviour
     {
         foreach(var particle in explosionParticles)
         {
-            particle.PlayOneShot(landmine, new Vector3(-90f,0,0).AnglesToQuaternion());
+            particle.PlayOneShot(landmine, Quaternion.Euler(-90f,0,0));
         }
 
         mineList.Remove(landmine);

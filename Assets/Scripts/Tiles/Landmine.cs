@@ -7,8 +7,8 @@ public class Landmine : MonoBehaviour
     [SerializeField] LandmineTile tileReference;
     void Start()
     {
-        var animManager = GameObject.Find("TerrainManager").GetComponent<MineAnimationManager>();
-        animManager.AddMine(transform.position.ToVector3Int());
+        if(GameObject.Find("TerrainManager").TryGetComponent<MineAnimationManager>(out var manager))
+            manager.AddMine(transform.position.ToVector3Int());
     }
 
     void OnTriggerEnter2D(Collider2D collision)

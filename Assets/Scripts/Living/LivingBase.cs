@@ -20,7 +20,8 @@ public class LivingBase : MonoBehaviour, IDamageable
 
     public virtual bool Heal(float healAmount)
     {
-        if (health == maxHealth) return false;
+        if (health == maxHealth) 
+            return false;
 
         health = Mathf.Clamp(health + healAmount, 0, maxHealth);
         return true;

@@ -2732,7 +2732,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 10, y: 0}
+  m_AnchoredPosition: {x: 879.71497, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &452009548
@@ -3202,7 +3202,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.053528, y: 0.0954895, z: -10}
+  m_LocalPosition: {x: 11.996887, y: 0.0954895, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4029,7 +4029,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ef482adf1caa79488039b0a162a41fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useJsonEncryption: 0
   worldName: UnityTest
   worldCanvas: {fileID: 786146380}
   player: {fileID: 2136044628}
@@ -6066,7 +6065,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 249, y: 0}
+  m_AnchoredPosition: {x: 1118.715, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1087214259
@@ -7001,6 +7000,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1755fb79c546b054eb4b98c5a0ed52c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movement: {fileID: 2136044630}
+  fieldOfReach: 140
 --- !u!1 &1276825296
 GameObject:
   m_ObjectHideFlags: 0
@@ -15397,7 +15398,7 @@ MonoBehaviour:
     south: {fileID: 21300000, guid: 7e13b3c1faad2aa4187cfc55f2b2ca42, type: 3}
     west: {fileID: 21300000, guid: 4a712d9459365b549b28820f919b6583, type: 3}
   gfx: {fileID: 2136044648}
-  playerAnimator: {fileID: 0}
+  playerAnimator: {fileID: 2136044638}
 --- !u!4 &2136044632
 Transform:
   m_ObjectHideFlags: 0
@@ -15636,7 +15637,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4031
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -15646,10 +15647,10 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 4294967295
   m_CallbackLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0

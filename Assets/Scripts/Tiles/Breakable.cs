@@ -62,7 +62,7 @@ public class Breakable : MonoBehaviour, IDamageable
         foreach (var particle in BreakingManager.Instance.BreakParticles)
         {
             var instance = particle.PlayOneShot(transform.position,
-                new Vector3(0,0,90f).AnglesToQuaternion());
+                Quaternion.Euler(0, 0, 90f));
 
             instance.ChangeColors(tile.Colors[0], tile.Colors[1]);
         }

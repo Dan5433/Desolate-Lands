@@ -25,10 +25,10 @@ public class Interact : MonoBehaviour
 
     bool CanDisableUI()
     {
-        if(activeTile == null) return false;
+        if(activeTile == null) 
+            return false;
 
-        if ((Input.GetKeyDown(KeyCode.Escape) ||
-            Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2)) 
+        if (Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2) 
             return true;
 
         if(!ItemManager.Instance.IsHoldingItem && Input.GetMouseButtonDown(1)) 

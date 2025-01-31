@@ -1,3 +1,4 @@
+using EditorAttributes;
 using System;
 using System.Collections;
 using System.IO;
@@ -13,20 +14,18 @@ namespace CustomExtensions
         {
             return tilemap.GetTilesBlock(tilemap.cellBounds);
         }
+
         public static Vector3Int ToVector3Int(this Vector3 vector)
         {
-            return new Vector3Int((int)vector.x, (int)vector.y, (int)vector.z);
+            int x = vector.x >= 0 ? (int)vector.x: (int)(vector.x - 1);
+            int y = vector.y >= 0 ? (int)vector.y : (int)(vector.y - 1);
+            int z = vector.z >= 0 ? (int)vector.z : (int)(vector.z - 1);
+            return new Vector3Int(x,y,z); //vector is anchored to bottom-left corner.
         }
 
         public static Vector2Int ToVector2Int(this Vector2 vector)
         {
             return new Vector2Int((int)vector.x, (int)vector.y);
-        }
-
-        public static Vector2 ExtendRaycast(this RaycastHit2D hit, float distance, Transform transform)
-        {
-            Ray2D ray = new(transform.position, transform.up);
-            return ray.GetPoint(hit.distance + distance);
         }
 
         public static void ChangeColors(this ParticleSystem system, Color a, Color b)
@@ -42,11 +41,6 @@ namespace CustomExtensions
         {
             system.Stop();
             system.Play();
-        }
-
-        public static Quaternion AnglesToQuaternion(this Vector3 angles)
-        {
-            return new Quaternion() { eulerAngles = angles };
         }
 
         public static void PlayRandomClip(this AudioSource source, AudioClip[] audio)
@@ -78,12 +72,6 @@ namespace CustomExtensions
             return instance;
         }
 
-        public static Coroutine RestartCoroutine(this MonoBehaviour mono, IEnumerator routine)
-        {
-            mono.StopCoroutine(routine);
-            return mono.StartCoroutine(routine);
-        }
-
         public static RaycastHit2D RaycastTo(this Vector3 self, Vector3 target, float distance, int layerMask, Color color)
         {
             var direction = target - self;
@@ -112,7 +100,7 @@ namespace CustomExtensions
 public enum Direction
 {
     Up = 0,
-    Down = 2,
     Left = 1,
+    Down = 2,
     Right = 3,
 }

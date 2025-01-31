@@ -6,8 +6,18 @@ public class PlayerAudio : MonoBehaviour
     [SerializeField] AudioSource playerAudio;
     [SerializeField] AudioClip[] hurtClips;
 
-    public void Hurt()
+    public void PlaySoundEffect(PlayerSounds soundType)
     {
-        playerAudio.PlayRandomClip(hurtClips);
+        switch (soundType)
+        {
+            case PlayerSounds.Hurt:
+                playerAudio.PlayRandomClip(hurtClips); break;
+        }
     }
+}
+
+public enum PlayerSounds
+{
+    Hurt = 0,
+    Heal = 1,
 }

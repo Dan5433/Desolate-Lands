@@ -47,7 +47,7 @@ public class WorldBorderManager : MonoBehaviour
 
         var border = Instantiate(gasBorder, 
             (Vector3Int)(chunk * TerrainManager.ChunkSize) + position, 
-            new Vector3(0, 0, (int)direction * 90).AnglesToQuaternion());
+            Quaternion.Euler(0, 0, (int)direction * 90));
 
         var shape = border.shape;
         var main = border.main;

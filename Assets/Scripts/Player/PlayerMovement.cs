@@ -11,8 +11,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] PlayerSprites sprites;
     [SerializeField] SpriteRenderer gfx;
     [SerializeField] Animator playerAnimator;
+    Direction facing;
     Rigidbody2D rb;
     const string saveString = "Position.bin";
+
+    public Direction Facing => facing;
 
     void Start()
     {
@@ -26,6 +29,9 @@ public class PlayerMovement : MonoBehaviour
     {
         vertInput = Input.GetAxis("Vertical");
         horInput = Input.GetAxis("Horizontal");
+
+        playerAnimator.SetFloat("vertInput", vertInput);
+        playerAnimator.SetFloat("horInput", horInput);
 
         rb.velocity = new Vector2(horInput, vertInput).normalized * speed;
         UpdateSprite(vertInput, horInput);
@@ -47,20 +53,24 @@ public class PlayerMovement : MonoBehaviour
         if (horInput > 0)
         {
             gfx.sprite = sprites.east;
+            facing = Direction.Right;
         }
         if (horInput < 0)
         {
             gfx.sprite = sprites.west;
+            facing = Direction.Left;
         }
 
         //check vertical last to prioritize sprite
         if (vertInput > 0)
         {
             gfx.sprite = sprites.north;
+            facing = Direction.Up;
         }
         if (vertInput < 0)
         {
             gfx.sprite = sprites.south;
+            facing = Direction.Down;
         }
     }
     void SavePosition()

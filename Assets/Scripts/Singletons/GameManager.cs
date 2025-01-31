@@ -1,4 +1,3 @@
-using EditorAttributes;
 using System;
 using System.IO;
 using System.Linq;
@@ -10,7 +9,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [SerializeField] bool useJsonEncryption;
     [SerializeField] string worldName;
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
@@ -21,7 +19,6 @@ public class GameManager : MonoBehaviour
     static string playerDataDirPath;
     static string pendingWorldName = null;
 
-    public bool UseJsonEncryption => useJsonEncryption;
     public string WorldName => worldName;
     public GameObject WorldCanvas => worldCanvas;
     public GameObject Player => player;

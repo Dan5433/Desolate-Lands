@@ -21,7 +21,6 @@ public class InventoryBase : MonoBehaviour
 
     void Start()
     {
-
         for (int i = 0; i < inventory.Length; i++)
         {
             inventory[i] = ItemManager.Instance.InvItemAir;

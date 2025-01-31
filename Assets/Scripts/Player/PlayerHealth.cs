@@ -36,7 +36,7 @@ public class PlayerHealth : LivingBase
 
         UpdateDisplay();
         StartCoroutine(LerpBarColor(damageColor));
-        GetComponent<PlayerAudio>().Hurt();
+        GetComponent<PlayerAudio>().PlaySoundEffect(PlayerSounds.Hurt);
     }
 
 

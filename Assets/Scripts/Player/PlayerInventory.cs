@@ -21,4 +21,14 @@ public class PlayerInventory : InventoryBase
                 break;
         }
     }
+
+    public void ClearInventory()
+    {
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            inventory[i] = ItemManager.Instance.InvItemAir;
+        }
+
+        DeleteInventory();
+    }
 }
