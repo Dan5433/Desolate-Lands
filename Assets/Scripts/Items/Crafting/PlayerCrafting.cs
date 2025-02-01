@@ -19,16 +19,19 @@ public class PlayerCrafting : MonoBehaviour
 
     void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Tab)) return;
+        if (!Input.GetKeyDown(KeyCode.Tab)) 
+            return;
 
         if (!ui.gameObject.activeSelf)
         {
             ui.UpdateAvailableCraftingUI(inventory.Inventory);
-            interact.DisableUI();
+            interact.DisableUI();   
             interact.UpdateUI(gameObject, ui.gameObject);
+
             ui.gameObject.SetActive(true);
         }
-        else interact.DisableUI();
+        else 
+            interact.DisableUI();
     }
 
     void Start()
@@ -105,7 +108,7 @@ public class PlayerCrafting : MonoBehaviour
         });
     }
 
-    private void OnApplicationQuit()
+    private void OnDestroy()
     {
         SaveCraftingData();
     }

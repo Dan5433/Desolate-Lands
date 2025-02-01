@@ -22,13 +22,9 @@ public class PlayerInventory : InventoryBase
         }
     }
 
-    public void ClearInventory()
+    public override void ClearInventory()
     {
-        for (int i = 0; i < inventory.Length; i++)
-        {
-            inventory[i] = ItemManager.Instance.InvItemAir;
-        }
-
+        base.ClearInventory();
         DeleteInventory();
     }
 }

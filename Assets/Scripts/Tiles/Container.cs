@@ -16,7 +16,8 @@ public class Container : InventoryBase, IBreakable
 
     public void GenInventory()
     {
-        if (IsInventorySaved()) return;
+        if (IsInventorySaved()) 
+            return;
 
         var tilemap = GetComponentInParent<Tilemap>();
 

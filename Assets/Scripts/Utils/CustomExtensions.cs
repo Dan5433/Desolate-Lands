@@ -2,6 +2,7 @@ using EditorAttributes;
 using System;
 using System.Collections;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -91,6 +92,11 @@ namespace CustomExtensions
             Debug.DrawLine(right, bottom, color, duration);
             Debug.DrawLine(bottom, left, color, duration);
             Debug.DrawLine(left, top, color, duration);
+        }
+
+        public static bool IsEven(this int n)
+        {
+            return n % 2 == 0;
         }
     }
 

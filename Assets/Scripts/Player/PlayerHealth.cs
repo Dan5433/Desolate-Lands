@@ -90,8 +90,23 @@ public class PlayerHealth : LivingBase
         };
     }
 
+    private void Reset()
+    {
+        health = maxHealth;
+        barImage.fillAmount = 1f;
+    }
+
     protected override void OnDeath()
     {
         //TODO: add game over functionality
+        base.OnDeath();
+
+        GetComponent<PlayerInventory>().ClearInventory();
+        GetComponent<SpecialPlayerInventory>().ClearInventory();
+
+        GameManager.IncrementDeaths();
+
+        transform.position = Vector3.zero;
+        Reset();
     }
 }

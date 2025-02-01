@@ -6,22 +6,19 @@ public class IntValidator : TMP_InputValidator
 {
     public override char Validate(ref string text, ref int pos, char ch)
     {
-        // Allow digits and negative sign
+        //allow digits and negative sign
         if (char.IsDigit(ch) || (ch == '-' && pos == 0 && !text.Contains("-")))
         {
-            // Create the new text as if the character was added
             string newText = text.Insert(pos, ch.ToString());
 
-            // Check if the new text is a valid integer
             if (IsValidInteger(newText))
             {
-                pos++; // Move the caret forward if valid\
+                pos++;
                 text = newText;
                 return ch;
             }
         }
 
-        // Reject invalid characters
         return '\0';
     }
 

@@ -39,6 +39,9 @@ public class DropHeldItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
 
     public void OnPointerMove(PointerEventData eventData)
     {
+        if (!Camera.main)
+            return;
+
         var hit = Physics2D.Raycast(
             Camera.main.ScreenToWorldPoint(Input.mousePosition),
             Vector2.zero);

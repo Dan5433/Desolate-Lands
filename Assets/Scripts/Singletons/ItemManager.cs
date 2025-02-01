@@ -228,18 +228,21 @@ public class ItemManager : MonoBehaviour
 
         if (selectedItem.ItemObj != Instance.Air && slotType != SlotType.Any && selectedItem.ItemObj.Slot != slotType) return;
 
-        if (slotType != SlotType.Any) SpecialItemActions(slotItem.ItemObj, selectedItem.ItemObj, GameManager.Instance.Player);
+        if (slotType != SlotType.Any) 
+            SpecialItemActions(slotItem.ItemObj, selectedItem.ItemObj, GameManager.Instance.Player);
 
         if (mouseButton == 0)
         {
             if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air)
             {
-                if (allowDeposit) DepositItem(slotItem, selectedItem);
+                if (allowDeposit) 
+                    DepositItem(slotItem, selectedItem);
                 else return;
             }
             else
             {
-                if (!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw)) return;
+                if (!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw)) 
+                    return;
             }
         }
 
@@ -247,19 +250,22 @@ public class ItemManager : MonoBehaviour
         {
             if (selectedItem.ItemObj == Instance.Air && slotItem.ItemObj != Instance.Air)
             {
-                if (allowWithdraw) SplitSlot(ref slotItem);
+                if (allowWithdraw) 
+                    SplitSlot(ref slotItem);
                 else return;
             }
             else if (slotItem.ItemObj == Instance.Air || 
                 (slotItem.ItemObj == selectedItem.ItemObj && slotItem.Count < slotItem.ItemObj.MaxCount))
             {
-                if (allowDeposit) IncrementSlot(ref slotItem, selectedItem);
+                if (allowDeposit) 
+                    IncrementSlot(ref slotItem, selectedItem);
                 else return;
             }
 
             else
             {
-                if(!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw)) return;
+                if(!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw)) 
+                    return;
             }
         }
 
@@ -273,21 +279,16 @@ public class ItemManager : MonoBehaviour
 
     static void SpecialItemActions(Item slot, Item selected, GameObject invoker)
     {
-        if (slot != null && slot.GetType() == typeof(EquippableItem))
+        if (slot != null && slot is EquippableItem item)
         {
-            var item = slot as EquippableItem;
             foreach (var effect in item.Effects)
-            {
                 effect.Unequip(invoker);
-            }
         }
-        if (selected != null && selected.GetType() == typeof(EquippableItem))
+
+        if (selected != null && selected is EquippableItem other)
         {
-            var item = selected as EquippableItem;
-            foreach (var effect in item.Effects)
-            {
+            foreach (var effect in other.Effects)
                 effect.Equip(invoker);
-            }
         }
     }
 }

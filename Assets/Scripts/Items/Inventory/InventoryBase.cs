@@ -26,9 +26,12 @@ public class InventoryBase : MonoBehaviour
             inventory[i] = ItemManager.Instance.InvItemAir;
         }
 
-        if (IsInventorySaved()) LoadInventory();
+        if (IsInventorySaved()) 
+            LoadInventory();
 
-        if (updateUIOnStart) UpdateUI();
+        if (updateUIOnStart) 
+            UpdateUI();
+
         InitInventory();
     }
 
@@ -127,11 +130,20 @@ public class InventoryBase : MonoBehaviour
         for (int i = 0; i < ui.childCount; i++)
         {
             var slot = ui.GetChild(i);
-            if (!ItemManager.IsInvSlot(slot.gameObject)) continue;
+            if (!ItemManager.IsInvSlot(slot.gameObject)) 
+                continue;
 
             ItemManager.UpdateItemUI(slot, inventory[slotIndex]);
             slotIndex++;
         }
+    }
+
+    public virtual void ClearInventory()
+    {
+        for (int i = 0; i < inventory.Length; i++)
+            inventory[i] = ItemManager.Instance.InvItemAir;
+
+        UpdateUI();
     }
 
     protected virtual string GetSaveKey()

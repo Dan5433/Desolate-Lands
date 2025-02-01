@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
     [SerializeField] CursorTexture[] cursors;
+    [SerializeField] Settings settings;
+    int deaths;
 
     static CursorState cursorState;
     static string worldDirPath;
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour
     public static string DataDirPath => worldDirPath;
     public static string PlayerDataDirPath => playerDataDirPath;
     public static string PendingWorldName { get { return pendingWorldName; } set { pendingWorldName = value; } }
+    
     public static CursorState CursorState {  
         get { return cursorState; } 
         set 
@@ -70,12 +73,6 @@ public class GameManager : MonoBehaviour
         CursorState = CursorState.Default;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            SceneManager.LoadScene("Main Menu");
-    }
-
     private void OnDestroy()
     {
         UpdatePlaytime();
@@ -116,7 +113,14 @@ public class GameManager : MonoBehaviour
 
         stats.playtime.hours = playtime.hours + hoursInScene;
 
+        stats.deaths += deaths;
+
         handler.SaveData(writer => stats.Write(writer));
+    }
+
+    public static void IncrementDeaths()
+    {
+        Instance.deaths++;
     }
 }
 
@@ -132,4 +136,10 @@ public enum CursorState
     Default = 0,
     Use = 1,
     Drop = 2
+}
+
+[Serializable]
+public struct Settings
+{
+    public float holdTimeToMainMenu;
 }

@@ -40,8 +40,7 @@ public class LoadWorld : MonoBehaviour
     private void Update()
     {
         if (!selectedWorld)
-            foreach (var button in worldOptions.GetComponentsInChildren<Button>())
-                button.interactable = false;
+            DisableWorldOptions();
 
         if (!EventSystem.current.currentSelectedGameObject)
         {
@@ -56,7 +55,18 @@ public class LoadWorld : MonoBehaviour
     public void EnableWorldOptions()
     {
         foreach (var button in worldOptions.GetComponentsInChildren<Button>())
+        {
             button.interactable = true;
+            button.GetComponentInChildren<TMP_Text>().color = Color.white;
+        }
+    }
+    void DisableWorldOptions()
+    {
+        foreach (var button in worldOptions.GetComponentsInChildren<Button>())
+        {
+            button.interactable = false;
+            button.GetComponentInChildren<TMP_Text>().color = button.colors.disabledColor;
+        }
     }
 
     public void LoadSelectedWorld()

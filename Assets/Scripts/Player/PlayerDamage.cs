@@ -14,7 +14,7 @@ public class PlayerDamage : MonoBehaviour
 
     public void ResetCooldown()
     {
-        cooldown = 0;
+        cooldown = baseCooldown;
     }
 
     public void DealDamage(RaycastHit2D hit, IDamageable damageable)
