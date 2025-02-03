@@ -102,12 +102,12 @@ public class LoadTerrain : MonoBehaviour
                 var tile = node.tileID == -1 ? null : main.MasterTiles[node.tileID];
                 tileData.Add(new(x, y), tile);
 
-                y++;
+                x++;
 
-                if (y >= startY + TerrainManager.ChunkSize.y)
+                if (x >= startX + TerrainManager.ChunkSize.x)
                 {
-                    y = startY;
-                    x++;
+                    x = startX;
+                    y++;
                 }
             }
         }

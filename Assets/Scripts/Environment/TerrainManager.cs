@@ -225,9 +225,7 @@ public class TerrainManager : MonoBehaviour
                 if (!HasRoomToPlace(tilemap, bounds)) 
                     continue;
 
-                //TODO: fix bug placing structures facing left (rotated 90c degrees)
-                var tiles = structure.GetAllTiles();
-                tilemap.SetTilesBlock(bounds, tiles);
+                tilemap.SetTilesBlock(bounds, structure.GetAllTiles());
             }
         }
     }
