@@ -16,7 +16,7 @@ public class PauseMenu : MonoBehaviour
 
         if (!interact.IsUIActive && !isGamePaused)
             Pause();
-        else if (isGamePaused)
+        else
             Unpause();
     }
 

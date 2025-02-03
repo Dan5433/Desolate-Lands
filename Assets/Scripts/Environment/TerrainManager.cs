@@ -75,7 +75,7 @@ public class TerrainManager : MonoBehaviour
         foreach (var tilemap in tilemaps)
         {
             tilemap.origin = (Vector3Int)(currentChunkIndex * chunkSize - chunkSize);
-            tilemap.size = new(chunkSize.x * (renderDist * 2 + 1), chunkSize.y * (renderDist * 2 + 1), 1);
+            tilemap.size = new(chunkSize.x * (renderDist * 2 + 3), chunkSize.y * (renderDist * 2 + 3), 1);
             tilemap.ResizeBounds();
 
             tilemap.gameObject.SetActive(false);
@@ -124,7 +124,6 @@ public class TerrainManager : MonoBehaviour
 
             if (parsedChunks == null || !parsedChunks.ContainsKey(chunk))
             {
-                Debug.Log("gen new chunk");
                 GenChunk(chunk * chunkSize, chunk, region);
             }
             else
@@ -182,18 +181,16 @@ public class TerrainManager : MonoBehaviour
         bounds.size += (Vector3Int)structureMargin*2;
         foreach (var tile in tilemap.GetTilesBlock(bounds))
         {
-            if(tile != null)
-            {
-                return false;
-            }
+            if(tile == null)
+                continue;
+
+            return false;
         }
         return true;
     }
 
     void GenChunk(Vector2Int tilePos, Vector2Int chunkIndex, Vector2Int region)
     {
-        //lags the game horribly
-        //refactor settiles (which lags the most) to use tile change data instead
         GenBoxTiles(ground, grTiles, tilePos);
         foreach (var genTiles in topTiles)
         {
@@ -218,7 +215,9 @@ public class TerrainManager : MonoBehaviour
                 if (structure == null) 
                     continue;
 
-                Vector3Int spawnPosition = new(Random.Range(startPos.x, endPos.x), Random.Range(startPos.y, endPos.y));
+                Vector3Int spawnPosition = new(
+                    Random.Range(startPos.x, endPos.x), 
+                    Random.Range(startPos.y, endPos.y));
 
                 var bounds = structure.cellBounds;
                 bounds.position = spawnPosition;
@@ -226,7 +225,9 @@ public class TerrainManager : MonoBehaviour
                 if (!HasRoomToPlace(tilemap, bounds)) 
                     continue;
 
-                tilemap.SetTilesBlock(bounds, structure.GetAllTiles());
+                //TODO: fix bug placing structures facing left (rotated 90c degrees)
+                var tiles = structure.GetAllTiles();
+                tilemap.SetTilesBlock(bounds, tiles);
             }
         }
     }
