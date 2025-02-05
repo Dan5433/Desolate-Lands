@@ -7610,6 +7610,7 @@ MonoBehaviour:
   worldSize: {x: 2048, y: 2048}
   structureMargin: {x: 1, y: 1}
   renderDist: 1
+  tilemapCompressMargin: {x: 1, y: 1}
 --- !u!114 &1354565117
 MonoBehaviour:
   m_ObjectHideFlags: 0

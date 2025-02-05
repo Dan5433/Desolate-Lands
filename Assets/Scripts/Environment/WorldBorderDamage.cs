@@ -34,7 +34,10 @@ public class WorldBorderDamage : MonoBehaviour
                     continue;
 
                 //TODO: make work for vertical (use y)
-                var distanceToBorder = transform.position.x - obj.transform.position.x;
+                var distanceToBorder = Mathf.Min(
+                    transform.position.x - obj.transform.position.x,
+                    transform.position.y - obj.transform.position.y);
+
                 var percentCloseToBorder = 
                     (WorldBorderManager.Instance.EffectRange - distanceToBorder) / 
                     WorldBorderManager.Instance.EffectRange;

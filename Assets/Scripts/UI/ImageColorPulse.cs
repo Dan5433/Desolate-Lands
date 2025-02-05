@@ -28,7 +28,6 @@ public class ImageColorPulse : MonoBehaviour
 
     IEnumerator PulseColor()
     {
-        Debug.Log("started pulse");
         var image = GetComponent<Image>();
         image.color = startColor;
 

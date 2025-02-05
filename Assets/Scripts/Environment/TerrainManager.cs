@@ -49,7 +49,7 @@ public class TerrainManager : MonoBehaviour
     private void Start()
     {
         //0 second delay causes the compress to happen after player is loaded (idk why)
-        Invoke(nameof(CompressOnStart),0);
+        Invoke(nameof(CompressOnStart), 0);
     }
 
     void CompressOnStart()
@@ -75,9 +75,14 @@ public class TerrainManager : MonoBehaviour
         foreach (var tilemap in tilemaps)
         {
             tilemap.origin = (Vector3Int)(currentChunkIndex * chunkSize - chunkSize);
-            tilemap.size = new(chunkSize.x * (renderDist * 2 + 3), chunkSize.y * (renderDist * 2 + 3), 1);
+            
+            int xSize = chunkSize.x * (renderDist * 2 + 1);
+            int ySize = chunkSize.y * (renderDist * 2 + 1);
+
+            tilemap.size = new(xSize, ySize,1);
             tilemap.ResizeBounds();
 
+            //needed for proper rendering
             tilemap.gameObject.SetActive(false);
             tilemap.gameObject.SetActive(true);
         }
@@ -103,6 +108,10 @@ public class TerrainManager : MonoBehaviour
 
             shrunkTilemap = true;
         }
+
+        //avoid compressing multiple times
+        if (shrunkTilemap)
+            CompressTilemaps(currentChunk, ground, top, solid, BreakingManager.Instance.Tilemap);
 
         Vector2Int currRegion = default;
         Dictionary<Vector2Int, TilemapChunkNodesData> parsedChunks = null;
@@ -138,9 +147,6 @@ public class TerrainManager : MonoBehaviour
 
             LoadBorderIfEndOfWorld(chunk);
         }
-
-        if (shrunkTilemap) 
-            CompressTilemaps(currentChunk, ground, top, solid, BreakingManager.Instance.Tilemap);
     }
 
     bool ChunkInsideWorldBorder(Vector2Int chunk)
@@ -262,8 +268,6 @@ public class TerrainManager : MonoBehaviour
 
         Vector3Int[] positions = new Vector3Int[gridSize.x * gridSize.y];
         TileBase[] tiles = new TileBase[positions.Length];
-
-        Debug.Log("Array size: " + positions.Length);
 
         //split chunk into cells based on distance
         int index = 0;

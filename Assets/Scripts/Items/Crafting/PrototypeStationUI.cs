@@ -89,7 +89,6 @@ public class PrototypeStationUI : MonoBehaviour
 
     public void SelectPrototype(CraftingPrototype prototype, MissingRequirements missing)
     {
-        Debug.Log(prototype.name);
         if(selectedPrototype == prototype) 
             return;
 
