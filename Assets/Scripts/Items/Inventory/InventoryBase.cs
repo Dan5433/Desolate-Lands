@@ -67,7 +67,7 @@ public class InventoryBase : MonoBehaviour
 
         ItemManager.SpawnGroundItem(
             InventoryItemFactory.Create(item.ItemObj,excess), 
-            gameObject.transform.position, false);
+            gameObject.transform.position);
 
         return excess;
     }

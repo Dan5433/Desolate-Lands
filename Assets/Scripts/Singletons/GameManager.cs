@@ -20,7 +20,9 @@ public class GameManager : MonoBehaviour
     static string worldDirPath;
     static string playerDataDirPath;
     static string pendingWorldName = null;
+    static bool isGamePaused = false;
 
+    public static bool IsGamePaused => isGamePaused;
     public string WorldName => worldName;
     public GameObject WorldCanvas => worldCanvas;
     public GameObject Player => player;
@@ -66,6 +68,16 @@ public class GameManager : MonoBehaviour
 
             Instance = this;
         }
+    }
+
+    public static void TogglePauseState()
+    {
+        isGamePaused = !isGamePaused;
+
+        if(isGamePaused)
+            Time.timeScale = 0f;
+        else
+            Time.timeScale = 1f;
     }
 
     private void Start()
@@ -121,6 +133,10 @@ public class GameManager : MonoBehaviour
     public static void IncrementDeaths()
     {
         Instance.deaths++;
+    }
+    public void ExitToMain()
+    {
+        SceneManager.LoadScene(0);
     }
 }
 

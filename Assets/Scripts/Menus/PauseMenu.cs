@@ -5,37 +5,29 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] GameObject pauseMenu;
     [SerializeField] Interact interact;
-    static bool isGamePaused = false;
-
-    public static bool IsGamePaused => isGamePaused;
 
     private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape))
+        if (!Input.GetKeyDown(KeyCode.Escape) || DeathMenu.IsDead)
             return;
 
-        if (!interact.IsUIActive && !isGamePaused)
+        if (!interact.IsUIActive && !GameManager.IsGamePaused)
             Pause();
         else
             Unpause();
     }
 
-    public void ExitToMain()
-    {
-        SceneManager.LoadScene(0);
-    }
-
     void Pause()
     {
-        isGamePaused = true;
+        GameManager.TogglePauseState();
+
         pauseMenu.SetActive(true);
-        Time.timeScale = 0f;
     }
 
     public void Unpause()
     {
-        isGamePaused = false;
+        GameManager.TogglePauseState();
+
         pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
     }
 }

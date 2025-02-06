@@ -40,9 +40,11 @@ public class ZombieBase : LivingBase
 
     private void Update()
     {
+        if (GameManager.IsGamePaused)
+            return;
 
 #if UNITY_EDITOR
-        if(targetBreadcrumbs.Count > 0)
+        if (targetBreadcrumbs.Count > 0)
         {
             foreach (var crumb in targetBreadcrumbs)
                 crumb.DrawDiamond(0.25f, Color.cyan, 1f);

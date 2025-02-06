@@ -2,6 +2,7 @@ using CustomClasses;
 using UnityEngine;
 using UnityEngine.UI;
 
+//TODO: fix collision with mines
 public class GroundItem : MonoBehaviour
 {
     [SerializeField] InvItem item;

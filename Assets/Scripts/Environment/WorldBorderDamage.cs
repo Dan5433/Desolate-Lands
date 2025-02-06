@@ -33,7 +33,6 @@ public class WorldBorderDamage : MonoBehaviour
                     !obj.transform.parent.TryGetComponent(out living))
                     continue;
 
-                //TODO: make work for vertical (use y)
                 var distanceToBorder = Mathf.Min(
                     transform.position.x - obj.transform.position.x,
                     transform.position.y - obj.transform.position.y);

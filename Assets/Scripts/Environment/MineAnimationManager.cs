@@ -13,6 +13,9 @@ public class MineAnimationManager : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.IsGamePaused)
+            return;
+
         float revealMultiplier = player.GetComponent<CustomPlayerData>().MineRevealDistMultiplier;
 
         foreach (Vector3Int landmine in mineList)

@@ -29,6 +29,9 @@ public class Interact : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.IsGamePaused)
+            return;
+
         if (CanDisableUI())
         {
             DisableUI();

@@ -1,4 +1,5 @@
 using CustomClasses;
+using System.Drawing;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,18 +41,20 @@ public class ItemManager : MonoBehaviour
 
     public static bool DropHeldItem(Vector3 position, Vector3 direction, float distance)
     {
-        if (!Instance.IsHoldingItem) return false;
+        if (!Instance.IsHoldingItem) 
+            return false;
+
         GameManager.CursorState = CursorState.Default;
 
         Vector3 spawnPos = position + direction * distance;
 
-        LayerMask mask = LayerMask.GetMask("Interact");
-        RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, mask);
+        int mask = LayerMask.GetMask("Solid");
+        var hit = Physics2D.Raycast(position, direction, distance, mask);
 
-        if (hit) spawnPos = hit.point;
+        if (hit) 
+            spawnPos = hit.point;
 
-
-        SpawnGroundItem(Instance.heldItem.Item.Clone(), spawnPos, false);
+        SpawnGroundItem(Instance.heldItem.Item.Clone(), spawnPos);
 
         Instance.heldItem.Item = Instance.InvItemAir;
         UpdateItemUI(Instance.heldItem.transform, Instance.heldItem.Item);
@@ -125,23 +128,26 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public static void SpawnGroundItem(InvItem item, Vector3 middlePos, bool randomizePos)
+    public static void SpawnGroundItem(InvItem item, Vector3 center, Vector2 spreadRadius = default)
     {
-        if (item.ItemObj == Instance.Air) return;
+        if (item.ItemObj == Instance.Air)
+            return;
 
         var groundItem = Instantiate(Instance.groundItemPrefab, GameManager.Instance.WorldCanvas.transform);
         groundItem.GetComponent<GroundItem>().InvItem = item;
-        Vector3 pos = middlePos;
 
-        if (randomizePos)
-        {
-            RectTransform rect = groundItem.GetComponent<RectTransform>();
-            pos = middlePos + new Vector3(
-            Random.Range(rect.sizeDelta.x / 2, 1 - rect.sizeDelta.x / 2),
-            Random.Range(rect.sizeDelta.y / 2, 1 - rect.sizeDelta.y / 2));
-        }
+        var pos = center + new Vector3(
+                Random.Range(-spreadRadius.x, spreadRadius.x),
+                Random.Range(-spreadRadius.y, spreadRadius.y));
 
-        groundItem.transform.position = pos;
+        int mask = LayerMask.GetMask("Solid");
+        var distance = Vector2.Distance(center, pos);
+        var hit = Physics2D.Raycast(center, pos - center, distance, mask);
+
+        if (hit)
+            groundItem.transform.position = hit.point;
+        else
+            groundItem.transform.position = pos;
     }
 
     static void DepositItem(InvItem slotItem, InvItem selectedItem)

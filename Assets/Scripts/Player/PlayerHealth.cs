@@ -12,6 +12,7 @@ public class PlayerHealth : LivingBase
     [SerializeField] Color healColor;
     [SerializeField] float colorLerpSpeed;
     [SerializeField] float healthLerpSpeed;
+    [SerializeField] DeathMenu deathMenu;
     Color normalColor;
 
     override protected void Start()
@@ -20,10 +21,7 @@ public class PlayerHealth : LivingBase
 
         normalColor = barImage.color;
 
-        healthBar.maxValue = maxHealth;
-        healthBar.value = health;
-
-        UpdateDisplay();
+        Reset();
     }
 
     public override void Damage(float damageAmount)
@@ -93,19 +91,30 @@ public class PlayerHealth : LivingBase
     private void Reset()
     {
         health = maxHealth;
-        barImage.fillAmount = 1f;
+        healthBar.maxValue = maxHealth;
+        healthBar.value = health;
+        UpdateDisplay();
     }
 
     protected override void OnDeath()
     {
-        //TODO: add game over functionality
         base.OnDeath();
+
+        foreach (var item in GetComponent<PlayerInventory>().Inventory)
+            ItemManager.SpawnGroundItem(item.Clone(), transform.position, new(3f, 3f));
+
+        foreach (var item in GetComponent<SpecialPlayerInventory>().Inventory)
+            ItemManager.SpawnGroundItem(item.Clone(), transform.position, new(3f, 3f));
 
         GetComponent<PlayerInventory>().ClearInventory();
         GetComponent<SpecialPlayerInventory>().ClearInventory();
 
+        deathMenu.Death();
         GameManager.IncrementDeaths();
+    }
 
+    public void Respawn()
+    {
         transform.position = Vector3.zero;
         Reset();
     }

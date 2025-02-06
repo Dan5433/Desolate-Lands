@@ -63,7 +63,7 @@ public class CraftStation : InventoryBase, IBreakable
             var dropItem = InventoryItemFactory.Create(
                 item.ItemObj, item.Name, item.Count);
 
-            ItemManager.SpawnGroundItem(dropItem, tilePosition, true);
+            ItemManager.SpawnGroundItem(dropItem, tilePosition, new(0.5f, 0.5f));
         }
 
         DeleteInventory();

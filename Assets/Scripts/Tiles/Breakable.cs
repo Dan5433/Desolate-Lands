@@ -56,7 +56,7 @@ public class Breakable : MonoBehaviour, IDamageable
 
             ItemManager.SpawnGroundItem(
                 InventoryItemFactory.Create(drop.item, count), 
-                transform.position, true);
+                transform.position, new(0.5f, 0.5f));
         }
 
         foreach (var particle in BreakingManager.Instance.BreakParticles)

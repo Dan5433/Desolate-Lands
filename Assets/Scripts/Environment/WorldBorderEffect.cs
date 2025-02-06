@@ -17,6 +17,9 @@ public class WorldBorderEffect : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.IsGamePaused)
+            return;
+
         float xProximity = totalWorldSize.x - Mathf.Abs(transform.position.x);
         float yProximity = totalWorldSize.y - Mathf.Abs(transform.position.y);
 

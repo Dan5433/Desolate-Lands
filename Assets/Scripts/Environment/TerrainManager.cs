@@ -90,6 +90,9 @@ public class TerrainManager : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.IsGamePaused) 
+            return;
+
         //TODO: only save user change data to tiles and generate chunks using the seed each time
         //treat previously saved region data as user modified to make data persistent after seed update
         bool shrunkTilemap = false;

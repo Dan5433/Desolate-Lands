@@ -91,6 +91,7 @@ public class LoadTerrain : MonoBehaviour
 
     public void SetTilemapChunk(Tilemap tilemap, LinkedList<TilemapSaveNode> nodes, int startX, int startY)
     {
+        //TODO: fix excessive calls when slightly moving (without loading new chunks)
         var tileData = new Dictionary<Vector3Int, TileBase>();
         int x = startX;
         int y = startY;

@@ -61,7 +61,7 @@ public class Container : InventoryBase, IBreakable
             var dropItem = InventoryItemFactory.Create(
                 item.ItemObj, item.Name, item.Count);
 
-            ItemManager.SpawnGroundItem(dropItem, transform.position, true);
+            ItemManager.SpawnGroundItem(dropItem, transform.position, new(0.5f,0.5f));
         }
 
         DeleteInventory();
