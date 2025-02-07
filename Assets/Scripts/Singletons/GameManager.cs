@@ -136,6 +136,7 @@ public class GameManager : MonoBehaviour
     }
     public void ExitToMain()
     {
+        TogglePauseState();
         SceneManager.LoadScene(0);
     }
 }

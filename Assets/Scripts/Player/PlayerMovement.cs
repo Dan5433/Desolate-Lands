@@ -111,6 +111,6 @@ public class PlayerMovement : MonoBehaviour
         //public Sprite se;
         //public Sprite sw;
         //public Sprite nw;
-        //TODO: add diagonal movement sprites
+        //IDEA alpha 1.2: add diagonal movement sprites
     }
 }

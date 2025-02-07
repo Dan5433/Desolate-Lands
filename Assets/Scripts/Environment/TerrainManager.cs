@@ -97,7 +97,7 @@ public class TerrainManager : MonoBehaviour
         if(GameManager.IsGamePaused) 
             return;
 
-        //TODO: only save user change data to tiles and generate chunks using the seed each time
+        //IDEA alpha 2.0: only save user change data to tiles and generate chunks using the seed each time
         //treat previously saved region data as user modified to make data persistent after seed update
         bool shrunkTilemap = false;
         var currentChunk = GetChunkIndex(player.position);
@@ -217,6 +217,9 @@ public class TerrainManager : MonoBehaviour
 
     void GenStructures(Vector2Int startPos, Tilemap tilemap)
     {
+        //BUG: avoid cutoff by determining what chunks the structures bleed into
+        //and then force loading them
+
         Vector2Int endPos = startPos + chunkSize;
 
         foreach(var structureGroup in structures)
@@ -283,8 +286,8 @@ public class TerrainManager : MonoBehaviour
             for (int y = startPos.y; y < endPos.y; y += distance)
             {
                 Vector3Int position = new(
-                    Mathf.Clamp(Random.Range(x, x + distance),startPos.x,endPos.x),
-                    Mathf.Clamp(Random.Range(y, y + distance), startPos.y, endPos.y));
+                    Mathf.Clamp(Random.Range(x, x + distance),startPos.x,endPos.x-1),
+                    Mathf.Clamp(Random.Range(y, y + distance), startPos.y, endPos.y-1));
 
                 positions[index] = position;
                 tiles[index] = WeightedUtils.RollTile(tilePool, masterTiles);

@@ -90,7 +90,6 @@ public class PlayerHealth : LivingBase
 
     private void Reset()
     {
-        health = maxHealth;
         healthBar.maxValue = maxHealth;
         healthBar.value = health;
         UpdateDisplay();
@@ -116,6 +115,7 @@ public class PlayerHealth : LivingBase
     public void Respawn()
     {
         transform.position = Vector3.zero;
+        health = maxHealth;
         Reset();
     }
 }

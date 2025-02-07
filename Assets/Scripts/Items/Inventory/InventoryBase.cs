@@ -26,8 +26,7 @@ public class InventoryBase : MonoBehaviour
             inventory[i] = ItemManager.Instance.InvItemAir;
         }
 
-        if (IsInventorySaved()) 
-            LoadInventory();
+        LoadInventory();
 
         if (updateUIOnStart) 
             UpdateUI();
@@ -84,18 +83,21 @@ public class InventoryBase : MonoBehaviour
     {
         var dataHandler = new BinaryDataHandler(dataDirPath, GetSaveKey());
 
+        if (!dataHandler.FileExists())
+            return;
+
         dataHandler.LoadData(reader =>
         {
             for(int i = 0; i < inventory.Length; i++)
-            {
                 inventory[i] = InventoryItemFactory.Create(reader);
-            }
         });
     }
 
     protected async void DeleteInventory()
     {
         var fullPath = Path.Combine(dataDirPath, GetSaveKey());
+        if (!File.Exists(fullPath))
+            return;
 
         await Task.Run(() => { File.Delete(fullPath); });
     }
@@ -106,7 +108,8 @@ public class InventoryBase : MonoBehaviour
 
         dataHandler.SaveData(writer =>
         {
-            foreach (var item in inventory) item.Save(writer);
+            foreach (var item in inventory) 
+                item.Save(writer);
         });
     }
 
