@@ -2272,7 +2272,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1169.9855, y: -613.94476}
+  m_AnchoredPosition: {x: 1169.9855, y: 0}
   m_SizeDelta: {x: 1039.971, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &339218908
@@ -2319,8 +2319,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 416771456}
-        m_TargetAssemblyTypeName: DeathMenu, Assembly-CSharp
+      - m_Target: {fileID: 697510277}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: ExitToMain
         m_Mode: 1
         m_Arguments:
@@ -4999,6 +4999,7 @@ GameObject:
   - component: {fileID: 786146383}
   - component: {fileID: 786146382}
   - component: {fileID: 786146381}
+  - component: {fileID: 786146385}
   m_Layer: 5
   m_Name: World Canvas
   m_TagString: Untagged
@@ -5089,6 +5090,33 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1181, y: 616}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!50 &786146385
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786146380}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &788047656
 GameObject:
   m_ObjectHideFlags: 0
@@ -7998,7 +8026,7 @@ MonoBehaviour:
   player: {fileID: 2136044632}
   worldSize: {x: 2048, y: 2048}
   structureMargin: {x: 1, y: 1}
-  renderDist: 1
+  renderRadius: 1
 --- !u!114 &1354565117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9860,7 +9888,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1169.9855, y: -438.94476}
+  m_AnchoredPosition: {x: 1169.9855, y: 0}
   m_SizeDelta: {x: 1039.971, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1664977204
@@ -11687,8 +11715,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 416771455}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+      - m_Target: {fileID: 697510277}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: ExitToMain
         m_Mode: 1
         m_Arguments:

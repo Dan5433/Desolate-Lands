@@ -33,7 +33,7 @@ public class LoadTerrain : MonoBehaviour
         tilemap.SetTiles(genCoords, tiles);
     }
 
-    public Dictionary<Vector2Int, TilemapChunkNodesData> ParseRegionFile(Vector2Int region, LinkedList<Vector2Int> chunksToLoad, params Tilemap[] tilemaps)
+    public Dictionary<Vector2Int, TilemapChunkNodesData> ParseRegionFile(Vector2Int region, Vector2Int[] chunksToLoad, params Tilemap[] tilemaps)
     {
         Dictionary<Vector2Int, TilemapChunkNodesData> parsedChunks = new();
 
@@ -79,29 +79,32 @@ public class LoadTerrain : MonoBehaviour
         return parsedChunks;
     }
 
-    LinkedList<TilemapSaveNode> ParseTilemapNodes(BinaryReader reader, int nodeCount)
+    TilemapSaveNode[] ParseTilemapNodes(BinaryReader reader, int nodeCount)
     {
-        LinkedList<TilemapSaveNode> nodes = new();
+        var nodes = new TilemapSaveNode[nodeCount];
 
         for (int i = 0; i < nodeCount; i++)
-            nodes.AddLast(new TilemapSaveNode(reader));
+            nodes[i] = new TilemapSaveNode(reader);
 
         return nodes;
     }
 
-    public void SetTilemapChunk(Tilemap tilemap, LinkedList<TilemapSaveNode> nodes, int startX, int startY)
+    public void SetTilemapChunk(Tilemap tilemap, TilemapSaveNode[] nodes, int startX, int startY)
     {
-        //TODO: fix excessive calls when slightly moving (without loading new chunks)
-        var tileData = new Dictionary<Vector3Int, TileBase>();
+        int tilesCount = TerrainManager.ChunkSize.x * TerrainManager.ChunkSize.y;
+        var tiles = new TileBase[tilesCount];
+        var positions = new Vector3Int[tilesCount];
+
         int x = startX;
         int y = startY;
 
+        int tileIndex = 0;
         foreach(var node in nodes)
         {
             for (int i = 0; i < node.length; i++)
             {
-                var tile = node.tileID == -1 ? null : main.MasterTiles[node.tileID];
-                tileData.Add(new(x, y), tile);
+                tiles[tileIndex] = node.tileID == -1 ? null : main.MasterTiles[node.tileID];
+                positions[tileIndex] = new(x, y);
 
                 x++;
 
@@ -110,9 +113,11 @@ public class LoadTerrain : MonoBehaviour
                     x = startX;
                     y++;
                 }
+
+                tileIndex++;
             }
         }
 
-        tilemap.SetTiles(tileData.Keys.ToArray(), tileData.Values.ToArray());
+        tilemap.SetTiles(positions, tiles);
     }
 }

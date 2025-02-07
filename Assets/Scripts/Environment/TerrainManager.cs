@@ -20,7 +20,7 @@ public class TerrainManager : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] Vector2Int worldSize;
     [SerializeField] Vector2Int structureMargin;
-    [SerializeField][Tooltip("In Chunks")] int renderDist;
+    [SerializeField][Tooltip("In Chunks")] int renderRadius;
 
     WorldBorderManager borderManager;
     LoadTerrain loadTerrain;
@@ -57,14 +57,18 @@ public class TerrainManager : MonoBehaviour
         CompressTilemaps(GetChunkIndex(player.position), ground, top, solid, BreakingManager.Instance.Tilemap);
     }
 
-    LinkedList<Vector2Int> GetChunksInsideRenderDistance(Vector2Int currentChunk)
+    Vector2Int[] GetChunksInsideRenderDistance(Vector2Int currentChunk)
     {
-        LinkedList<Vector2Int> rendered = new();
-        for (int x = currentChunk.x - renderDist; x <= currentChunk.x + renderDist; x++)
+        int renderDiameter = (renderRadius * 2 + 1);
+        var rendered = new Vector2Int[renderDiameter * renderDiameter];
+
+        int i = 0;
+        for (int x = currentChunk.x - renderRadius; x <= currentChunk.x + renderRadius; x++)
         {
-            for (int y = currentChunk.y - renderDist; y <= currentChunk.y + renderDist; y++)
+            for (int y = currentChunk.y - renderRadius; y <= currentChunk.y + renderRadius; y++)
             {
-                rendered.AddLast(new Vector2Int(x, y));
+                rendered[i] = (new Vector2Int(x, y));
+                i++;
             }
         }
         return rendered;
@@ -76,8 +80,8 @@ public class TerrainManager : MonoBehaviour
         {
             tilemap.origin = (Vector3Int)(currentChunkIndex * chunkSize - chunkSize);
             
-            int xSize = chunkSize.x * (renderDist * 2 + 1);
-            int ySize = chunkSize.y * (renderDist * 2 + 1);
+            int xSize = chunkSize.x * (renderRadius * 2 + 1);
+            int ySize = chunkSize.y * (renderRadius * 2 + 1);
 
             tilemap.size = new(xSize, ySize,1);
             tilemap.ResizeBounds();

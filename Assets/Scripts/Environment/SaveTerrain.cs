@@ -269,7 +269,7 @@ public struct TilemapSaveNode
 
 public struct TilemapChunkNodesData
 {
-    public Dictionary<Tilemap, LinkedList<TilemapSaveNode>> data;
+    public Dictionary<Tilemap, TilemapSaveNode[]> data;
 }
 
 [Serializable]
