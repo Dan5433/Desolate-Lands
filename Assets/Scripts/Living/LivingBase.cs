@@ -41,7 +41,7 @@ public class LivingBase : MonoBehaviour, IDamageable
         return true;
     }
 
-    protected virtual void OnDeath() { }
+    protected virtual void OnDeath() {}
 
     void LoadHealth()
     {
@@ -68,8 +68,9 @@ public class LivingBase : MonoBehaviour, IDamageable
         Debug.Log(test);
     }
 
-    private void OnDestroy()
+    void OnDestroy()
     {
+        Debug.Log("saving health");
         SaveHealth();
     }
 }

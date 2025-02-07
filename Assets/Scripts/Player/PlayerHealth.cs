@@ -114,8 +114,8 @@ public class PlayerHealth : LivingBase
 
     public void Respawn()
     {
-        transform.position = Vector3.zero;
         health = maxHealth;
+        transform.position = Vector3.zero;
         Reset();
     }
 }

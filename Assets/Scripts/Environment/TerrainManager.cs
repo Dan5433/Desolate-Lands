@@ -22,6 +22,7 @@ public class TerrainManager : MonoBehaviour
     [SerializeField] Vector2Int structureMargin;
     [SerializeField][Tooltip("In Chunks")] int renderRadius;
 
+    Dictionary<Vector2Int, StructurePlaceData[]> deferredStructures = new();
     WorldBorderManager borderManager;
     LoadTerrain loadTerrain;
     SaveTerrain saveTerrain;
@@ -139,18 +140,14 @@ public class TerrainManager : MonoBehaviour
             }
 
             if (parsedChunks == null || !parsedChunks.ContainsKey(chunk))
-            {
                 GenChunk(chunk * chunkSize, chunk, region);
-            }
             else
-            {
                 foreach (var tilemapNodesPair in parsedChunks[chunk].data)
                 {
                     loadTerrain.SetTilemapChunk(
                         tilemapNodesPair.Key, tilemapNodesPair.Value,
                         chunk.x * ChunkSize.x, chunk.y * ChunkSize.y);
                 }
-            }
 
             LoadBorderIfEndOfWorld(chunk);
         }
@@ -202,15 +199,15 @@ public class TerrainManager : MonoBehaviour
         return true;
     }
 
-    void GenChunk(Vector2Int tilePos, Vector2Int chunkIndex, Vector2Int region)
+    void GenChunk(Vector2Int startTile, Vector2Int chunkIndex, Vector2Int region)
     {
-        GenBoxTiles(ground, grTiles, tilePos);
+        GenBoxTiles(ground, grTiles, startTile);
         foreach (var genTiles in topTiles)
         {
-            GenGriddedTiles(top, genTiles.Tiles, genTiles.GenGap, tilePos);
+            GenGriddedTiles(top, genTiles.Tiles, genTiles.GenGap, startTile);
         }
 
-        GenStructures(tilePos, solid);
+        GenStructures(startTile, solid);
 
         saveTerrain.SaveTiles(region, chunkIndex, ground, top, solid);
     }
@@ -237,6 +234,12 @@ public class TerrainManager : MonoBehaviour
 
                 var bounds = structure.cellBounds;
                 bounds.position = spawnPosition;
+
+                if(spawnPosition.x + bounds.size.x > endPos.x || 
+                    spawnPosition.y + bounds.size.y > endPos.y)
+                {
+                    Debug.Log($"Structure chunk boundary bleed at: {spawnPosition}");
+                }
 
                 if (!HasRoomToPlace(tilemap, bounds)) 
                     continue;
@@ -350,4 +353,10 @@ public struct StructureGroup
 {
     [SerializeField] public WeightedStructure[] structures;
     [SerializeField] public int rollsPerChunk;
+}
+
+public struct StructurePlaceData
+{
+    public int index;
+    public Vector3Int position;
 }

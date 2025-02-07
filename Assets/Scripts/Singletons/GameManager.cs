@@ -136,7 +136,9 @@ public class GameManager : MonoBehaviour
     }
     public void ExitToMain()
     {
-        TogglePauseState();
+        isGamePaused = false;
+        Time.timeScale = 1f;
+
         SceneManager.LoadScene(0);
     }
 }

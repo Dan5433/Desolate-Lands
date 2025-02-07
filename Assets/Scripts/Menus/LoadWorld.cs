@@ -60,7 +60,7 @@ public class LoadWorld : MonoBehaviour
             button.GetComponentInChildren<TMP_Text>().color = Color.white;
         }
     }
-    void DisableWorldOptions()
+    public void DisableWorldOptions()
     {
         foreach (var button in worldOptions.GetComponentsInChildren<Button>())
         {
