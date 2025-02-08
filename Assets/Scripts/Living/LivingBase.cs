@@ -61,16 +61,10 @@ public class LivingBase : MonoBehaviour, IDamageable
         var handler = new BinaryDataHandler(dataDirPath, GetSaveKey());
 
         handler.SaveData(writer => writer.Write(health));
-
-        //test for save
-        float test = 0;
-        handler.LoadData(reader => test = reader.ReadSingle());
-        Debug.Log(test);
     }
 
     void OnDestroy()
     {
-        Debug.Log("saving health");
         SaveHealth();
     }
 }

@@ -69,6 +69,15 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
     }
+    private void OnDestroy()
+    {
+        UpdatePlaytime();
+    }
+
+    private void Start()
+    {
+        CursorState = CursorState.Default;
+    }
 
     public static void TogglePauseState()
     {
@@ -78,16 +87,6 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0f;
         else
             Time.timeScale = 1f;
-    }
-
-    private void Start()
-    {
-        CursorState = CursorState.Default;
-    }
-
-    private void OnDestroy()
-    {
-        UpdatePlaytime();
     }
 
     void UpdatePlaytime()
@@ -134,7 +133,8 @@ public class GameManager : MonoBehaviour
     {
         Instance.deaths++;
     }
-    public void ExitToMain()
+
+    public static void ExitToMain()
     {
         isGamePaused = false;
         Time.timeScale = 1f;

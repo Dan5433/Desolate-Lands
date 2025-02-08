@@ -24,4 +24,10 @@ public class DeathMenu : MonoBehaviour
 
         deathMenu.SetActive(false);
     }
+
+    public void ExitToMain()
+    {
+        isDead = false;
+        GameManager.ExitToMain();
+    }
 }

@@ -93,11 +93,6 @@ namespace CustomExtensions
             Debug.DrawLine(bottom, left, color, duration);
             Debug.DrawLine(left, top, color, duration);
         }
-
-        public static bool IsEven(this int n)
-        {
-            return n % 2 == 0;
-        }
     }
 
 }

@@ -21,6 +21,10 @@ public class PlayerHealth : LivingBase
 
         normalColor = barImage.color;
 
+        //respawn after loading if exited without respawning
+        if (health <= 0f)
+            Respawn();
+
         Reset();
     }
 
