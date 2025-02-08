@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shadow : MonoBehaviour
 {
     [SerializeField] Vector2 offset;
-    [SerializeField] Color color = Color.black;
+    [SerializeField] Color color = new(0,0,0,0.75f);
 
     private void OnValidate()
     {
@@ -23,9 +23,9 @@ public class Shadow : MonoBehaviour
 
     Transform CreateShadow()
     {
-        //TODO: fix shadow layering to show behind text
         GameObject shadow = new(nameof(Shadow), typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
         shadow.transform.SetParent(transform, false);
+        shadow.layer = LayerMask.NameToLayer("UI");
 
         //Add canvas component with sorting override to draw shadow behind text
         var newCanvas = shadow.AddComponent<Canvas>();
