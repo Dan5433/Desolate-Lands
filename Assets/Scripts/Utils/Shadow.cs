@@ -2,6 +2,8 @@ using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(TextMeshProUGUI))]
+[ExecuteInEditMode]
+[DisallowMultipleComponent]
 public class Shadow : MonoBehaviour
 {
     [SerializeField] Vector2 offset;
@@ -13,7 +15,10 @@ public class Shadow : MonoBehaviour
         if (!shadow)
             shadow = CreateShadow();
 
-        shadow.GetComponent<RectTransform>().anchoredPosition = offset;
+        var rectTransform = shadow.GetComponent<RectTransform>();
+        rectTransform.anchorMin = Vector2.zero;
+        rectTransform.anchorMax = Vector2.one;
+        rectTransform.anchoredPosition = offset;
 
         var text = shadow.GetComponent<TextMeshProUGUI>();
         text.color = color;
@@ -44,7 +49,18 @@ public class Shadow : MonoBehaviour
         target.enableWordWrapping = source.enableWordWrapping;
         target.overflowMode = source.overflowMode;
         target.font = source.font;
+        target.enableAutoSizing = source.enableAutoSizing;
+        target.fontSizeMin = source.fontSizeMin;
+        target.fontSizeMax = source.fontSizeMax;
         target.fontSize = source.fontSize;
         target.fontStyle = source.fontStyle;
+    }
+
+    private void OnDestroy()
+    {
+        if (Application.isPlaying)
+            return;
+
+        DestroyImmediate(transform.Find(nameof(Shadow)).gameObject);
     }
 }
