@@ -8247,7 +8247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilemap: {fileID: 1017067505}
   player: {fileID: 2136044632}
-  revealDist: 3
+  revealDist: 3.5
   explosionParticles:
   - {fileID: 7448398848949484827, guid: 26c7fe6b336407b4c90c740451d4fe7e, type: 3}
 --- !u!114 &1354565121

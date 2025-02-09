@@ -83,10 +83,16 @@ public class GameManager : MonoBehaviour
     {
         isGamePaused = !isGamePaused;
 
-        if(isGamePaused)
+        if (isGamePaused)
+        {
             Time.timeScale = 0f;
+            AudioListener.pause = true;
+        }
         else
+        {
             Time.timeScale = 1f;
+            AudioListener.pause = false;
+        }
     }
 
     void UpdatePlaytime()
@@ -136,8 +142,8 @@ public class GameManager : MonoBehaviour
 
     public static void ExitToMain()
     {
-        isGamePaused = false;
-        Time.timeScale = 1f;
+        if (isGamePaused)
+            TogglePauseState();
 
         SceneManager.LoadScene(0);
     }

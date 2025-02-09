@@ -35,6 +35,10 @@ public class Landmine : MonoBehaviour
             if (!applyDamage.TryGetComponent<IDamageable>(out var damageable)) 
                 continue;
 
+            //var direction = applyDamage.transform.position - transform.position;
+            //int mask = LayerMask.GetMask("Player", "Enemy", "Interact");
+            //var raycast = Physics2D.Raycast(transform.position, direction,);
+
             float damageMagnitude = 
                 (tileReference.ExplosionRadius - 
                 Vector3.Distance(transform.position, applyDamage.transform.position)) /
