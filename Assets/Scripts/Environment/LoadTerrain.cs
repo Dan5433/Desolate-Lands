@@ -120,4 +120,28 @@ public class LoadTerrain : MonoBehaviour
 
         tilemap.SetTiles(positions, tiles);
     }
+
+    public void LoadDeferredStructures(Dictionary<Vector2Int, List<StructurePlaceData>> dict)
+    {
+        var dirPath = Path.Combine(GameManager.DataDirPath, TerrainManager.DataDirName);
+        BinaryDataHandler dataHandler = new(dirPath, SaveTerrain.DeferredStructuresFileName);
+
+        if (!dataHandler.FileExists())
+            return;
+
+        dataHandler.LoadData(reader =>
+        {
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                var chunk = reader.ReadVector2Int();
+                List<StructurePlaceData> structures = new(reader.ReadInt32());
+
+                for (int s = 0; s < structures.Capacity; s++)
+                    structures.Add(new(reader));
+
+                dict.Add(chunk, structures);
+            }
+        });
+    }
 }

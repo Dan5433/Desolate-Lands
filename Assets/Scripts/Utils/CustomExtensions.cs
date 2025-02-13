@@ -15,6 +15,13 @@ namespace CustomExtensions
         {
             return tilemap.GetTilesBlock(tilemap.cellBounds);
         }
+        public static TileBase[] GetAllTilesTrimmed(this Tilemap tilemap, Vector3Int trimOffset)
+        {
+            var bounds = tilemap.cellBounds;
+            bounds.position += trimOffset;
+            bounds.size -= trimOffset;
+            return tilemap.GetTilesBlock(bounds);
+        }
 
         public static Vector3Int ToVector3Int(this Vector3 vector)
         {
@@ -60,11 +67,23 @@ namespace CustomExtensions
             writer.Write(v.y);
         }
 
+        public static void Write(this BinaryWriter writer, Vector3Int v)
+        {
+            writer.Write(v.x);
+            writer.Write(v.y);
+            writer.Write(v.z);
+        }
+
         public static Vector2Int ReadVector2Int(this BinaryReader reader)
         {
             return new(reader.ReadInt32(), reader.ReadInt32());
         }
-        
+
+        public static Vector3Int ReadVector3Int(this BinaryReader reader)
+        {
+            return new(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+        }
+
         public static ParticleSystem PlayOneShot(this ParticleSystem system, Vector3 position, Quaternion rotation)
         {
             var instance = UnityEngine.Object.Instantiate(system, position, rotation);

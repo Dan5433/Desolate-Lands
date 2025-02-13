@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -22,12 +23,17 @@ public class TerrainManager : MonoBehaviour
     [SerializeField] Vector2Int structureMargin;
     [SerializeField][Tooltip("In Chunks")] int renderRadius;
 
-    Dictionary<Vector2Int, StructurePlaceData[]> deferredStructures = new();
+    Vector2Int currentChunk;
+
     WorldBorderManager borderManager;
     LoadTerrain loadTerrain;
     SaveTerrain saveTerrain;
+
     HashSet<Vector2Int> renderedChunks = new();
+    Dictionary<Vector2Int, List<StructurePlaceData>> deferredStructures = new();
+
     Dictionary<TileBase, int> tileLookup;
+
     static Vector2Int chunkSize = new(32, 32);
     static Vector2Int regionSize = new(32, 32);
     static readonly string dataDirName = "regions";
@@ -51,6 +57,7 @@ public class TerrainManager : MonoBehaviour
     {
         //0 second delay causes the compress to happen after player is loaded (idk why)
         Invoke(nameof(CompressOnStart), 0);
+        loadTerrain.LoadDeferredStructures(deferredStructures);
     }
 
     void CompressOnStart()
@@ -58,50 +65,18 @@ public class TerrainManager : MonoBehaviour
         CompressTilemaps(GetChunkIndex(player.position), ground, top, solid, BreakingManager.Instance.Tilemap);
     }
 
-    Vector2Int[] GetChunksInsideRenderDistance(Vector2Int currentChunk)
-    {
-        int renderDiameter = (renderRadius * 2 + 1);
-        var rendered = new Vector2Int[renderDiameter * renderDiameter];
-
-        int i = 0;
-        for (int x = currentChunk.x - renderRadius; x <= currentChunk.x + renderRadius; x++)
-        {
-            for (int y = currentChunk.y - renderRadius; y <= currentChunk.y + renderRadius; y++)
-            {
-                rendered[i] = (new Vector2Int(x, y));
-                i++;
-            }
-        }
-        return rendered;
-    }
-
-    void CompressTilemaps(Vector2Int currentChunkIndex, params Tilemap[] tilemaps)
-    {
-        foreach (var tilemap in tilemaps)
-        {
-            tilemap.origin = (Vector3Int)(currentChunkIndex * chunkSize - chunkSize);
-            
-            int xSize = chunkSize.x * (renderRadius * 2 + 1);
-            int ySize = chunkSize.y * (renderRadius * 2 + 1);
-
-            tilemap.size = new(xSize, ySize,1);
-            tilemap.ResizeBounds();
-
-            //needed for proper rendering
-            tilemap.gameObject.SetActive(false);
-            tilemap.gameObject.SetActive(true);
-        }
-    }
-
     void Update()
     {
         if(GameManager.IsGamePaused) 
             return;
 
+        //IDEA: alpha 1.0.1 disable tilemaps while generating and enable at the end;
+        //might help perfomance
+
         //IDEA alpha 2.0: only save user change data to tiles and generate chunks using the seed each time
         //treat previously saved region data as user modified to make data persistent after seed update
         bool shrunkTilemap = false;
-        var currentChunk = GetChunkIndex(player.position);
+        currentChunk = GetChunkIndex(player.position);
         var chunksInRender = GetChunksInsideRenderDistance(currentChunk);
 
         foreach (var chunk in renderedChunks.ToArray())
@@ -150,6 +125,41 @@ public class TerrainManager : MonoBehaviour
                 }
 
             LoadBorderIfEndOfWorld(chunk);
+        }
+    }
+
+    Vector2Int[] GetChunksInsideRenderDistance(Vector2Int currentChunk)
+    {
+        int renderDiameter = (renderRadius * 2 + 1);
+        var rendered = new Vector2Int[renderDiameter * renderDiameter];
+
+        int i = 0;
+        for (int x = currentChunk.x - renderRadius; x <= currentChunk.x + renderRadius; x++)
+        {
+            for (int y = currentChunk.y - renderRadius; y <= currentChunk.y + renderRadius; y++)
+            {
+                rendered[i] = new(x, y);
+                i++;
+            }
+        }
+        return rendered;
+    }
+
+    void CompressTilemaps(Vector2Int currentChunkIndex, params Tilemap[] tilemaps)
+    {
+        foreach (var tilemap in tilemaps)
+        {
+            tilemap.origin = (Vector3Int)(currentChunkIndex * chunkSize - chunkSize);
+
+            int xSize = chunkSize.x * (renderRadius * 2 + 1);
+            int ySize = chunkSize.y * (renderRadius * 2 + 1);
+
+            tilemap.size = new(xSize, ySize, 1);
+            tilemap.ResizeBounds();
+
+            //needed for proper rendering
+            tilemap.gameObject.SetActive(false);
+            tilemap.gameObject.SetActive(true);
         }
     }
 
@@ -207,15 +217,17 @@ public class TerrainManager : MonoBehaviour
             GenGriddedTiles(top, genTiles.Tiles, genTiles.GenGap, startTile);
         }
 
-        GenStructures(startTile, solid);
+        GenStructures(chunkIndex, startTile, solid);
 
         saveTerrain.SaveTiles(region, chunkIndex, ground, top, solid);
     }
 
-    void GenStructures(Vector2Int startPos, Tilemap tilemap)
+    void GenStructures(Vector2Int chunk, Vector2Int startPos, Tilemap tilemap)
     {
-        //BUG: avoid cutoff by determining what chunks the structures bleed into
-        //and then force loading them
+        Vector2Int renderEnd = (currentChunk + new Vector2Int(renderRadius, renderRadius) * 2) * chunkSize;
+
+        if (deferredStructures.Remove(chunk, out var structureDataList))
+            PlaceDeferredStructures(structureDataList, tilemap, renderEnd);
 
         Vector2Int endPos = startPos + chunkSize;
 
@@ -225,7 +237,7 @@ public class TerrainManager : MonoBehaviour
             {
                 var structure = WeightedUtils.RollStructure(structureGroup.structures);
 
-                if (structure == null) 
+                if (!structure) 
                     continue;
 
                 Vector3Int spawnPosition = new(
@@ -235,14 +247,11 @@ public class TerrainManager : MonoBehaviour
                 var bounds = structure.cellBounds;
                 bounds.position = spawnPosition;
 
-                if(spawnPosition.x + bounds.size.x > endPos.x || 
-                    spawnPosition.y + bounds.size.y > endPos.y)
-                {
-                    Debug.Log($"Structure chunk boundary bleed at: {spawnPosition}");
-                }
-
                 if (!HasRoomToPlace(tilemap, bounds)) 
                     continue;
+
+                //Stop structures outside of render from being generated
+                CheckForStructureLeaks(chunk, bounds, renderEnd, spawnPosition, structureGroup, structure);
 
                 tilemap.SetTilesBlock(bounds, structure.GetAllTiles());
             }
@@ -300,6 +309,65 @@ public class TerrainManager : MonoBehaviour
 
         tilemap.SetTiles(positions, tiles);
     }
+
+    void CheckForStructureLeaks(Vector2Int chunk, BoundsInt bounds, Vector2Int renderEnd, Vector3Int spawn, StructureGroup group, Tilemap structure)
+    {
+        Vector3Int trimOffset = (Vector3Int)renderEnd - bounds.position;
+        if (trimOffset.x >= bounds.size.x && trimOffset.x >= bounds.size.y)
+            return;
+
+        int groupIndex = Array.FindIndex(structures, g => g.Equals(group));
+        int index = Array.FindIndex(group.structures, s => s.structure == structure);
+
+        StructurePlaceData data = new(groupIndex, index, spawn, trimOffset);
+
+        if (trimOffset.x < bounds.size.x)
+        {
+            data.trimOffset.y = 0;
+            data.position.x = (chunk.x + 1) * chunkSize.x;
+            AddDeferredStructure(chunk + new Vector2Int(1, 0), data);
+        }
+
+        if (trimOffset.x < bounds.size.x && trimOffset.y < bounds.size.y)
+        {
+            data.trimOffset.y = trimOffset.y;
+            data.position.y = (chunk.y + 1) * chunkSize.y;
+            AddDeferredStructure(chunk + new Vector2Int(1, 1), data);
+        }
+
+        if (trimOffset.y < bounds.size.y)
+        {
+            data.trimOffset.x = 0;
+            data.position.x = spawn.x;
+            AddDeferredStructure(chunk + new Vector2Int(0, 1), data);
+        }
+    }
+
+    void PlaceDeferredStructures(List<StructurePlaceData> structureDataList, Tilemap tilemap, Vector2Int renderEnd)
+    {
+        foreach(var data in structureDataList)
+        {
+            var group = structures[data.group];
+            var structure = group.structures[data.index].structure;
+
+            var bounds = structure.cellBounds;
+            bounds.position = data.position;
+            bounds.size -= data.trimOffset;
+
+            CheckForStructureLeaks(GetChunkIndex(data.position), bounds, renderEnd, data.position, group, structure);
+
+            tilemap.SetTilesBlock(bounds, structure.GetAllTilesTrimmed(data.trimOffset));
+
+            Debug.Log("Placed deferred structure at: " + bounds.position);
+        }
+    }
+
+    void AddDeferredStructure(Vector2Int chunkToWaitFor, StructurePlaceData data)
+    {
+        deferredStructures.TryAdd(chunkToWaitFor, new());
+        deferredStructures[chunkToWaitFor].Add(data);
+    }
+
     public static Vector2Int GetRegionIndex(Vector2Int chunk)
     {
         Vector2Int region = new(chunk.x / RegionSize.x, chunk.y / RegionSize.y);
@@ -336,6 +404,12 @@ public class TerrainManager : MonoBehaviour
 
         return chunk;
     }
+
+    private void OnDestroy()
+    {
+        if(deferredStructures.Count > 0)
+            saveTerrain.SaveDeferredStructures(deferredStructures);
+    }
 }
 
 [Serializable]
@@ -357,6 +431,32 @@ public struct StructureGroup
 
 public struct StructurePlaceData
 {
+    public int group;
     public int index;
     public Vector3Int position;
+    public Vector3Int trimOffset;
+
+    public StructurePlaceData(int group, int index, Vector3Int position, Vector3Int trimOffset)
+    {
+        this.group = group;
+        this.index = index;
+        this.position = position;
+        this.trimOffset = trimOffset;
+    }
+
+    public StructurePlaceData(BinaryReader reader)
+    {
+        group = reader.ReadInt32();
+        index = reader.ReadInt32();
+        position = reader.ReadVector3Int();
+        trimOffset = reader.ReadVector3Int();
+    }
+
+    public readonly void Write(BinaryWriter writer)
+    {
+        writer.Write(group);
+        writer.Write(index);
+        writer.Write(position);
+        writer.Write(trimOffset);
+    }
 }

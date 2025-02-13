@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 public class SaveTerrain : MonoBehaviour
 {
     TerrainManager main;
+    public static readonly string DeferredStructuresFileName = "deferred_structures";
 
     void Awake()
     {
@@ -168,6 +168,24 @@ public class SaveTerrain : MonoBehaviour
             }
         });
     }
+
+    public void SaveDeferredStructures(Dictionary<Vector2Int, List<StructurePlaceData>> dict)
+    {
+        var dirPath = Path.Combine(GameManager.DataDirPath, TerrainManager.DataDirName);
+        BinaryDataHandler dataHandler = new(dirPath, DeferredStructuresFileName);
+
+        dataHandler.SaveData(writer =>
+        {
+            writer.Write(dict.Count);
+            foreach(var chunkStructures in dict)
+            {
+                writer.Write(chunkStructures.Key);
+                writer.Write(chunkStructures.Value.Count);
+                foreach(var structure in chunkStructures.Value)
+                    structure.Write(writer);
+            }
+        });
+    }
 }
 
 [Serializable]
@@ -191,11 +209,12 @@ public struct TilemapSaveNode
     {
         LinkedList<TilemapSaveNode> results = new();
 
-        //length: 10, id: -1
-        //length: 3, id: 1
-        //length: 10, id: -1
-        //tile index: 12 (the middle one in id 1)
-        //index in node: 2
+        /*length: 10, id: -1
+        length: 3, id: 1
+        length: 10, id: -1
+        tile index: 12 (the middle one in id 1)
+        index in node: 2
+        */
 
         int currentIndex = 0;
         for(int i = 0; i < nodes.Length; i++)
