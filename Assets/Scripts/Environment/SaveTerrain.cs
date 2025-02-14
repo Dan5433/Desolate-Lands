@@ -46,29 +46,24 @@ public class SaveTerrain : MonoBehaviour
                 TilemapSaveNode currentNode = new();
                 List<TilemapSaveNode> nodes = new();
 
-                BoundsInt bounds = new(startX, startY, 0, 
+                BoundsInt bounds = new(startX, startY, 0,
                     TerrainManager.ChunkSize.x, TerrainManager.ChunkSize.y, 1);
 
                 var tiles = tilemap.GetTilesBlock(bounds);
 
-                int index = 0;
-                for (int x = startX; x < startX + TerrainManager.ChunkSize.x; x++)
+                foreach(var tile in tiles)
                 {
-                    for (int y = startY; y < startY + TerrainManager.ChunkSize.y; y++)
+                    int id = tile != null ? main.TileLookup[tile] : -1;
+
+                    //write current node and make new node if different tile encountered
+                    if (currentNode.tileID != id)
                     {
-                        int id = tiles[index] != null ? main.TileLookup[tiles[index]] : -1;
+                        if (currentNode.length > 0) nodes.Add(currentNode);
 
-                        //write current node and make new node if different tile encountered
-                        if(currentNode.tileID != id)
-                        {
-                            if (currentNode.length > 0) nodes.Add(currentNode);
-
-                            currentNode = new() { tileID = id };
-                        }
-
-                        currentNode.length++;
-                        index++;
+                        currentNode = new() { tileID = id };
                     }
+
+                    currentNode.length++;
                 }
 
                 //write last node if not empty
@@ -80,9 +75,7 @@ public class SaveTerrain : MonoBehaviour
 
                 //write the nodes
                 foreach (var node in nodes)
-                {
                     node.Write(writer);
-                }
             }
 
         }, FileMode.Append);
@@ -131,11 +124,9 @@ public class SaveTerrain : MonoBehaviour
                             tilemapNodes[j] = new(reader);
                         }
 
-                        Vector2Int localOffset = new(
-                            tilePosition.x - TerrainManager.ChunkSize.x * chunkIndex.x, 
-                            tilePosition.y - TerrainManager.ChunkSize.y * chunkIndex.y);
+                        Vector2Int localPosition = (Vector2Int)tilePosition - TerrainManager.ChunkSize * chunkIndex;
 
-                        int tileIndex = localOffset.y + TerrainManager.ChunkSize.y * localOffset.x;
+                        int tileIndex = localPosition.x + localPosition.y * TerrainManager.ChunkSize.y;
 
                         var modifiedNodes = TilemapSaveNode.DeleteTile(tileIndex, tilemapNodes);
                         
@@ -146,9 +137,9 @@ public class SaveTerrain : MonoBehaviour
                         }
                     }
                 }
+                //copy unrelated chunks as-is
                 else
                 {
-                    //copy unrelated chunks as-is
                     int tilemapCount = reader.ReadInt32();
                     writer.Write(tilemapCount);
 
