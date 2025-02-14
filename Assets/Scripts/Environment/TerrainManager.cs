@@ -312,35 +312,37 @@ public class TerrainManager : MonoBehaviour
 
     void CheckForStructureLeaks(Vector2Int chunk, BoundsInt bounds, Vector2Int renderEnd, Vector3Int spawn, StructureGroup group, Tilemap structure)
     {
-        //BUG: structures with y offset dont save; use debug on "structures" world
         Vector3Int trimOffset = (Vector3Int)renderEnd - bounds.position;
-        if (trimOffset.x >= bounds.size.x && trimOffset.x >= bounds.size.y)
+        if (trimOffset.x >= bounds.size.x && trimOffset.y >= bounds.size.y)
             return;
 
         int groupIndex = Array.FindIndex(structures, g => g.Equals(group));
         int index = Array.FindIndex(group.structures, s => s.structure == structure);
 
-        StructurePlaceData data = new(groupIndex, index, spawn, trimOffset);
-
         if (trimOffset.x < bounds.size.x)
         {
-            data.trimOffset.y = 0;
-            data.position.x = (chunk.x + 1) * chunkSize.x;
-            AddDeferredStructure(chunk + new Vector2Int(1, 0), data);
-        }
-
-        if (trimOffset.x < bounds.size.x && trimOffset.y < bounds.size.y)
-        {
-            data.trimOffset.y = trimOffset.y;
-            data.position.y = (chunk.y + 1) * chunkSize.y;
-            AddDeferredStructure(chunk + new Vector2Int(1, 1), data);
+            Vector3Int adjustedPosition = new((chunk.x + 1) * chunkSize.x, spawn.y);
+            Vector3Int adjustedOffset = new(trimOffset.x, 0);
+            
+            AddDeferredStructure(chunk + new Vector2Int(1, 0), 
+                new(groupIndex, index, adjustedPosition, adjustedOffset));
         }
 
         if (trimOffset.y < bounds.size.y)
         {
-            data.trimOffset.x = 0;
-            data.position.x = spawn.x;
-            AddDeferredStructure(chunk + new Vector2Int(0, 1), data);
+            Vector3Int adjustedPosition = new(spawn.x, (chunk.y + 1) * chunkSize.y);
+            Vector3Int adjustedOffset = new(0, trimOffset.y);
+
+            AddDeferredStructure(chunk + new Vector2Int(0, 1),
+                new(groupIndex, index, adjustedPosition, adjustedOffset));
+        }
+
+        if (trimOffset.x < bounds.size.x && trimOffset.y < bounds.size.y)
+        {
+            Vector3Int adjustedPosition = (Vector3Int)(chunk * chunkSize + chunkSize);
+
+            AddDeferredStructure(chunk + new Vector2Int(1, 1),
+                new(groupIndex, index, adjustedPosition, trimOffset));
         }
     }
 
