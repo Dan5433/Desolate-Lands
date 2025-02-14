@@ -55,12 +55,6 @@ public class GameManager : MonoBehaviour
             worldDirPath = Path.Combine(Application.persistentDataPath, "saves", worldName);
             playerDataDirPath = Path.Combine(worldDirPath, "player");
 
-            if (!PlayerPrefs.HasKey(worldName))
-            {
-                Debug.Log("Initializing new seed for world: "+worldName);
-                PlayerPrefs.SetInt(worldName, Random.Range(int.MinValue,int.MaxValue));
-            }
-
             int seed = PlayerPrefs.GetInt(worldName);
             Random.InitState(seed);
 

@@ -147,6 +147,7 @@ public class Interact : MonoBehaviour
     }
     bool CanDisableUI()
     {
+        //BUG: escape needs to be pressed 2 times
         if (activeTile == null)
             return false;
 

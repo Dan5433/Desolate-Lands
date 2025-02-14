@@ -3,6 +3,7 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class CreateWorld : MonoBehaviour
 {
@@ -17,6 +18,11 @@ public class CreateWorld : MonoBehaviour
         {
             Debug.Log("Seed succesfully parsed: "+seed);
             PlayerPrefs.SetInt(name, seed);
+        }
+        else
+        {
+            Debug.Log("Initializing new seed for world: " + worldName);
+            PlayerPrefs.SetInt(name, Random.Range(int.MinValue, int.MaxValue));
         }
 
         CreateStatsFile(name);

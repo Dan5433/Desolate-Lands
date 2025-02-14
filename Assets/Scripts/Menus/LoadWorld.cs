@@ -80,6 +80,7 @@ public class LoadWorld : MonoBehaviour
         string worldName = selectedWorld.GetComponentInChildren<TMP_Text>().text;
 
         string worldDirPath = Path.Combine(MainMenuManager.SavesDirPath, worldName);
+        PlayerPrefs.DeleteKey(worldName);
         Directory.Delete(worldDirPath,true);
 
         Destroy(selectedWorld);
