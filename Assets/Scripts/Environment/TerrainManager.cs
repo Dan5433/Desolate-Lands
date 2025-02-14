@@ -312,6 +312,7 @@ public class TerrainManager : MonoBehaviour
 
     void CheckForStructureLeaks(Vector2Int chunk, BoundsInt bounds, Vector2Int renderEnd, Vector3Int spawn, StructureGroup group, Tilemap structure)
     {
+        //BUG: structures with y offset dont save; use debug on "structures" world
         Vector3Int trimOffset = (Vector3Int)renderEnd - bounds.position;
         if (trimOffset.x >= bounds.size.x && trimOffset.x >= bounds.size.y)
             return;
