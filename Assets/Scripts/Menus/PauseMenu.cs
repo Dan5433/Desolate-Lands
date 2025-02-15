@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -7,11 +6,11 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] Interact interact;
 
     private void Update()
-    {
-        if (!Input.GetKeyDown(KeyCode.Escape) || DeathMenu.IsDead)
+    {   
+        if (!Input.GetKeyDown(KeyCode.Escape) || DeathMenu.IsDead || interact.IsUIActive)
             return;
 
-        if (!interact.IsUIActive && !GameManager.IsGamePaused)
+        if (!GameManager.IsGamePaused)
             Pause();
         else
             Unpause();
