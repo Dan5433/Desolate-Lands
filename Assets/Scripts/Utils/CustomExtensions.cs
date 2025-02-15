@@ -12,11 +12,11 @@ namespace CustomExtensions
         {
             return tilemap.GetTilesBlock(tilemap.cellBounds);
         }
-        public static TileBase[] GetAllTilesTrimmed(this Tilemap tilemap, Vector3Int trimOffset)
+        public static TileBase[] GetAllTilesTrimmed(this Tilemap tilemap, Vector3Int trimOffset, Vector3Int size)
         {
             var bounds = tilemap.cellBounds;
             bounds.position += trimOffset;
-            bounds.size -= trimOffset;
+            bounds.size = size;
             return tilemap.GetTilesBlock(bounds);
         }
 

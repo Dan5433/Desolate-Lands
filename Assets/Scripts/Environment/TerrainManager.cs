@@ -1,5 +1,6 @@
 using CustomClasses;
 using CustomExtensions;
+using EditorAttributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,7 @@ using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(SaveTerrain))]
 [RequireComponent(typeof(LoadTerrain))]
+[RequireComponent(typeof(WorldBorderManager))]
 public class TerrainManager : MonoBehaviour
 {
     [SerializeField] TileBase[] masterTiles;
@@ -92,10 +94,6 @@ public class TerrainManager : MonoBehaviour
             shrunkTilemap = true;
         }
 
-        //avoid compressing multiple times
-        if (shrunkTilemap)
-            CompressTilemaps(currentChunk, ground, top, solid, BreakingManager.Instance.Tilemap);
-
         Vector2Int currRegion = default;
         Dictionary<Vector2Int, TilemapChunkNodesData> parsedChunks = null;
 
@@ -126,6 +124,10 @@ public class TerrainManager : MonoBehaviour
 
             LoadBorderIfEndOfWorld(chunk);
         }
+        
+        //avoid compressing multiple times
+        if (shrunkTilemap)
+            CompressTilemaps(currentChunk, ground, top, solid, BreakingManager.Instance.Tilemap);
     }
 
     Vector2Int[] GetChunksInsideRenderDistance(Vector2Int currentChunk)
@@ -173,25 +175,17 @@ public class TerrainManager : MonoBehaviour
         if (chunk.x == worldSize.x - 1 || chunk.x == -worldSize.x)
         {
             if (Mathf.Sign(chunk.x) == -1)
-            {
                 borderManager.LoadBorder(chunk, Direction.Right);
-            }
             else
-            {
                 borderManager.LoadBorder(chunk, Direction.Left);
-            }
         }
 
         if (chunk.y == worldSize.y - 1 || chunk.y == -worldSize.y)
         {
             if (Mathf.Sign(chunk.y) == -1)
-            {
                 borderManager.LoadBorder(chunk, Direction.Up);
-            }
             else
-            {
                 borderManager.LoadBorder(chunk, Direction.Down);
-            }
         }
     }
 
@@ -222,12 +216,30 @@ public class TerrainManager : MonoBehaviour
         saveTerrain.SaveTiles(region, chunkIndex, ground, top, solid);
     }
 
+    [Button("Place Structure",36)]
+    void PlaceStructure(Vector3Int spawn, int group, int index)
+    {
+        Vector2Int renderEnd = (currentChunk + new Vector2Int(renderRadius, renderRadius) * 2) * chunkSize;
+        var structure = structures[group].structures[index].structure;
+
+        var bounds = structure.cellBounds;
+        bounds.position = spawn;
+
+        if (!HasRoomToPlace(solid, bounds))
+            return;
+
+        //Stop structures outside of render from being generated
+        CheckForStructureLeaks(GetChunkIndex(spawn), bounds, renderEnd, spawn, default, structures[group], structure);
+
+        solid.SetTilesBlock(bounds, structure.GetAllTiles());
+    }
+
     void GenStructures(Vector2Int chunk, Vector2Int startPos, Tilemap tilemap)
     {
         Vector2Int renderEnd = (currentChunk + new Vector2Int(renderRadius, renderRadius) * 2) * chunkSize;
 
-        if (deferredStructures.Remove(chunk, out var structureDataList))
-            PlaceDeferredStructures(structureDataList, tilemap, renderEnd);
+        if (deferredStructures.Remove(chunk, out var dataSet))
+            PlaceDeferredStructures(dataSet, tilemap, renderEnd);
 
         Vector2Int endPos = startPos + chunkSize;
 
@@ -251,7 +263,7 @@ public class TerrainManager : MonoBehaviour
                     continue;
 
                 //Stop structures outside of render from being generated
-                CheckForStructureLeaks(chunk, bounds, renderEnd, spawnPosition, structureGroup, structure);
+                CheckForStructureLeaks(chunk, bounds, renderEnd, spawnPosition, default, structureGroup, structure);
 
                 tilemap.SetTilesBlock(bounds, structure.GetAllTiles());
             }
@@ -310,7 +322,7 @@ public class TerrainManager : MonoBehaviour
         tilemap.SetTiles(positions, tiles);
     }
 
-    void CheckForStructureLeaks(Vector2Int chunk, BoundsInt bounds, Vector2Int renderEnd, Vector3Int spawn, StructureGroup group, Tilemap structure)
+    void CheckForStructureLeaks(Vector2Int chunk, BoundsInt bounds, Vector2Int renderEnd, Vector3Int spawn, Vector3Int currentTrimOffset, StructureGroup group, Tilemap structure)
     {
         Vector3Int trimOffset = (Vector3Int)renderEnd - bounds.position;
         if (trimOffset.x >= bounds.size.x && trimOffset.y >= bounds.size.y)
@@ -323,43 +335,49 @@ public class TerrainManager : MonoBehaviour
         {
             Vector3Int adjustedPosition = new((chunk.x + 1) * chunkSize.x, spawn.y);
             Vector3Int adjustedOffset = new(trimOffset.x, 0);
+            Vector3Int size = new(bounds.size.x - trimOffset.x, 
+                Mathf.Min(bounds.size.y, trimOffset.y), 1);
             
             AddDeferredStructure(chunk + new Vector2Int(1, 0), 
-                new(groupIndex, index, adjustedPosition, adjustedOffset));
+                new(groupIndex, index, adjustedPosition, size, adjustedOffset + currentTrimOffset));
         }
 
         if (trimOffset.y < bounds.size.y)
         {
             Vector3Int adjustedPosition = new(spawn.x, (chunk.y + 1) * chunkSize.y);
             Vector3Int adjustedOffset = new(0, trimOffset.y);
+            Vector3Int size = new(Mathf.Min(bounds.size.x, trimOffset.x), 
+                bounds.size.y - trimOffset.y, 1);
 
             AddDeferredStructure(chunk + new Vector2Int(0, 1),
-                new(groupIndex, index, adjustedPosition, adjustedOffset));
+                new(groupIndex, index, adjustedPosition, size, adjustedOffset + currentTrimOffset));
         }
 
         if (trimOffset.x < bounds.size.x && trimOffset.y < bounds.size.y)
         {
             Vector3Int adjustedPosition = (Vector3Int)(chunk * chunkSize + chunkSize);
+            Vector3Int size = new(bounds.size.x - trimOffset.x, 
+                bounds.size.y - trimOffset.y, 1);
 
             AddDeferredStructure(chunk + new Vector2Int(1, 1),
-                new(groupIndex, index, adjustedPosition, trimOffset));
+                new(groupIndex, index, adjustedPosition, size, trimOffset + currentTrimOffset));
         }
     }
 
-    void PlaceDeferredStructures(List<StructurePlaceData> structureDataList, Tilemap tilemap, Vector2Int renderEnd)
+    void PlaceDeferredStructures(List<StructurePlaceData> dataSet, Tilemap tilemap, Vector2Int renderEnd)
     {
-        foreach(var data in structureDataList)
+        foreach (var data in dataSet)
         {
             var group = structures[data.group];
             var structure = group.structures[data.index].structure;
 
             var bounds = structure.cellBounds;
             bounds.position = data.position;
-            bounds.size -= data.trimOffset;
+            bounds.size = data.size;
 
-            CheckForStructureLeaks(GetChunkIndex(data.position), bounds, renderEnd, data.position, group, structure);
+            CheckForStructureLeaks(GetChunkIndex(data.position), bounds, renderEnd, data.position, data.trimOffset, group, structure);
 
-            tilemap.SetTilesBlock(bounds, structure.GetAllTilesTrimmed(data.trimOffset));
+            tilemap.SetTilesBlock(bounds, structure.GetAllTilesTrimmed(data.trimOffset, data.size));
 
             Debug.Log("Placed deferred structure at: " + bounds.position);
         }
@@ -369,6 +387,8 @@ public class TerrainManager : MonoBehaviour
     {
         deferredStructures.TryAdd(chunkToWaitFor, new());
         deferredStructures[chunkToWaitFor].Add(data);
+        Debug.Log($"Added deferred structure for {chunkToWaitFor} at {data.position} with size {data.size} and trim offset {data.trimOffset}" +
+            $"\nTotal count for chunk: {deferredStructures[chunkToWaitFor].Count}");
     }
 
     public static Vector2Int GetRegionIndex(Vector2Int chunk)
@@ -437,13 +457,15 @@ public struct StructurePlaceData
     public int group;
     public int index;
     public Vector3Int position;
+    public Vector3Int size;
     public Vector3Int trimOffset;
 
-    public StructurePlaceData(int group, int index, Vector3Int position, Vector3Int trimOffset)
+    public StructurePlaceData(int group, int index, Vector3Int position, Vector3Int size, Vector3Int trimOffset)
     {
         this.group = group;
         this.index = index;
         this.position = position;
+        this.size = size;
         this.trimOffset = trimOffset;
     }
 
@@ -452,6 +474,7 @@ public struct StructurePlaceData
         group = reader.ReadInt32();
         index = reader.ReadInt32();
         position = reader.ReadVector3Int();
+        size = reader.ReadVector3Int();
         trimOffset = reader.ReadVector3Int();
     }
 
@@ -460,6 +483,7 @@ public struct StructurePlaceData
         writer.Write(group);
         writer.Write(index);
         writer.Write(position);
+        writer.Write(size);
         writer.Write(trimOffset);
     }
 }

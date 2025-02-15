@@ -224,6 +224,8 @@ public class ItemManager : MonoBehaviour
         return index;
     }
 
+    //IDEA: alpha 1.0.2 add minecraft-like controls to quickly pick up same items
+    // or transfer them to inventory into corresponding type
     public static void GrabItem(Transform slot, int mouseButton, SlotType slotType, bool allowDeposit, bool allowWithdraw)
     {
         var slotInventory = slot.parent.GetComponentInParent<InventoryRef>().Inventory;
