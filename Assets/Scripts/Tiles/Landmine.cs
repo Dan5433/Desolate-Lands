@@ -5,18 +5,11 @@ using UnityEngine.Tilemaps;
 public class Landmine : MonoBehaviour
 {
     [SerializeField] LandmineTile tileReference;
-    void Start()
-    {
-        if(GameObject.Find("TerrainManager").TryGetComponent<MineAnimationManager>(out var manager))
-            manager.AddMine(transform.position.ToVector3Int());
-    }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.CompareTag("Item"))
-        {
             Destroy(collision.gameObject);
-        }
 
         Explode();
 
@@ -35,6 +28,7 @@ public class Landmine : MonoBehaviour
             if (!applyDamage.TryGetComponent<IDamageable>(out var damageable)) 
                 continue;
 
+            //TODO: add raycast going to each object to get accurate distance
             //var direction = applyDamage.transform.position - transform.position;
             //int mask = LayerMask.GetMask("Player", "Enemy", "Interact");
             //var raycast = Physics2D.Raycast(transform.position, direction,);
@@ -49,10 +43,6 @@ public class Landmine : MonoBehaviour
             damageable.Damage(Mathf.Lerp(0, tileReference.Damage, damageMagnitude));
         }
 
-        var terrainManager = GameObject.Find("TerrainManager");
-        if(terrainManager && terrainManager.TryGetComponent<MineAnimationManager>(out var animManager))
-        {
-            animManager.DeleteMine(transform.position.ToVector3Int());
-        }
+        MineAnimationManager.Instance.ExplodeMine(transform.position);
     }
 }

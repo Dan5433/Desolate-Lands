@@ -3138,7 +3138,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -8394,8 +8394,6 @@ MonoBehaviour:
       structure: {fileID: 585156328748535408, guid: aa8d73642252c394596bb327407190c2, type: 3}
     - weight: 2
       structure: {fileID: 585156328748535408, guid: 3fd5b063359a2bb4190848218ed6adb8, type: 3}
-    - weight: 0
-      structure: {fileID: 585156328748535408, guid: d106280891921d442ba42aa480086e74, type: 3}
     rollsPerChunk: 3
   grTiles:
   - weight: 100

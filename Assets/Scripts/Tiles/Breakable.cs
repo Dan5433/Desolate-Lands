@@ -8,7 +8,7 @@ public class Breakable : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        //IDEA alpha 1.0.1: save and load health
+        //TODO alpha 1.0.1: save and load health
         UpdateSprite();
     }
 

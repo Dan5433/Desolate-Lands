@@ -8,7 +8,7 @@ public class WorldBorderManager : MonoBehaviour
 {
     public static WorldBorderManager Instance { get; private set; }
 
-    [SerializeField][Tooltip("How far away the effects start")] float effectRange;
+    [SerializeField][Tooltip("How far away from the border the effects start")] float effectRange;
     [SerializeField] ParticleSystem gasBorder;
     [SerializeField] DefaultPositions[] startingPositions;
     Dictionary<Vector2Int,LinkedList<GameObject>> loadedBorders = new();
