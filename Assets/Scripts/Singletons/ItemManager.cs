@@ -61,10 +61,13 @@ public class ItemManager : MonoBehaviour
         return true;
     }
 
-    public static bool IsInvSlot(GameObject gameObject)
+    public static Transform GetInvSlot(Transform child)
     {
-        if (gameObject.GetComponent<SwapItem>() != null) return true;
-        return false;
+        var slot = child.GetComponentInChildren<SwapItem>();
+        if (slot)
+            return slot.transform;
+
+        return null;
     }
 
     public static bool IsHeldItemUsable()
@@ -213,13 +216,22 @@ public class ItemManager : MonoBehaviour
     public static int GetSlotIndex(Transform slot)
     {
         int index = 0;
-        var parent = slot.parent;
-        for (int i = 0; i < parent.childCount; i++)
-        {
-            var child = parent.GetChild(i);
 
-            if (child == slot) break;
-            if (IsInvSlot(child.gameObject)) index++;
+        Transform inventoryContainer = slot.parent;
+        while(inventoryContainer.GetComponent<InventoryRef>() == null)
+            inventoryContainer = inventoryContainer.parent;
+
+        foreach (Transform child in inventoryContainer)
+        {
+            var invSlot = GetInvSlot(child);
+
+            if (!invSlot)
+                continue;
+
+            if (invSlot == slot)
+                break;
+            else
+                index++;
         }
         return index;
     }

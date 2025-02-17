@@ -6,12 +6,5 @@ using UnityEngine;
 public class CraftingPrototype : ScriptableObject
 {
     public CraftingRecipe recipe;
-    public ResourceCost[] resourceCost;
-}
-
-[Serializable]
-public struct ResourceCost
-{
-    public CraftingResource resource;
-    public int count;
+    public PlayerResource[] resourceCost;
 }

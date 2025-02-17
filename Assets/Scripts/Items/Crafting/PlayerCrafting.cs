@@ -46,7 +46,7 @@ public class PlayerCrafting : MonoBehaviour
 
     public void ChangeResourceCount(Resource type, int changeBy)
     {
-        int index = Array.FindIndex(resources, r => r.type == type);
+        int index = Array.FindIndex(resources, r => r.resource.type == type);
         resources[index].count += changeBy;
 
         UpdateUI();
@@ -56,7 +56,7 @@ public class PlayerCrafting : MonoBehaviour
     {
         foreach(var resource in resources)
         {
-            var UI = Array.Find(resourcesUI, ui => ui.type == resource.type).UI;
+            var UI = Array.Find(resourcesUI, ui => ui.type == resource.resource.type).UI;
 
             UI.GetComponentInChildren<TMP_Text>().text = resource.count.ToString();
         }
@@ -117,7 +117,7 @@ public class PlayerCrafting : MonoBehaviour
 [Serializable]
 public struct PlayerResource
 {
-    public Resource type;
+    public CraftingResource resource;
     public int count;
 }
 

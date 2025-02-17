@@ -57,7 +57,7 @@ public class CraftingManager : MonoBehaviour
         var resourcesCount = new Dictionary<Resource, int>();
         foreach (var resource in availableResources)
         {
-            resourcesCount[resource.type] = resource.count;
+            resourcesCount[resource.resource.type] = resource.count;
         }
 
         var station = Array.Find(Instance.prototypes, p => p.type == type);
@@ -119,7 +119,8 @@ public class CraftingManager : MonoBehaviour
         var itemsCount = new Dictionary<Item, int>();
         foreach (var item in availableItems)
         {
-            if (!itemsCount.ContainsKey(item.ItemObj)) itemsCount[item.ItemObj] = 0;
+            if (!itemsCount.ContainsKey(item.ItemObj)) 
+                itemsCount[item.ItemObj] = 0;
 
             itemsCount[item.ItemObj] += item.Count;
         }

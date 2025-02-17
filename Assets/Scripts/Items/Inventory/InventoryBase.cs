@@ -132,8 +132,10 @@ public class InventoryBase : MonoBehaviour
         int slotIndex = 0;
         for (int i = 0; i < ui.childCount; i++)
         {
-            var slot = ui.GetChild(i);
-            if (!ItemManager.IsInvSlot(slot.gameObject)) 
+            var child = ui.GetChild(i);
+
+            var slot = ItemManager.GetInvSlot(child);
+            if (!slot) 
                 continue;
 
             ItemManager.UpdateItemUI(slot, inventory[slotIndex]);

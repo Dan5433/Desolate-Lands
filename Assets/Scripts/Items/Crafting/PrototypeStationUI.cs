@@ -39,14 +39,14 @@ public class PrototypeStationUI : MonoBehaviour
 
         for (int i = 0; i < cost.Length; i++)
         {
-            GameObject itemUI;
+            GameObject resourceUI;
 
-            if (i < materialsUI.childCount) itemUI = materialsUI.GetChild(i).gameObject;
-            else itemUI = Instantiate(resourcePrefab, materialsUI);
+            if (i < materialsUI.childCount) resourceUI = materialsUI.GetChild(i).gameObject;
+            else resourceUI = Instantiate(resourcePrefab, materialsUI);
 
-            itemUI.GetComponentInChildren<Image>().sprite = cost[i].item.Sprite;
+            resourceUI.GetComponentInChildren<Image>().sprite = cost[i].item.Sprite;
 
-            var text = itemUI.GetComponentInChildren<TMP_Text>();
+            var text = resourceUI.GetComponentInChildren<TMP_Text>();
             if (missing.Contains(cost[i].item))
                 text.text = 
                     $"<color=#{ColorUtility.ToHtmlStringRGB(missingColor)}>" + 
@@ -59,7 +59,7 @@ public class PrototypeStationUI : MonoBehaviour
             Destroy(materialsUI.GetChild(i).gameObject);
         }
     }
-    void UpdateResourcesUI(ResourceCost[] cost, HashSet<Resource> missing)
+    void UpdateResourcesUI(PlayerResource[] cost, HashSet<Resource> missing)
     {
         var resourcesUI = costUI.Find("Resources");
 
@@ -74,9 +74,8 @@ public class PrototypeStationUI : MonoBehaviour
 
             var text = resourceCost.GetComponentInChildren<TMP_Text>();
             if (missing.Contains(cost[i].resource.type))
-                text.text = 
-                    $"<color=#{ColorUtility.ToHtmlStringRGB(missingColor)}>" +
-                    cost[i].count;
+                text.text =
+                    $"<color=#{ColorUtility.ToHtmlStringRGB(missingColor)}>{cost[i].count}";
             else
                 text.text = cost[i].count.ToString();
         }
