@@ -11,15 +11,30 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] PlayerSprites sprites;
     [SerializeField] SpriteRenderer gfx;
     [SerializeField] Animator playerAnimator;
+    [SerializeField] CapsuleCollider2D feetCollider;
+    [SerializeField] BoxCollider2D bodyCollider;
+    [SerializeField] float sidewaysColliderResize;
+    [SerializeField] Transform interactPointer;
+    [SerializeField] float pointerOffset;
+    Vector2 pointerOrigin;
+    float feetWidth, bodyWidth;
     Direction facing;
     Rigidbody2D rb;
     const string saveString = "Position.bin";
 
     public Direction Facing => facing;
 
+    private void Awake()
+    {
+        pointerOrigin = interactPointer.localPosition;
+        feetWidth = feetCollider.size.x;
+        bodyWidth = bodyCollider.size.x;
+
+        rb = GetComponent<Rigidbody2D>();
+    }
+
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
         Cursor.lockState = CursorLockMode.Confined;
 
         LoadPosition();
@@ -34,7 +49,13 @@ public class PlayerMovement : MonoBehaviour
         playerAnimator.SetFloat("horInput", horInput);
 
         rb.velocity = new Vector2(horInput, vertInput).normalized * speed;
+
         UpdateSprite(vertInput, horInput);
+        if (UpdateFacingDirection())
+        {
+            UpdateHitbox();
+            UpdatePointerOffset();
+        }
     }
 
     [Button("Get Chunk Index", 36)]
@@ -47,31 +68,75 @@ public class PlayerMovement : MonoBehaviour
     {
         SavePosition();
     }
+    
+    bool UpdateFacingDirection()
+    {
+        if (gfx.sprite == sprites.north)
+        {
+            if (facing == Direction.Up)
+                return false;
+            facing = Direction.Up;
+        }
+        if (gfx.sprite == sprites.east)
+        {
+            if (facing == Direction.Right)
+                return false;
+            facing = Direction.Right;
+        }
+        if (gfx.sprite == sprites.south)
+        {
+            if (facing == Direction.Down)
+                return false;
+            facing = Direction.Down;
+        }
+        if (gfx.sprite == sprites.west)
+        {
+            if (facing == Direction.Left)
+                return false;
+            facing = Direction.Left;
+        }
+
+        return true;
+    }
 
     void UpdateSprite(float vertInput, float horInput)
     {
         if (horInput > 0)
-        {
             gfx.sprite = sprites.east;
-            facing = Direction.Right;
-        }
         if (horInput < 0)
-        {
             gfx.sprite = sprites.west;
-            facing = Direction.Left;
-        }
 
-        //check vertical last to prioritize sprite
+        //check vertical last to prioritize vertical sprites
         if (vertInput > 0)
-        {
             gfx.sprite = sprites.north;
-            facing = Direction.Up;
-        }
         if (vertInput < 0)
-        {
             gfx.sprite = sprites.south;
-            facing = Direction.Down;
+    }
+
+    void UpdateHitbox()
+    {
+        if(facing == Direction.Up || facing == Direction.Down)
+        {
+            feetCollider.size = new(feetWidth, feetCollider.size.y);
+            bodyCollider.size = new(bodyWidth, bodyCollider.size.y);
         }
+        else
+        {
+            feetCollider.size = new(feetWidth - sidewaysColliderResize, feetCollider.size.y);
+            bodyCollider.size = new(bodyWidth - sidewaysColliderResize, bodyCollider.size.y);
+        }
+    }
+
+    void UpdatePointerOffset()
+    {
+        interactPointer.localPosition = facing switch
+        {
+            Direction.Up => new(pointerOrigin.x,pointerOrigin.y + pointerOffset),
+            Direction.Right => new(pointerOrigin.x + pointerOffset, pointerOrigin.y),
+            Direction.Down => new(pointerOrigin.x, pointerOrigin.y - pointerOffset),
+            Direction.Left => new(pointerOrigin.x - pointerOffset, pointerOrigin.y),
+            _ => default
+        };
     }
     void SavePosition()
     {
