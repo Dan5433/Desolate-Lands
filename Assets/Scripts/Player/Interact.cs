@@ -39,7 +39,7 @@ public class Interact : MonoBehaviour
             return;
         }
 
-        LayerMask mask = LayerMask.GetMask("Interact");
+        int mask = LayerMask.GetMask("Interact");
         RaycastHit2D[] hits = Physics2D.RaycastAll(origin.position, origin.up, reach, mask);
 
         Debug.DrawRay(origin.position, origin.up, Color.green, reach);
