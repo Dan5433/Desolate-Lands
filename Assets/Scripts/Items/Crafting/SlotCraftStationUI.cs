@@ -1,8 +1,6 @@
-using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class SlotCraftStationUI : MonoBehaviour
 {
@@ -65,7 +63,7 @@ public class SlotCraftStationUI : MonoBehaviour
 
     public void PressButton()
     {
-        if (selectedRecipe == null || !IsOutputAvailable(selectedRecipe.reward)) 
+        if (selectedRecipe == null || !IsOutputAvailable(selectedRecipe.reward.item)) 
             return;
 
         buttonHeld = true;
@@ -89,11 +87,10 @@ public class SlotCraftStationUI : MonoBehaviour
         return outputSlot.Locked || currentStation.Inventory[1].ItemObj == ItemManager.Instance.Air;
     }
 
-    bool IsOutputAvailable(CraftItem recipeOutput)
+    bool IsOutputAvailable(Item reward)
     {
-        return IsOutputEmpty() || (currentStation.Inventory[1].ItemObj == recipeOutput.item &&
-            currentStation.Inventory[1].Count + recipeOutput.count <= 
-            currentStation.Inventory[1].ItemObj.MaxCount);
+        return currentStation.Inventory[1].ItemObj == reward && outputSlot.Locked 
+            || currentStation.Inventory[1].ItemObj == ItemManager.Instance.Air;
     }
 
     void PreviewItemOutput(SlotCraftingRecipe craftingRecipe)
@@ -106,8 +103,6 @@ public class SlotCraftStationUI : MonoBehaviour
         currentStation.Inventory[1] = InventoryItemFactory.Create(
             selectedRecipe.reward.item, selectedRecipe.reward.item.Name, outputCount);
 
-        outputSlot.Locked = true;
-
         currentStation.UpdateUI();
     }
 
@@ -118,10 +113,10 @@ public class SlotCraftStationUI : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             var reward = craftingRecipe.resourceRewards[i];
-            GameObject resourceUI;
 
-            if (i < resourceRewards.childCount) resourceUI = resourceRewards.GetChild(i).gameObject;
-            else resourceUI = Instantiate(resourcePrefab, resourceRewards);
+            GameObject resourceUI = i < resourceRewards.childCount
+            ? resourceRewards.GetChild(i).gameObject
+            : Instantiate(resourcePrefab, resourceRewards);
 
             int total = reward.count * currentStation.Inventory[1].Count;
             resourceUI.GetComponentInChildren<Image>().sprite = reward.resource.sprite;
@@ -140,11 +135,16 @@ public class SlotCraftStationUI : MonoBehaviour
         CraftItem input = new(currentStation.Inventory[0].ItemObj, currentStation.Inventory[0].Count);
         var craftingRecipe = CraftingManager.GetSingleSlotRecipe(input, currentStation.Type);
 
-        if (craftingRecipe == null || !IsOutputAvailable(craftingRecipe.reward))
+        if (craftingRecipe == null)
         {
             outputSlot.Locked = false;
             return;
         }
+        else
+            outputSlot.Locked = true;
+
+        if (!IsOutputEmpty() || !IsOutputAvailable(craftingRecipe.reward.item))
+            return;
 
         selectedRecipe = craftingRecipe;
 
@@ -157,15 +157,14 @@ public class SlotCraftStationUI : MonoBehaviour
         int recipesMade = currentStation.Inventory[1].Count / selectedRecipe.reward.count;
 
         currentStation.Inventory[0].Count -= recipesMade * selectedRecipe.cost.count;
+
         if(currentStation.Inventory[0].Count <= 0)
         {
             currentStation.Inventory[0] = ItemManager.Instance.InvItemAir;
         }
 
         foreach (var reward in selectedRecipe.resourceRewards)
-        {
             playerResources.ChangeResourceCount(reward.resource.type, reward.count * recipesMade);
-        }
 
         outputSlot.Locked = false;
         ResetUI();

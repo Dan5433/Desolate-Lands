@@ -38,6 +38,9 @@ public class CraftingManager : MonoBehaviour
 
     public static SlotCraftingRecipe GetSingleSlotRecipe(CraftItem input, CraftingStationType type)
     {
+        if (input.item == ItemManager.Instance.Air)
+            return null;
+
         var station = Array.Find(Instance.slotRecipes, r => r.type == type);
 
         foreach (var recipe in station.recipes)
@@ -45,6 +48,7 @@ public class CraftingManager : MonoBehaviour
             if (recipe.cost.item == input.item
                 && recipe.cost.count <= input.count) return recipe;
         }
+
         return null;
     }
 
