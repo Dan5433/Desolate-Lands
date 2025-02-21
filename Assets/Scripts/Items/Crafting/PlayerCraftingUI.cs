@@ -20,10 +20,9 @@ public class PlayerCraftingUI : MonoBehaviour
     {
         for (int i = 0; i < cost.Length; i++)
         {
-            GameObject itemUI;
-
-            if (i < materialCostUI.childCount) itemUI = materialCostUI.GetChild(i).gameObject;
-            else itemUI = Instantiate(resourcePrefab, materialCostUI);
+            GameObject itemUI = i < materialCostUI.childCount
+                ? materialCostUI.GetChild(i).gameObject
+                : Instantiate(resourcePrefab, materialCostUI);
 
             itemUI.GetComponentInChildren<Image>().sprite = cost[i].item.Sprite;
             itemUI.GetComponentInChildren<TMP_Text>().text = cost[i].count.ToString();
@@ -36,7 +35,8 @@ public class PlayerCraftingUI : MonoBehaviour
 
     public void SelectRecipe(CraftingRecipe recipe)
     {
-        if (selectedRecipe == null) ToggleTooltip();
+        if (selectedRecipe == null) 
+            ToggleTooltip();
 
         itemImage.sprite = recipe.reward.item.Sprite;
         itemName.text = recipe.reward.item.Name;
@@ -95,17 +95,19 @@ public class PlayerCraftingUI : MonoBehaviour
         var availableRecipes = CraftingManager.GetCraftableRecipes(inventory);
 
         var tooltip = selectedPrototypeUI.GetChild(0).GetComponent<TMP_Text>();
-        if (crafting.PrototypedRecipes.Count == 0) tooltip.text = "Prototype an item to craft it yourself";
-        else if (availableRecipes.Count > 0) tooltip.text = "Choose an item to craft";
-        else tooltip.text = "You don't have enough resources to craft";
+        if (crafting.PrototypedRecipes.Count == 0) 
+            tooltip.text = "Prototype an item to craft it yourself";
+        else if (availableRecipes.Count > 0) 
+            tooltip.text = "Choose an item to craft";
+        else 
+            tooltip.text = "You don't have enough resources to craft";
 
         int index = 0;
         foreach (var recipe in availableRecipes)
         {
-            GameObject recipeUI;
-
-            if (index < content.childCount) recipeUI = content.GetChild(index).gameObject;
-            else recipeUI = Instantiate(recipePrefab, content);
+            GameObject recipeUI = index < content.childCount
+                ? content.GetChild(index).gameObject
+                : Instantiate(recipePrefab, content);
 
             var image = recipeUI.transform.Find("Image");
             image.GetComponent<Image>().sprite = recipe.reward.item.Sprite;

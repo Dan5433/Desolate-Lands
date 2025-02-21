@@ -39,18 +39,16 @@ public class PrototypeStationUI : MonoBehaviour
 
         for (int i = 0; i < cost.Length; i++)
         {
-            GameObject resourceUI;
-
-            if (i < materialsUI.childCount) resourceUI = materialsUI.GetChild(i).gameObject;
-            else resourceUI = Instantiate(resourcePrefab, materialsUI);
+            GameObject resourceUI = i < materialsUI.childCount
+                ? materialsUI.GetChild(i).gameObject
+                : Instantiate(resourcePrefab, materialsUI);
 
             resourceUI.GetComponentInChildren<Image>().sprite = cost[i].item.Sprite;
 
             var text = resourceUI.GetComponentInChildren<TMP_Text>();
             if (missing.Contains(cost[i].item))
-                text.text = 
-                    $"<color=#{ColorUtility.ToHtmlStringRGB(missingColor)}>" + 
-                    cost[i].count;
+                text.text = $"<color=#{ColorUtility.ToHtmlStringRGB(missingColor)}>" 
+                    + cost[i].count;
             else
                 text.text = cost[i].count.ToString();
         }
@@ -65,10 +63,9 @@ public class PrototypeStationUI : MonoBehaviour
 
         for (int i = 0; i < cost.Length; i++)
         {
-            GameObject resourceCost;
-
-            if (i < resourcesUI.childCount) resourceCost = resourcesUI.GetChild(i).gameObject;
-            else resourceCost = Instantiate(resourcePrefab, resourcesUI);
+            GameObject resourceCost = i < resourcesUI.childCount
+                ? resourcesUI.GetChild(i).gameObject
+                : Instantiate(resourcePrefab, resourcesUI);
 
             resourceCost.GetComponentInChildren<Image>().sprite = cost[i].resource.sprite;
 

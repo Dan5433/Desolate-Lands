@@ -29,7 +29,6 @@ public class PrototypeStation : MonoBehaviour
 
         var prototypesAndMissing = CraftingManager.GetPrototypesAndMissing(inventory, resources, type);
 
-        GameObject prototypeUI;
         int index = 0;
         foreach (var prototype in prototypesAndMissing)
         {
@@ -38,8 +37,9 @@ public class PrototypeStation : MonoBehaviour
                 prototype.Value.missingResources.Count > 0))
                 continue;
 
-            if (index < content.childCount) prototypeUI = content.GetChild(index).gameObject;
-            else prototypeUI = Instantiate(prototypePrefab, content);
+            GameObject prototypeUI = index < content.childCount
+                ? content.GetChild(index).gameObject
+                : Instantiate(prototypePrefab, content);
 
             var image = prototypeUI.transform.Find("Image");
             image.GetComponent<Image>().sprite = prototype.Key.recipe.reward.item.Sprite;

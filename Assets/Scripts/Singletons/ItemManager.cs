@@ -72,32 +72,29 @@ public class ItemManager : MonoBehaviour
 
     public static bool IsHeldItemUsable()
     {
-        if (Instance.heldItem.Item.ItemObj is UsableItem) return true;
+        if (Instance.heldItem.Item.ItemObj is UsableItem) 
+            return true;
         return false;
     }
 
     public static void UseHeldItem(GameObject user)
     {
-        if (!IsHeldItemUsable()) return;
+        if (!IsHeldItemUsable()) 
+            return;
 
         var item = Instance.heldItem.Item.ItemObj as UsableItem;
 
         foreach(var effect in item.Effects)
-        {
             effect.Use(user);
-        }
 
-        if(Instance.heldItem.Item.Count > 1)
-        {
+        if (Instance.heldItem.Item.Count > 1)
             Instance.heldItem.Item.Count--;
-        }
         else
-        {
             Instance.heldItem.Item = Instance.InvItemAir;
-        }
 
         UpdateItemUI(Instance.heldItem.gameObject.transform, Instance.heldItem.Item);
-        if(!Instance.IsHoldingItem) GameManager.CursorState = CursorState.Default;
+        if(!Instance.IsHoldingItem) 
+            GameManager.CursorState = CursorState.Default;
     }
 
     public static void UpdateItemUI(Transform slot, InvItem item)
@@ -108,27 +105,17 @@ public class ItemManager : MonoBehaviour
         if (item.ItemObj == Instance.air)
         {
             if (slot.TryGetComponent<SwapItem>(out var script))
-            {
                 image.sprite = script.Placeholder;
-            }
             else
-            {
                 image.sprite = Instance.air.Sprite;
-            }
         }
         else
-        {
             image.sprite = item.ItemObj.Sprite;
-        }
 
         if (item.CountTxt > 1)
-        {
             countTxt.text = item.CountTxt.ToString();
-        }
         else
-        {
             countTxt.text = string.Empty;
-        }
     }
 
     public static void SpawnGroundItem(InvItem item, Vector3 center, Vector2 spreadRadius = default)
@@ -204,9 +191,12 @@ public class ItemManager : MonoBehaviour
 
     static bool SwapSlots(ref InvItem slotItem, InvItem selectedItem, bool allowDeposit, bool allowWithdraw)
     {
-        if (slotItem.ItemObj == Instance.Air && selectedItem.ItemObj == Instance.Air) return false;
-        if (!allowDeposit && slotItem.ItemObj == Instance.Air) return false;
-        if (!allowWithdraw && selectedItem.ItemObj == Instance.Air) return false;
+        if (slotItem.ItemObj == Instance.Air && selectedItem.ItemObj == Instance.Air) 
+            return false;
+        if (!allowDeposit && slotItem.ItemObj == Instance.Air) 
+            return false;
+        if (!allowWithdraw && selectedItem.ItemObj == Instance.Air) 
+            return false;
 
         Instance.heldItem.Item = slotItem.Clone();
         slotItem = selectedItem.Clone();
@@ -246,18 +236,22 @@ public class ItemManager : MonoBehaviour
         var slotItem = slotInventory.Inventory[index];
         var selectedItem = Instance.heldItem.Item.Clone();
 
-        if (selectedItem.ItemObj != Instance.Air && slotType != SlotType.Any && selectedItem.ItemObj.Slot != slotType) return;
+        if (selectedItem.ItemObj != Instance.Air 
+            && slotType != SlotType.Any && selectedItem.ItemObj.Slot != slotType) 
+            return;
 
         if (slotType != SlotType.Any) 
             SpecialItemActions(slotItem.ItemObj, selectedItem.ItemObj, GameManager.Instance.Player);
 
         if (mouseButton == 0)
         {
-            if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air)
+            if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air 
+                && slotItem.Count < slotItem.ItemObj.MaxCount && selectedItem.Count < selectedItem.ItemObj.MaxCount)
             {
                 if (allowDeposit) 
                     DepositItem(slotItem, selectedItem);
-                else return;
+                else 
+                    return;
             }
             else
             {
@@ -272,14 +266,16 @@ public class ItemManager : MonoBehaviour
             {
                 if (allowWithdraw) 
                     SplitSlot(ref slotItem);
-                else return;
+                else 
+                    return;
             }
             else if (slotItem.ItemObj == Instance.Air || 
                 (slotItem.ItemObj == selectedItem.ItemObj && slotItem.Count < slotItem.ItemObj.MaxCount))
             {
                 if (allowDeposit) 
                     IncrementSlot(ref slotItem, selectedItem);
-                else return;
+                else 
+                    return;
             }
 
             else
