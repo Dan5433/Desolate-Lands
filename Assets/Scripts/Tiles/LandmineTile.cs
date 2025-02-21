@@ -3,8 +3,8 @@ using UnityEngine;
 public class LandmineTile : AnimatedGameobjectTile
 {
     [SerializeField] float explosionRadius;
-    [SerializeField] float damage;
+    [SerializeField] Vector2 damageRange;
 
     public float ExplosionRadius => explosionRadius;
-    public float Damage => damage;
+    public Vector2 DamageRange => damageRange;
 }

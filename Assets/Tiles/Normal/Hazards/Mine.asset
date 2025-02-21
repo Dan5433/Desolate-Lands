@@ -31,4 +31,4 @@ MonoBehaviour:
   m_TileAnimationFlags: 0
   instancedGameobject: {fileID: 7115283593347744808, guid: 50c110d8575f4304da1dd525aacd96a2, type: 3}
   explosionRadius: 1.7
-  damage: 50
+  damage: 25

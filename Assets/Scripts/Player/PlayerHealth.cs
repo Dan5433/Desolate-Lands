@@ -32,7 +32,8 @@ public class PlayerHealth : LivingBase
     {
         base.Damage(damageAmount);
 
-        if (health <= 0) return;
+        if (health <= 0) 
+            return;
 
         StopAllCoroutines();
 
@@ -56,8 +57,8 @@ public class PlayerHealth : LivingBase
 
     void UpdateDisplay()
     {
+        healthText.text = Mathf.CeilToInt(health).ToString();
         StartCoroutine(LerpBarValue(health));
-        healthText.text = Mathf.RoundToInt(health).ToString();
     }
 
     IEnumerator LerpBarValue(float targetHealth)
@@ -102,6 +103,8 @@ public class PlayerHealth : LivingBase
     protected override void OnDeath()
     {
         base.OnDeath();
+        healthBar.value = 0;
+        healthText.text = "0";
 
         foreach (var item in GetComponent<PlayerInventory>().Inventory)
             ItemManager.SpawnGroundItem(item.Clone(), transform.position, new(3f, 3f));
