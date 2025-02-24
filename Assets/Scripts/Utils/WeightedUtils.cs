@@ -10,7 +10,7 @@ public class WeightedUtils
         foreach (var tile in tiles) 
             totalWeight += tile.weight;
 
-        int randomWeight = Random.Range(0, totalWeight);
+        int randomWeight = GameRandom.Range(0, totalWeight);
         foreach (var tile in tiles)
         {
             randomWeight -= tile.weight;
@@ -26,7 +26,7 @@ public class WeightedUtils
         foreach (var structure in structures) 
             totalWeight += structure.weight;
 
-        int randomWeight = Random.Range(0, totalWeight);
+        int randomWeight = GameRandom.Range(0, totalWeight);
         foreach (var structure in structures)
         {
             randomWeight -= structure.weight;

@@ -7,23 +7,13 @@ using Random = UnityEngine.Random;
 
 public class CreateWorld : MonoBehaviour
 {
-    [SerializeField] TMP_InputField worldName;
-    [SerializeField] TMP_InputField worldSeed;
+    [SerializeField] TMP_InputField worldNameInput;
+    [SerializeField] TMP_InputField worldSeedInput;
 
     public void Create()
     {
         string name = ParseName();
-
-        if (int.TryParse(worldSeed.text,out int seed))
-        {
-            Debug.Log("Seed succesfully parsed: "+seed);
-            PlayerPrefs.SetInt(name, seed);
-        }
-        else
-        {
-            Debug.Log("Initializing new seed for world: " + worldName);
-            PlayerPrefs.SetInt(name, Random.Range(int.MinValue, int.MaxValue));
-        }
+        ParseSeed(name);
 
         CreateStatsFile(name);
 
@@ -46,7 +36,7 @@ public class CreateWorld : MonoBehaviour
 
     string ParseName()
     {
-        string name = worldName.text != string.Empty ? worldName.text : "New World";
+        string name = worldNameInput.text != string.Empty ? worldNameInput.text : "New World";
 
         int existingCounter = 0;
         foreach (var dir in Directory.GetDirectories(MainMenuManager.SavesDirPath, $"*{name}*"))
@@ -58,5 +48,28 @@ public class CreateWorld : MonoBehaviour
             name += $" ({existingCounter})";
 
         return name;
+    }
+
+    void ParseSeed(string worldName)
+    {
+        RandomStateWrapper randomStateWrapper;
+
+        if (worldSeedInput.text != string.Empty)
+        {
+            Debug.Log("Seed succesfully parsed for world: " + worldName);
+
+            var hash = Hash128.Compute(worldSeedInput.text);
+            randomStateWrapper = new(hash);
+        }
+        else
+        {
+            Debug.Log("Initializing new seed for world: " + worldName);
+
+            randomStateWrapper = new(
+                Random.Range(int.MinValue,int.MaxValue), Random.Range(int.MinValue, int.MaxValue),
+                Random.Range(int.MinValue, int.MaxValue), Random.Range(int.MinValue, int.MaxValue));
+        }
+
+        GameRandom.Init(randomStateWrapper);
     }
 }

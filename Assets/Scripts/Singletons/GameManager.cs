@@ -1,3 +1,4 @@
+using EditorAttributes;
 using System;
 using System.IO;
 using System.Linq;
@@ -13,7 +14,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
     [SerializeField] CursorTexture[] cursors;
-    [SerializeField] Settings settings;
     int deaths;
 
     static CursorState cursorState;
@@ -23,7 +23,6 @@ public class GameManager : MonoBehaviour
     static bool isGamePaused = false;
 
     public static bool IsGamePaused => isGamePaused;
-    public string WorldName => worldName;
     public GameObject WorldCanvas => worldCanvas;
     public GameObject Player => player;
     public static string DataDirPath => worldDirPath;
@@ -50,27 +49,31 @@ public class GameManager : MonoBehaviour
         {
             if(pendingWorldName != null)
                 worldName = pendingWorldName;
+
             Debug.Log("Loaded world: " + worldName);
 
             worldDirPath = Path.Combine(Application.persistentDataPath, "saves", worldName);
             playerDataDirPath = Path.Combine(worldDirPath, "player");
 
-            int seed = PlayerPrefs.GetInt(worldName);
-            Random.InitState(seed);
-
-            Debug.Log("Set seed to " + seed);
-
             Instance = this;
         }
-    }
-    private void OnDestroy()
-    {
-        UpdatePlaytime();
     }
 
     private void Start()
     {
         CursorState = CursorState.Default;
+    }
+
+    private void OnDestroy()
+    {
+        UpdatePlaytime();
+    }
+
+    void SaveRandomState()
+    {
+        RandomStateWrapper wrapper = new(GameRandom.State);
+        string json = JsonUtility.ToJson(wrapper);
+        PlayerPrefs.SetString(worldName, json);
     }
 
     public static void TogglePauseState()
@@ -136,6 +139,8 @@ public class GameManager : MonoBehaviour
 
     public static void ExitToMain()
     {
+        Instance.SaveRandomState();
+
         if (isGamePaused)
             TogglePauseState();
 
@@ -156,9 +161,35 @@ public enum CursorState
     Use = 1,
     Drop = 2
 }
-
 [Serializable]
-public struct Settings
+public struct RandomStateWrapper
 {
-    public float holdTimeToMainMenu;
+    public int s0, s1, s2, s3;
+
+    public RandomStateWrapper(int s0, int s1, int s2, int s3)
+    {
+        this.s0 = s0;
+        this.s1 = s1;
+        this.s2 = s2;
+        this.s3 = s3;
+    }
+
+    public RandomStateWrapper(Hash128 hash)
+    {
+        string hex = hash.ToString();
+        s0 = (int)Convert.ToUInt32(hex.Substring(0, 8), 16);
+        s1 = (int)Convert.ToUInt32(hex.Substring(8, 8), 16);
+        s2 = (int)Convert.ToUInt32(hex.Substring(16, 8), 16);
+        s3 = (int)Convert.ToUInt32(hex.Substring(24, 8), 16);
+    }
+
+    public RandomStateWrapper(Random.State state)
+    {
+        this = JsonUtility.FromJson<RandomStateWrapper>(JsonUtility.ToJson(state));
+    }
+
+    public static implicit operator Random.State(RandomStateWrapper wrapper)
+    {
+        return JsonUtility.FromJson<Random.State>(JsonUtility.ToJson(wrapper));
+    }
 }

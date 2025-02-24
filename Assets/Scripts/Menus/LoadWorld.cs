@@ -27,10 +27,10 @@ public class LoadWorld : MonoBehaviour
 
             var statsContainer = worldSelect.Find("Stats");
             statsContainer.Find("Playtime").GetComponent<TMP_Text>().text =
-                "Playtime: "+stats.playtime;
+                "Playtime: "+ stats.playtime;
 
             statsContainer.Find("Creation Date").GetComponent<TMP_Text>().text = 
-                "Creation Date: "+stats.creationDate.ToShortDateString();
+                "Creation Date: "+ stats.creationDate.ToShortDateString();
 
             statsContainer.Find("Deaths").GetComponent<TMP_Text>().text = 
                 "Deaths: " + stats.deaths;
@@ -71,7 +71,12 @@ public class LoadWorld : MonoBehaviour
 
     public void LoadSelectedWorld()
     {
-        GameManager.PendingWorldName = selectedWorld.GetComponentInChildren<TMP_Text>().text;
+        string worldName = selectedWorld.GetComponentInChildren<TMP_Text>().text;
+
+        string randomStateJson = PlayerPrefs.GetString(worldName);
+        GameRandom.Init(JsonUtility.FromJson<RandomStateWrapper>(randomStateJson));
+
+        GameManager.PendingWorldName = worldName;
         SceneManager.LoadScene("Game");
     }
 

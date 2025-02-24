@@ -14,10 +14,10 @@ public class RandomWeightedTile : Tile
     {
         if (go == null) return false;
 
-        if (go.TryGetComponent<TilePlaceInit>(out var script))
-        {
-            script.Init(GetTile(), position);
-        }
+        //if (go.TryGetComponent<TilePlaceInit>(out var script))
+        //{
+        //    script.Init(GetTile(), position);
+        //}
 
         return true;
     }

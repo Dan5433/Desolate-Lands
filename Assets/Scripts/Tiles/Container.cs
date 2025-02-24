@@ -33,7 +33,7 @@ public class Container : InventoryBase, IBreakable
 
         for (int i = 0; i < inventory.Length; i++)
         {
-            int randomWeight = Random.Range(0, totalWeight);
+            int randomWeight = GameRandom.Range(0, totalWeight);
             foreach (var item in lootTable)
             {
                 randomWeight -= item.weight;
