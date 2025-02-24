@@ -10,9 +10,11 @@ public class PrototypeStationTile : BreakableTile
 
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
     {
-        if(go == null) return false;
+        if(!Application.isPlaying || go == null 
+            || go.TryGetComponent<PrototypeStation>(out var prototypeStation)) 
+            return false;
 
-        go.GetComponent<PrototypeStation>().StartUp(type, CraftingManager.Instance.PrototypingUI);
+        prototypeStation.StartUp(type, CraftingManager.Instance.PrototypingUI);
 
         return true;
     }

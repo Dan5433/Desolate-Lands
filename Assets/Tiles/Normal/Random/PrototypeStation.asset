@@ -31,9 +31,10 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 1
-  m_InstancedGameObject: {fileID: 3593850188700526489, guid: f569912dca92731428914023a568546f, type: 3}
+  m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
   tiles:
   - weight: 1
     tile: {fileID: 11400000, guid: c53f980e2bdc73f468bfd5050a18de11, type: 2}
+  noiseScale: 0.01

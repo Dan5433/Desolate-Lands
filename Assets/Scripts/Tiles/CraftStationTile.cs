@@ -10,14 +10,12 @@ public class PrototypingStationTile : BreakableTile
 
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
     {
-        if(go == null) return false;
+        if(!Application.isPlaying || go == null 
+            || !go.TryGetComponent<CraftStation>(out var craftStation)) 
+            return false;
 
-        var script = go.GetComponent<CraftStation>();
-        script.CraftingUi = CraftingManager.Instance.CraftingUI;
-
-        script.Type = type;
-
-        script.enabled = true;
+        craftStation.StartUp(type, CraftingManager.Instance.CraftingUI);
+        craftStation.enabled = true;
 
         return true;
     }

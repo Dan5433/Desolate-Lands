@@ -5,12 +5,21 @@ using UnityEngine.Tilemaps;
 
 public class CraftStation : InventoryBase, IBreakable
 {
-    public CraftingStationType Type;
-    public GameObject CraftingUi;
+    CraftingStationType type;
+    GameObject craftingUi;
+
+    public CraftingStationType Type => type;
+    public GameObject CraftingUi => craftingUi;
+
+    public void StartUp(CraftingStationType type, GameObject ui)
+    {
+        this.type = type;
+        craftingUi = ui;
+    }
 
     void OnEnable()
     {
-        ui = CraftingUi.transform.Find("Interactable");
+        ui = craftingUi.transform.Find("Interactable");
     }
 
     protected override string GetSaveKey()
@@ -20,13 +29,13 @@ public class CraftStation : InventoryBase, IBreakable
 
     public void UpdateCraftingUI()
     {
-        var title = CraftingUi.transform.Find("Title").GetComponent<TMP_Text>();
+        var title = craftingUi.transform.Find("Title").GetComponent<TMP_Text>();
 
         title.text = name.Replace("(Clone)","");
 
-        var craftingUi = CraftingUi.GetComponent<SlotCraftStationUI>();
-        craftingUi.SetStation(this);
-        craftingUi.LoadState(LoadProgress());
+        var craftingUiScript = craftingUi.GetComponent<SlotCraftStationUI>();
+        craftingUiScript.SetStation(this);
+        craftingUiScript.LoadState(LoadProgress());
     }
 
     float LoadProgress()
