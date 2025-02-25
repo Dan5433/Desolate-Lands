@@ -46,7 +46,7 @@ MonoBehaviour:
   minMaterial: 2
   lootPool:
   - item: {fileID: 11400000, guid: 1bf2836710c82f240a3f909f96733269, type: 2}
-    weight: 85
+    weight: 78
     minMax: {x: 1, y: 1}
     quantityDistribution:
       serializedVersion: 2
@@ -127,7 +127,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
-    weight: 5
+    weight: 7
     minMax: {x: 1, y: 2}
     quantityDistribution:
       serializedVersion: 2
