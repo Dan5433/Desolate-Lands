@@ -38,16 +38,21 @@ public class CreateWorld : MonoBehaviour
     {
         string name = worldNameInput.text != string.Empty ? worldNameInput.text : "New World";
 
+        string modifiedName = name;
         int existingCounter = 0;
-        foreach (var dir in Directory.GetDirectories(MainMenuManager.SavesDirPath, $"*{name}*"))
-            existingCounter++;
+        foreach (var dir in Directory.GetDirectories(MainMenuManager.SavesDirPath))
+        {
+            string directoryName = Path.GetFileName(dir);
+            if (modifiedName.Equals(directoryName))
+            {
+                existingCounter++;
+                modifiedName = $"{name} ({existingCounter})";
+            }
+        }
 
         Debug.Log($"Found {existingCounter} existing worlds with same name");
 
-        if (existingCounter > 0)
-            name += $" ({existingCounter})";
-
-        return name;
+        return modifiedName;
     }
 
     void ParseSeed(string worldName)
