@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -36,18 +37,20 @@ public class CreateWorld : MonoBehaviour
 
     string ParseName()
     {
-        string name = worldNameInput.text != string.Empty ? worldNameInput.text : "New World";
+        string name = !string.IsNullOrWhiteSpace(worldNameInput.text) 
+            ? worldNameInput.text : "New World";
 
         string modifiedName = name;
         int existingCounter = 0;
-        foreach (var dir in Directory.GetDirectories(MainMenuManager.SavesDirPath))
+
+        var existingWorlds = Directory.GetDirectories(MainMenuManager.SavesDirPath)
+                              .Select(Path.GetFileName)
+                              .ToHashSet();
+        
+        while (existingWorlds.Contains(modifiedName))
         {
-            string directoryName = Path.GetFileName(dir);
-            if (modifiedName.Equals(directoryName))
-            {
-                existingCounter++;
-                modifiedName = $"{name} ({existingCounter})";
-            }
+            existingCounter++;
+            modifiedName = $"{name} ({existingCounter})";
         }
 
         Debug.Log($"Found {existingCounter} existing worlds with same name");
