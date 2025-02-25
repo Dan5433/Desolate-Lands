@@ -37,4 +37,4 @@ MonoBehaviour:
   tiles:
   - weight: 1
     tile: {fileID: 11400000, guid: 013a38b27e79ef8499ad291fccb7d3ee, type: 2}
-  noiseScale: 0.01
+  noiseScale: 0.1

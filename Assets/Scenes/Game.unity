@@ -8534,7 +8534,7 @@ MonoBehaviour:
   grTiles:
   - weight: 100
     tileId: 0
-  - weight: 20
+  - weight: 15
     tileId: 1
   topTiles:
   - tiles:

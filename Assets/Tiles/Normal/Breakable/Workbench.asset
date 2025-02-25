@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd93269b57dc8584db11ab54d55cee8f, type: 3}
   m_Name: Workbench
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 21300000, guid: 72b72183d66970d4f8ea287025a5a005, type: 3}
+  m_DefaultSprite: {fileID: 21300000, guid: fe8f14be378acfd4bab0561cf9506904, type: 3}
   m_DefaultGameObject: {fileID: 5168300196735632252, guid: ef9aa519f36d0ed4e97e35efc81313dc, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []
