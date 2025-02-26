@@ -93,13 +93,6 @@ public class PlayerHealth : LivingBase
         };
     }
 
-    private void Reset()
-    {
-        healthBar.maxValue = maxHealth;
-        healthBar.value = health;
-        UpdateDisplay();
-    }
-
     protected override void OnDeath()
     {
         base.OnDeath();
@@ -124,5 +117,12 @@ public class PlayerHealth : LivingBase
         health = maxHealth;
         transform.position = Vector3.zero;
         Reset();
+    }
+
+    private void Reset()
+    {
+        healthBar.maxValue = maxHealth;
+        healthBar.value = health;
+        UpdateDisplay();
     }
 }
