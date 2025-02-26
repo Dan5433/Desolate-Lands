@@ -39,13 +39,16 @@ public class Interact : MonoBehaviour
             return;
         }
 
-        int mask = LayerMask.GetMask("Interact");
-        RaycastHit2D[] hits = Physics2D.RaycastAll(origin.position, origin.up, reach, mask);
+        int interactMask = LayerMask.GetMask("Interact");
+        var hits = Physics2D.RaycastAll(origin.position, origin.up, reach, interactMask);
 
         Debug.DrawRay(origin.position, origin.up, Color.green, reach);
 
         foreach (var hit in hits)
         {
+            if (IsHittingTopOfWallTile(hit))
+                break;
+
             if (Input.GetMouseButtonDown(1))
             {
                 if (hit.collider.TryGetComponent<Gatherable>(out var gatherable) &&
@@ -168,5 +171,20 @@ public class Interact : MonoBehaviour
     {
         activeTile = tile;
         activeUI = ui;
+    }
+
+    bool IsHittingTopOfWallTile(RaycastHit2D hit)
+    {
+        if (!hit.rigidbody || !hit.rigidbody.TryGetComponent<Tilemap>(out var solidTilemap))
+            return false;
+
+        var tilePosition = solidTilemap.WorldToCell(hit.collider.transform.position);
+        var hitTile = solidTilemap.GetTile(tilePosition);
+        var tileBelow = solidTilemap.GetTile(tilePosition - new Vector3Int(0, 1));
+
+        if (!tileBelow)
+            return false;
+
+        return hitTile.GetType() == tileBelow.GetType();
     }
 }

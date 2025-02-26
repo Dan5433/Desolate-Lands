@@ -61,13 +61,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        print(JsonUtility.ToJson(GameRandom.State));
         CursorState = CursorState.Default;
     }
 
     private void OnDestroy()
     {
-        print(JsonUtility.ToJson(GameRandom.State));
         SaveRandomState();
         UpdatePlaytime();
     }

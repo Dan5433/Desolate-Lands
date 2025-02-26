@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa15b9b0bc27e264f93caea63b4b97fa, type: 3}
   m_Name: Vines
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 21300000, guid: ddc668026cc9ffb4596fa1b19fe179e3, type: 3}
+  m_DefaultSprite: {fileID: 21300000, guid: b5464953a858fc54dbe6289e212c997b, type: 3}
   m_DefaultGameObject: {fileID: 628338776450109615, guid: ffbd5ccb826750242b14adf936aef5d3, type: 3}
   m_DefaultColliderType: 0
   m_TilingRules:
