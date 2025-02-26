@@ -43,6 +43,9 @@ public class InventoryBase : MonoBehaviour
     
     public int AddToInventory(InvItem item)
     {
+        if (item.ItemObj == ItemManager.Instance.Air)
+            return 0;
+
         int excess = item.Count;
 
         for (int i = 0; i < inventory.Length; i++)

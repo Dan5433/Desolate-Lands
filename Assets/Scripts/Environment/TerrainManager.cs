@@ -238,6 +238,8 @@ public class TerrainManager : MonoBehaviour
     {
         Vector2Int renderEnd = (currentChunk + new Vector2Int(renderRadius, renderRadius) * 2) * chunkSize;
 
+        //BUG: if chunk is already loaded, the structures still get cut off
+        //fix by checking if chunk is loaded and dont spawn structure at all if it is
         if (deferredStructures.Remove(chunk, out var dataSet))
             PlaceDeferredStructures(dataSet, tilemap, renderEnd);
 

@@ -50,14 +50,7 @@ public class Breakable : MonoBehaviour, IDamageable
         BreakingManager.UpdateBreakStage(tilePosition, 0);
 
         foreach (var drop in tile.Drops)
-        {
-            int count = drop.RandomCount();
-            if (count == 0) { continue; }
-
-            ItemManager.SpawnGroundItem(
-                InventoryItemFactory.Create(drop.item, count), 
-                transform.position, new(0.5f, 0.5f));
-        }
+            ItemManager.SpawnGroundItem(drop.Roll(), new(0.5f, 0.5f));
 
         foreach (var particle in BreakingManager.Instance.BreakParticles)
         {

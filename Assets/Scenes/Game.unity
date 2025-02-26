@@ -1546,52 +1546,52 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 1
-      m_TileSpriteIndex: 5
+      m_TileSpriteIndex: 0
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 0
       dummyAlignment: 0
-      m_AllTileFlags: 1073741826
+      m_AllTileFlags: 2147483650
   - first: {x: 659, y: 396, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 1
-      m_TileSpriteIndex: 5
+      m_TileSpriteIndex: 0
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 0
       dummyAlignment: 0
-      m_AllTileFlags: 1073741826
+      m_AllTileFlags: 2147483650
   - first: {x: 660, y: 396, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 1
-      m_TileSpriteIndex: 5
+      m_TileSpriteIndex: 0
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 0
       dummyAlignment: 0
-      m_AllTileFlags: 1073741826
+      m_AllTileFlags: 2147483650
   - first: {x: 661, y: 396, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 1
-      m_TileSpriteIndex: 5
+      m_TileSpriteIndex: 0
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 0
       dummyAlignment: 0
-      m_AllTileFlags: 1073741826
+      m_AllTileFlags: 2147483650
   - first: {x: 662, y: 396, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 1
-      m_TileSpriteIndex: 5
+      m_TileSpriteIndex: 0
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 0
       dummyAlignment: 0
-      m_AllTileFlags: 1073741826
+      m_AllTileFlags: 2147483650
   - first: {x: 658, y: 397, z: 0}
     second:
       serializedVersion: 2
@@ -2171,7 +2171,7 @@ Tilemap:
   - m_RefCount: 12
     m_Data: {fileID: 11400000, guid: 8a4ff1f651b1241438e82627e5bca4f2, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 9
+  - m_RefCount: 14
     m_Data: {fileID: 21300000, guid: eabe722257ea6cd4ca00a22b5b16828f, type: 3}
   - m_RefCount: 10
     m_Data: {fileID: 21300000, guid: 30831c92256f67f4ea3c36d4ebf01b3f, type: 3}
@@ -2181,7 +2181,7 @@ Tilemap:
     m_Data: {fileID: 21300000, guid: 685ee5e87dedc834ca86e676ecb75c6c, type: 3}
   - m_RefCount: 12
     m_Data: {fileID: 21300000, guid: 6a915b5c61e626446b16f425c569fad7, type: 3}
-  - m_RefCount: 14
+  - m_RefCount: 9
     m_Data: {fileID: 21300000, guid: ddc668026cc9ffb4596fa1b19fe179e3, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
@@ -2439,14 +2439,6 @@ CompositeCollider2D:
       - X: 6579999744
         Y: 3970625024
       - X: 6579999744
-        Y: 3969999872
-      - X: 6630000128
-        Y: 3969999872
-    - - X: 6630000128
-        Y: 3960624896
-      - X: 6579999744
-        Y: 3960624896
-      - X: 6579999744
         Y: 3950000128
       - X: 6630000128
         Y: 3950000128
@@ -2520,13 +2512,9 @@ CompositeCollider2D:
       - {x: 662, y: 400.0625}
       - {x: 661, y: 400.06247}
       - {x: 661.00006, y: 399.00003}
-    - - {x: 662.99994, y: 397}
+    - - {x: 662.99994, y: 395.00003}
       - {x: 662.99994, y: 397.0625}
       - {x: 658, y: 397.06247}
-      - {x: 658.00006, y: 397}
-    - - {x: 662.99994, y: 395.00003}
-      - {x: 662.99994, y: 396.0625}
-      - {x: 658, y: 396.06247}
       - {x: 658.00006, y: 395.00003}
     - - {x: 658.99994, y: 390}
       - {x: 658.99994, y: 390.3125}
@@ -4417,6 +4405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 0
   maxHealth: 75
+  spawnProtectionTime: 1
   state: 0
   baseDamage: 3
   speed: 4.6
@@ -8664,13 +8653,13 @@ MonoBehaviour:
   solid: {fileID: 330243725}
   structures:
   - structures:
-    - weight: 20
+    - weight: 22
       structure: {fileID: 0}
-    - weight: 8
+    - weight: 11
       structure: {fileID: 585156328748535408, guid: d6450bc7b423cbc4a81ba46f7e14159d, type: 3}
     - weight: 4
       structure: {fileID: 585156328748535408, guid: aa8d73642252c394596bb327407190c2, type: 3}
-    - weight: 2
+    - weight: 1
       structure: {fileID: 585156328748535408, guid: 3fd5b063359a2bb4190848218ed6adb8, type: 3}
     rollsPerChunk: 3
   grTiles:
@@ -12535,31 +12524,31 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.05
+      time: 0
       value: 0
-      inSlope: 0.9039528
-      outSlope: 0.9039528
-      tangentMode: 34
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.33333334
+      outWeight: 0
     - serializedVersion: 3
-      time: 0.65000004
-      value: 0.5423717
-      inSlope: 0.019128598
-      outSlope: 0.019128598
+      time: 0.7
+      value: 0.5012374
+      inSlope: 0.01415717
+      outSlope: 0.01415717
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.5972222
+      outWeight: 0.6483055
     - serializedVersion: 3
-      time: 0.85
-      value: 1.0010662
-      inSlope: 2.2934728
-      outSlope: 2.2934728
-      tangentMode: 34
+      time: 0.90000004
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -18431,6 +18420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 20
   maxHealth: 100
+  spawnProtectionTime: 1
   healthBar: {fileID: 748177996}
   healthText: {fileID: 2027034078}
   barImage: {fileID: 243693081}

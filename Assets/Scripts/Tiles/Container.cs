@@ -1,5 +1,4 @@
 using CustomClasses;
-using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Container : InventoryBase, IBreakable
@@ -23,13 +22,15 @@ public class Container : InventoryBase, IBreakable
 
         GenLoot(tilemap.GetTile<ContainerTile>(
             tilemap.WorldToCell(transform.position)).LootPool);
+
         SaveInventory();
     }
 
     protected void GenLoot(WeightedItem[] lootTable)
     {
         int totalWeight = 0;
-        foreach (var item in lootTable) totalWeight += item.weight;
+        foreach (var item in lootTable) 
+            totalWeight += item.weight;
 
         for (int i = 0; i < inventory.Length; i++)
         {
@@ -39,9 +40,7 @@ public class Container : InventoryBase, IBreakable
                 randomWeight -= item.weight;
                 if (randomWeight < 0)
                 {
-                    var loot = InventoryItemFactory.Create(
-                        item.item, item.item.Name, item.RandomCount());
-                    inventory[i] = loot;
+                    inventory[i] = item.Roll();
                     break;
                 }
             }

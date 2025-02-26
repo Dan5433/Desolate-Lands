@@ -101,13 +101,7 @@ public class Interact : MonoBehaviour
             .GetTile<GatherableTile>(gatherable.TilePosition);
 
         foreach (var drop in tile.Drops)
-        {
-            int count = drop.RandomCount();
-            if (count == 0)
-                continue;
-
-            inventory.AddToInventory(InventoryItemFactory.Create(drop.item, count));
-        }
+            inventory.AddToInventory(drop.Roll());
 
         inventory.UpdateUI();
         inventory.SaveInventory();
