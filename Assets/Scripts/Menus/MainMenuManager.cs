@@ -22,8 +22,6 @@ public class MainMenuManager : MonoBehaviour
         savesDirPath = Path.Combine(Application.persistentDataPath, "saves");
         Directory.CreateDirectory(savesDirPath);
         versionText.text = "v" + Application.version;
-
-        Random.InitState((int)DateTime.Now.Ticks);
     }
 
     public void Quit()

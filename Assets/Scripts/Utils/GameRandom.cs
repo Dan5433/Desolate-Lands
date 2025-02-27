@@ -4,10 +4,14 @@ using UnityEngine;
 public static class GameRandom
 {
     static Random.State state;
+    static bool isInitialized = false;
     public static Random.State State => state;
 
     static void ValidateState()
     {
+        if (!isInitialized)
+            Init(Random.state);
+
         if (Random.state.Equals(state))
             return;
 
@@ -19,9 +23,10 @@ public static class GameRandom
         state = Random.state;
     }
 
-    public static void Init(Random.State state)
+    public static void Init(Random.State initState)
     {
-        GameRandom.state = state;
+        state = initState;
+        isInitialized = true;
     }
 
     public static float Value
