@@ -44,6 +44,7 @@ public class PrototypeStation : MonoBehaviour
 
             int count = prototype.Key.recipe.reward.count;
             var countText = prototypeUI.GetComponentInChildren<TMP_Text>();
+
             if (count > 1) countText.text = count.ToString();
             else countText.text = string.Empty;
 

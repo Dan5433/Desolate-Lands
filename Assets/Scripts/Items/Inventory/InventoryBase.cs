@@ -41,7 +41,7 @@ public class InventoryBase : MonoBehaviour
         AddToInventory(InventoryItemFactory.Create(item,count));
     }
     
-    public int AddToInventory(InvItem item)
+    public virtual int AddToInventory(InvItem item)
     {
         if (item.ItemObj == ItemManager.Instance.Air)
             return 0;

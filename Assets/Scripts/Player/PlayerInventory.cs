@@ -1,9 +1,10 @@
-using System.IO;
-using Unity.VisualScripting;
+using CustomClasses;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerInventory : InventoryBase
 {
+    [SerializeField] UnityEvent onInventoryItemAdd;
     void OnTriggerEnter2D(Collider2D collision)
     {
         switch (collision.tag)
@@ -26,5 +27,12 @@ public class PlayerInventory : InventoryBase
     {
         base.ClearInventory();
         DeleteInventory();
+    }
+
+    public override int AddToInventory(InvItem item)
+    {
+        int excess = base.AddToInventory(item);
+        onInventoryItemAdd?.Invoke();
+        return excess;
     }
 }

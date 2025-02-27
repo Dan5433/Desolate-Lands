@@ -169,6 +169,9 @@ public class Interact : MonoBehaviour
 
     bool IsHittingTopOfWallTile(RaycastHit2D hit)
     {
+        //TODO: add check if both tiles have colliders in case stacked tiles
+        //without colliders generate
+
         if (!hit.rigidbody || !hit.rigidbody.TryGetComponent<Tilemap>(out var solidTilemap))
             return false;
 

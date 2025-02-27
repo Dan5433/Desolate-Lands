@@ -30,6 +30,9 @@ public class PrototypeStationUI : MonoBehaviour
 
     public void UpdateUI()
     {
+        if (!currentStation)
+            return;
+
         currentStation.UpdateAvailablePrototypesUI(inventory.Inventory, crafting.Resources);
     }
 
@@ -47,8 +50,8 @@ public class PrototypeStationUI : MonoBehaviour
 
             var text = resourceUI.GetComponentInChildren<TMP_Text>();
             if (missing.Contains(cost[i].item))
-                text.text = $"<color=#{ColorUtility.ToHtmlStringRGB(missingColor)}>" 
-                    + cost[i].count;
+                text.text = 
+                    $"<color=#{ColorUtility.ToHtmlStringRGB(missingColor)}>" + cost[i].count;
             else
                 text.text = cost[i].count.ToString();
         }
