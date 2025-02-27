@@ -32,15 +32,17 @@ public class LivingBase : MonoBehaviour, IDamageable
     }
 
     [Button("Damage", 30)]
-    public virtual void Damage(float damageAmount)
+    public virtual bool Damage(float damageAmount)
     {
         if (invulnerable)
-            return;
+            return false;
 
         health -= damageAmount;
 
         if(health <= 0) 
             OnDeath();
+
+        return true;
     }
 
     [Button("Heal", 30)]

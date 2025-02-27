@@ -12,7 +12,7 @@ public class Breakable : MonoBehaviour, IDamageable
         UpdateSprite();
     }
 
-    public void Damage(float damageAmount)
+    public bool Damage(float damageAmount)
     {
         var tilemap = GetComponentInParent<Tilemap>();
         float hardness = tilemap.GetTile<BreakableTile>(
@@ -21,7 +21,10 @@ public class Breakable : MonoBehaviour, IDamageable
         health -= damageAmount / hardness;
         UpdateSprite();
 
-        if (health <= 0) OnBreak();
+        if (health <= 0) 
+            OnBreak();
+
+        return true;
     }
 
     void UpdateSprite()

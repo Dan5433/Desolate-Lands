@@ -28,24 +28,27 @@ public class PlayerHealth : LivingBase
         Reset();
     }
 
-    public override void Damage(float damageAmount)
+    public override bool Damage(float damageAmount)
     {
-        base.Damage(damageAmount);
+        if (!base.Damage(damageAmount))
+            return false;
 
         if (health <= 0) 
-            return;
+            return false;
 
         StopAllCoroutines();
 
         UpdateDisplay();
         StartCoroutine(LerpBarColor(damageColor));
         GetComponent<PlayerAudio>().PlaySoundEffect(PlayerSounds.Hurt);
+        return true;
     }
 
 
     public override bool Heal(float healAmount)
     {
-        if (!base.Heal(healAmount)) return false;
+        if (!base.Heal(healAmount)) 
+            return false;
 
         StopAllCoroutines();
 
