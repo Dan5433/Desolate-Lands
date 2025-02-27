@@ -1,3 +1,4 @@
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -42,7 +43,7 @@ public class Interact : MonoBehaviour
         int interactMask = LayerMask.GetMask("Interact");
         var hits = Physics2D.RaycastAll(origin.position, origin.up, reach, interactMask);
 
-        Debug.DrawRay(origin.position, origin.up, Color.green, reach);
+        Debug.DrawRay(origin.position, origin.up * reach, Color.green);
 
         foreach (var hit in hits)
         {
@@ -51,30 +52,8 @@ public class Interact : MonoBehaviour
 
             if (Input.GetMouseButtonDown(1))
             {
-                if (hit.collider.TryGetComponent<Gatherable>(out var gatherable) &&
-                    gatherable.State == GatherableTileState.Replenished)
-                {
-                    GatherTile(gatherable);
+                if (ProcessInteraction(hit))
                     break;
-                }
-
-                if (hit.collider.TryGetComponent<Container>(out var container))
-                {
-                    OpenContainer(container);
-                    break;
-                }
-
-                if (hit.collider.TryGetComponent<CraftStation>(out var craftStation))
-                {
-                    OpenCraftStation(craftStation);
-                    break;
-                }
-
-                if (hit.collider.TryGetComponent<PrototypeStation>(out var prototypeStation))
-                {
-                    OpenPrototypeStation(prototypeStation);
-                    break;
-                }
             }
 
             if (Input.GetMouseButton(0))
@@ -91,6 +70,36 @@ public class Interact : MonoBehaviour
 
         if(!Input.GetMouseButton(0) || hits.Length == 0)
             damageScript.ResetCooldown();
+    }
+
+    bool ProcessInteraction(RaycastHit2D hit)
+    {
+        if (hit.collider.TryGetComponent<Gatherable>(out var gatherable) &&
+                    gatherable.State == GatherableTileState.Replenished)
+        {
+            GatherTile(gatherable);
+            return true;
+        }
+
+        if (hit.collider.TryGetComponent<Container>(out var container))
+        {
+            OpenContainer(container);
+            return true;
+        }
+
+        if (hit.collider.TryGetComponent<CraftStation>(out var craftStation))
+        {
+            OpenCraftStation(craftStation);
+            return true;
+        }
+
+        if (hit.collider.TryGetComponent<PrototypeStation>(out var prototypeStation))
+        {
+            OpenPrototypeStation(prototypeStation);
+            return true;
+        }
+
+        return false;
     }
 
     void GatherTile(Gatherable gatherable)
@@ -169,19 +178,20 @@ public class Interact : MonoBehaviour
 
     bool IsHittingTopOfWallTile(RaycastHit2D hit)
     {
-        //TODO: add check if both tiles have colliders in case stacked tiles
-        //without colliders generate
-
         if (!hit.rigidbody || !hit.rigidbody.TryGetComponent<Tilemap>(out var solidTilemap))
             return false;
 
         var tilePosition = solidTilemap.WorldToCell(hit.collider.transform.position);
+
         var hitTile = solidTilemap.GetTile(tilePosition);
-        var tileBelow = solidTilemap.GetTile(tilePosition - new Vector3Int(0, 1));
+        var tileBelow = solidTilemap.GetTile(new(tilePosition.x,tilePosition.y - 1));
 
         if (!tileBelow)
             return false;
 
-        return hitTile.GetType() == tileBelow.GetType();
+        if (solidTilemap.GetColliderType(tilePosition) == Tile.ColliderType.None)
+            return false;
+
+        return hitTile.name.Equals(tileBelow.name);
     }
 }
