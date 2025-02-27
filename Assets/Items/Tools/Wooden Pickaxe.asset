@@ -17,6 +17,9 @@ MonoBehaviour:
   maxCount: 1
   sprite: {fileID: 21300000, guid: 9ccb0c97aa329ee4998cf249c8c4a0e1, type: 3}
   slot: 1
-  durability: 25
+  effects: []
+  durability: 34
   type: 2
-  material: 1
+  material: 0
+  attackDamage: 0
+  attackSpeed: 0

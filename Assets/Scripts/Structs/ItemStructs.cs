@@ -19,11 +19,11 @@ namespace CustomClasses
     public enum ItemMaterial
     {
         Wood = 0,
-        Stone = 1,
-        RustedIron = 2,
-        Copper = 3,
+        Bone = 1,
+        HardenedBone = 2,
+        Stone = 3,
         Iron = 4,
-        Aluminium = 5
+        Steel = 5,
     }
 
     [Serializable]

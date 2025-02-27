@@ -110,5 +110,5 @@ MonoBehaviour:
   - {r: 0.7075472, g: 0.5442102, b: 0.3037113, a: 1}
   breakingAudio: []
   tool: 1
-  minMaterial: 3
+  minMaterial: 1
   type: 1

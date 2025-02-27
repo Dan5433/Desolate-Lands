@@ -18,6 +18,8 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 5df037e7323194c418c519dc80ab3bff, type: 3}
   slot: 1
   effects: []
-  durability: 18
+  durability: 22
   type: 1
-  material: 1
+  material: 0
+  attackDamage: 0
+  attackSpeed: 0
