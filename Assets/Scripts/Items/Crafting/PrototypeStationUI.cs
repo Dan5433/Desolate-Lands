@@ -147,16 +147,14 @@ public class PrototypeStationUI : MonoBehaviour
         }
 
         var reward = InventoryItemFactory.Create(
-            selectedPrototype.recipe.reward.item, 
+            selectedPrototype.recipe.reward.item,
             selectedPrototype.recipe.reward.count);
+
+        crafting.UnlockRecipe(selectedPrototype.recipe);
 
         inventory.AddToInventory(reward);
 
         inventory.UpdateUI();
-
-        crafting.UnlockRecipe(selectedPrototype.recipe);
-
-        currentStation.UpdateAvailablePrototypesUI(inventory.Inventory, crafting.Resources);
         ResetUI();
     }
 
