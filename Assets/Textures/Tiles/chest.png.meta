@@ -3,7 +3,7 @@ guid: b288ac8051b6e814293ada6ca87b2f94
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -124,12 +124,13 @@ TextureImporter:
     sprites: []
     outline: []
     physicsShape:
-    - - {x: -8, y: -4}
+    - - {x: -8, y: 1}
+      - {x: -8, y: -4}
       - {x: -8, y: -1}
       - {x: -8, y: -1}
       - {x: -8, y: -8}
       - {x: 8, y: -8}
-      - {x: 8, y: -4}
+      - {x: 8, y: 1}
     - - {x: -6, y: 16}
       - {x: -8, y: 16}
       - {x: 8, y: 16}
