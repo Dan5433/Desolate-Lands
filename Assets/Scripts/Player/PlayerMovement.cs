@@ -131,11 +131,11 @@ public class PlayerMovement : MonoBehaviour
     {
         interactPointer.localPosition = facing switch
         {
-            Direction.Up => new(pointerOrigin.x,pointerOrigin.y + pointerOffset),
+            Direction.Up => pointerOrigin,
             Direction.Right => new(pointerOrigin.x + pointerOffset, pointerOrigin.y),
             Direction.Down => new(pointerOrigin.x, pointerOrigin.y - pointerOffset),
             Direction.Left => new(pointerOrigin.x - pointerOffset, pointerOrigin.y),
-            _ => default
+            _ => pointerOrigin
         };
     }
     void SavePosition()

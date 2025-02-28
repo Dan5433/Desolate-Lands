@@ -1,3 +1,4 @@
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -48,9 +49,9 @@ public class Interact : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                if (!hit.collider.TryGetComponent<IDamageable>(out var damageable) ||
-                    ItemManager.Instance.IsHoldingItem || activeUI ||
-                    ItemManager.Instance.IsTooltipActive)
+                if (!hit.collider.TryGetComponent<IDamageable>(out var damageable) 
+                    || ItemManager.Instance.IsHoldingItem || ItemManager.Instance.IsTooltipActive 
+                    || activeUI)
                     continue;
 
                 damageScript.DealDamage(hit, damageable);
@@ -62,37 +63,41 @@ public class Interact : MonoBehaviour
 
             if (Input.GetMouseButtonDown(1))
             {
-                if (ProcessInteraction(hit))
+                if (ProcessInteraction(hit.collider))
                     break;
             }
         }
 
         if(!Input.GetMouseButton(0) || hits.Length == 0)
             damageScript.ResetCooldown();
+
+        var colliderAtPosition = Physics2D.OverlapPoint(transform.position, interactMask);
+        if (colliderAtPosition && Input.GetMouseButtonDown(1))
+            ProcessInteraction(colliderAtPosition);
     }
 
-    bool ProcessInteraction(RaycastHit2D hit)
+    bool ProcessInteraction(Collider2D collider)
     {
-        if (hit.collider.TryGetComponent<Gatherable>(out var gatherable) &&
+        if (collider.TryGetComponent<Gatherable>(out var gatherable) &&
                     gatherable.State == GatherableTileState.Replenished)
         {
             GatherTile(gatherable);
             return true;
         }
 
-        if (hit.collider.TryGetComponent<Container>(out var container))
+        if (collider.TryGetComponent<Container>(out var container))
         {
             OpenContainer(container);
             return true;
         }
 
-        if (hit.collider.TryGetComponent<CraftStation>(out var craftStation))
+        if (collider.TryGetComponent<CraftStation>(out var craftStation))
         {
             OpenCraftStation(craftStation);
             return true;
         }
 
-        if (hit.collider.TryGetComponent<PrototypeStation>(out var prototypeStation))
+        if (collider.TryGetComponent<PrototypeStation>(out var prototypeStation))
         {
             OpenPrototypeStation(prototypeStation);
             return true;
