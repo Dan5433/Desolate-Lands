@@ -2,6 +2,7 @@ using CustomExtensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -121,10 +122,10 @@ public class LoadTerrain : MonoBehaviour
         tilemap.SetTiles(positions, tiles);
     }
 
-    public void LoadDeferredStructures(Dictionary<Vector2Int, List<StructurePlaceData>> dict)
+    public void LoadTerrainData(Dictionary<Vector2Int, List<StructurePlaceData>> deferredStructures, HashSet<Vector2Int> savedChunks)
     {
         var dirPath = Path.Combine(GameManager.DataDirPath, TerrainManager.DataDirName);
-        BinaryDataHandler dataHandler = new(dirPath, SaveTerrain.DeferredStructuresFileName);
+        BinaryDataHandler dataHandler = new(dirPath, SaveTerrain.TerrainDataFileName);
 
         if (!dataHandler.FileExists())
             return;
@@ -140,7 +141,13 @@ public class LoadTerrain : MonoBehaviour
                 for (int s = 0; s < structures.Capacity; s++)
                     structures.Add(new(reader));
 
-                dict.Add(chunk, structures);
+                deferredStructures.Add(chunk, structures);
+            }
+
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                savedChunks.Add(reader.ReadVector2Int());
             }
         });
     }

@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 public class SaveTerrain : MonoBehaviour
 {
     TerrainManager main;
-    public static readonly string DeferredStructuresFileName = "deferred_structures";
+    public static readonly string TerrainDataFileName = "terrain_data";
 
     void Awake()
     {
@@ -160,21 +160,25 @@ public class SaveTerrain : MonoBehaviour
         });
     }
 
-    public void SaveDeferredStructures(Dictionary<Vector2Int, List<StructurePlaceData>> dict)
+    public void SaveTerrainData(Dictionary<Vector2Int, List<StructurePlaceData>> deferredStructures, HashSet<Vector2Int> savedChunks)
     {
         var dirPath = Path.Combine(GameManager.DataDirPath, TerrainManager.DataDirName);
-        BinaryDataHandler dataHandler = new(dirPath, DeferredStructuresFileName);
+        BinaryDataHandler dataHandler = new(dirPath, TerrainDataFileName);
 
         dataHandler.SaveData(writer =>
         {
-            writer.Write(dict.Count);
-            foreach(var chunkStructures in dict)
+            writer.Write(deferredStructures.Count);
+            foreach(var chunkStructures in deferredStructures)
             {
                 writer.Write(chunkStructures.Key);
                 writer.Write(chunkStructures.Value.Count);
                 foreach(var structure in chunkStructures.Value)
                     structure.Write(writer);
             }
+
+            writer.Write(savedChunks.Count);
+            foreach (var chunk in savedChunks)
+                writer.Write(chunk);
         });
     }
 }
