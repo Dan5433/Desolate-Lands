@@ -1,4 +1,3 @@
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -47,15 +46,6 @@ public class Interact : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            if (IsHittingTopOfWallTile(hit))
-                break;
-
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (ProcessInteraction(hit))
-                    break;
-            }
-
             if (Input.GetMouseButton(0))
             {
                 if (!hit.collider.TryGetComponent<IDamageable>(out var damageable) ||
@@ -65,6 +55,15 @@ public class Interact : MonoBehaviour
 
                 damageScript.DealDamage(hit, damageable);
                 break;
+            }
+
+            if (IsHittingTopOfWallTile(hit))
+                break;
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (ProcessInteraction(hit))
+                    break;
             }
         }
 

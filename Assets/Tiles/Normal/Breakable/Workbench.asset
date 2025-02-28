@@ -16,7 +16,7 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 5168300196735632252, guid: ef9aa519f36d0ed4e97e35efc81313dc, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  hardness: 1.5
+  hardness: 0.95
   drops:
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
     minMax: {x: 1, y: 2}

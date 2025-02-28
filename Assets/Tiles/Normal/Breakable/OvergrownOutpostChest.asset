@@ -16,7 +16,7 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 5557921506770125580, guid: 3ae7c2add328b154e92aedfc8285a5aa, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  hardness: 1.15
+  hardness: 1.3
   drops:
   - item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
     minMax: {x: 1, y: 2}
@@ -217,7 +217,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   - item: {fileID: 11400000, guid: 79c7ffa20e57f7c4f86071d44b8bae0f, type: 2}
-    weight: 4
+    weight: 6
     minMax: {x: 1, y: 3}
     quantityDistribution:
       serializedVersion: 2
@@ -253,7 +253,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   - item: {fileID: 11400000, guid: dcf350a4453a35e489105e52a694480a, type: 2}
-    weight: 1
+    weight: 2
     minMax: {x: 1, y: 1}
     quantityDistribution:
       serializedVersion: 2

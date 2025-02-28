@@ -93,7 +93,7 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 0, y: 1, z: 0}
     m_RuleTransform: 0
-  hardness: 2
+  hardness: 1.4
   drops:
   - item: {fileID: 11400000, guid: a2a3b5474aa760143b3ea6272e3780ad, type: 2}
     minMax: {x: 1, y: 3}
