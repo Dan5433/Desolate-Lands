@@ -25,7 +25,7 @@ public class WorldBorderDamage : MonoBehaviour
     
     IEnumerator DealDamage()
     {
-        while (true)
+        while (!DeathMenu.IsDead)
         {
             foreach (GameObject obj in insideTrigger)
             {
@@ -33,16 +33,16 @@ public class WorldBorderDamage : MonoBehaviour
                     !obj.transform.parent.TryGetComponent(out living))
                     continue;
 
-                var distanceToBorder = Mathf.Min(
-                    transform.position.x - obj.transform.position.x,
-                    transform.position.y - obj.transform.position.y);
+                var distanceToBorder = Mathf.Abs(transform.rotation.eulerAngles.z) == 90
+                    ? transform.position.x - obj.transform.position.x
+                    : transform.position.y - obj.transform.position.y;
 
-                var percentCloseToBorder = 
+                var proximityToBorder = 
                     (WorldBorderManager.Instance.EffectRange - distanceToBorder) / 
                     WorldBorderManager.Instance.EffectRange;
 
                 living.Damage(
-                    Mathf.Lerp(minDamageAmount,maxDamageAmount,percentCloseToBorder));
+                    Mathf.Lerp(minDamageAmount,maxDamageAmount, proximityToBorder));
             }
             yield return new WaitForSeconds(1);
         }

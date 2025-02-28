@@ -63,7 +63,9 @@ public class WorldBorderManager : MonoBehaviour
         damageTrigger.size = new(damageTrigger.size.x * size / 2, effectRange);
         damageTrigger.offset = new(0, effectRange / 2);
 
-        border.Restart();
+        //prewarm properly
+        border.gameObject.SetActive(false);
+        border.gameObject.SetActive(true);
 
         if (!loadedBorders.TryGetValue(chunk, out var list)){
             list = new();

@@ -1,0 +1,18 @@
+{
+  "foldouts": {
+    "TerrainManager (WorldBorderManager)_UnloadBorder_Vector2Int": true,
+    "TerrainManager (WorldBorderManager)_LoadBorder_Vector2Int_Direction": true
+  },
+  "parameterValues": {
+    "TerrainManager (WorldBorderManager)_UnloadBorder_Vector2Int": [
+      null
+    ],
+    "TerrainManager (WorldBorderManager)_LoadBorder_Vector2Int_Direction": [
+      {
+        "x": 0,
+        "y": 2047
+      },
+      3
+    ]
+  }
+}

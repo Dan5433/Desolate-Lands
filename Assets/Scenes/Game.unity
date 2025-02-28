@@ -18859,7 +18859,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27367b37538a6aa4cbd9fa160ec610a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 2136044632}
+  target: {fileID: 519420032}
   copyRotation: 0
 --- !u!1 &238161319647699207
 GameObject:

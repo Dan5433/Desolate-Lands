@@ -42,12 +42,6 @@ namespace CustomExtensions
             main.startColor = color;
         }
 
-        public static void Restart(this ParticleSystem system)
-        {
-            system.Stop();
-            system.Play();
-        }
-
         public static void PlayRandomClip(this AudioSource source, AudioClip[] audio)
         {
             if (audio.Length == 0) 
