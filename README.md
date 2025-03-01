@@ -1,5 +1,8 @@
 # Desolate Lands
 Desolate Lands is a rogue-lite, sandbox game set in a post-apocalyptic world where you are the lone survivor among hoards of zombies ready to eat you alive.
+# Requirements
+- OS: Windows
+- Memory: At least 4gb
 # Installation
 - **Open Latest Release**: Click on the latest release under "Releases".
 - **Download**: Click on the first zip file (not the source code) and choose a location to download the game.
