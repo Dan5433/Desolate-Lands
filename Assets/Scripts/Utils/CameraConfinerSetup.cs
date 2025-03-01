@@ -1,7 +1,7 @@
 using Cinemachine;
 using UnityEngine;
 
-public class CameraConfine : MonoBehaviour
+public class CameraConfinerSetup : MonoBehaviour
 {
     [SerializeField] TerrainManager terrainManager;
     [SerializeField] CinemachineConfiner confiner;
