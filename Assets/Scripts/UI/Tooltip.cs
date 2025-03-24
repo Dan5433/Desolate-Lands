@@ -4,6 +4,8 @@ using UnityEngine;
 public class Tooltip : MonoBehaviour
 {
     [SerializeField] Vector3 mouseOffset;
+    [SerializeField] TMP_Text main;
+    [SerializeField] TMP_Text extra;
     public void Hide()
     {
         gameObject.SetActive(false);
@@ -11,14 +13,14 @@ public class Tooltip : MonoBehaviour
 
     public void ShowMessage(string message)
     {
-        GetComponentInChildren<TMP_Text>().text = message;
+        main.text = message;
         gameObject.SetActive(true);
     }
 
     public void ShowMessage(string message, string extra)
     {
-        GetComponentInChildren<TMP_Text>().text = 
-            message + "\n<color=#777>" + extra;
+        main.text = message;
+        this.extra.text = extra;
         gameObject.SetActive(true);
     }
 
