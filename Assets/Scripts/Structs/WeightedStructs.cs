@@ -15,7 +15,14 @@ namespace CustomClasses
     public struct WeightedItem
     {
         public int weight;
-        public LootItem loot;
+        public LootItem item;
+    }
+
+    [Serializable]
+    public struct WeightedLootPool
+    {
+        public int weight;
+        public WeightedItem[] loot;
     }
 
     [Serializable]

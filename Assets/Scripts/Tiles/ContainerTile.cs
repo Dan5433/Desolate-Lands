@@ -7,6 +7,8 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(menuName = "2D/Tiles/Container Tile")]
 public class ContainerTile : BreakableTile
 {
-    [SerializeField] WeightedItem[] lootPool;
-    public WeightedItem[] LootPool => lootPool;
+    [SerializeField] LootItem[] guranteedLootPool;
+    [SerializeField] WeightedLootPool[] lootTable;
+    public LootItem[] GuranteedLootPool => guranteedLootPool;
+    public WeightedLootPool[] LootTable => lootTable;
 }

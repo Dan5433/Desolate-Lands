@@ -1,4 +1,5 @@
 using CustomClasses;
+using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 
 public class Container : InventoryBase, IBreakable
@@ -21,30 +22,23 @@ public class Container : InventoryBase, IBreakable
         var tilemap = GetComponentInParent<Tilemap>();
 
         GenLoot(tilemap.GetTile<ContainerTile>(
-            tilemap.WorldToCell(transform.position)).LootPool);
+            tilemap.WorldToCell(transform.position)).LootTable);
 
         SaveInventory();
     }
 
-    protected void GenLoot(WeightedItem[] lootTable)
+    protected void GenLoot(WeightedLootPool[] lootTable)
     {
-        int totalWeight = 0;
-        foreach (var item in lootTable) 
-            totalWeight += item.weight;
+        HashSet<int> slots = new(inventory.Length);
+        for (int i = 0; i < inventory.Length; i++)
+            slots.Add(i);
+
+        int totalPoolWeight = 0;
+        foreach (var pool in lootTable)
+            totalPoolWeight += pool.weight;
 
         for (int i = 0; i < inventory.Length; i++)
-        {
-            int randomWeight = GameRandom.Range(0, totalWeight);
-            foreach (var item in lootTable)
-            {
-                randomWeight -= item.weight;
-                if (randomWeight < 0)
-                {
-                    inventory[i] = item.loot.Roll();
-                    break;
-                }
-            }
-        }
+            inventory[i] = WeightedUtils.RollItem(lootTable, totalPoolWeight);
     }
 
     public void OnBreak()
@@ -53,7 +47,7 @@ public class Container : InventoryBase, IBreakable
 
         if (!IsInventorySaved())
             GenLoot(tilemap.GetTile<ContainerTile>(
-            tilemap.WorldToCell(transform.position)).LootPool);
+            tilemap.WorldToCell(transform.position)).LootTable);
 
         foreach (var item in inventory)
         {

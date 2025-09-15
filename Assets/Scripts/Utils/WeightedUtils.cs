@@ -35,4 +35,40 @@ public class WeightedUtils
         }
         return null;
     }
+
+    public static InvItem RollItem(WeightedLootPool[] lootTable, int totalPoolWeight)
+    {
+        WeightedLootPool chosenPool = default;
+
+        int randomWeight = GameRandom.Range(0, totalPoolWeight);
+        foreach (var pool in lootTable)
+        {
+            randomWeight -= pool.weight;
+            if (randomWeight < 0)
+            {
+                chosenPool = pool;
+                break;
+            }
+        }
+
+        if(chosenPool.loot.Length == 0)
+        {
+            Debug.LogWarning("Empty Loot Pool");
+            return ItemManager.Instance.InvItemAir;
+        }
+
+        int totalItemWeight = 0;
+        foreach (var item in chosenPool.loot)
+            totalItemWeight += item.weight;
+
+        randomWeight = GameRandom.Range(0, totalPoolWeight);
+        foreach (var weightedItem in chosenPool.loot)
+        {
+            randomWeight -= weightedItem.weight;
+            if (randomWeight < 0)
+                return weightedItem.item.Roll();
+        }
+
+        return ItemManager.Instance.InvItemAir;
+    }
 }

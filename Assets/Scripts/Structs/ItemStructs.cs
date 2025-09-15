@@ -50,6 +50,7 @@ namespace CustomClasses
         }
 
     }
+
     [Serializable]
     public class InvItem
     {
