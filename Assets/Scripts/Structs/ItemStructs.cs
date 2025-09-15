@@ -27,13 +27,16 @@ namespace CustomClasses
     }
 
     [Serializable]
-    public struct DropItem
+    public struct LootItem
     {
         public Item item;
         public Vector2Int minMax;
         public AnimationCurve quantityDistribution;
         public InvItem Roll()
         {
+            if (item == ItemManager.Instance.Air)
+                return ItemManager.Instance.InvItemAir;
+
             if (minMax.y > item.MaxCount) 
                 minMax.y = item.MaxCount;
 

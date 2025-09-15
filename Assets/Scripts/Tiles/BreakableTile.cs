@@ -8,13 +8,13 @@ using UnityEngine.Tilemaps;
 public class BreakableTile : RuleTile
 {
     [SerializeField][Min(0.0001f)] protected float hardness = 1f;
-    [SerializeField] protected DropItem[] drops;
+    [SerializeField] protected LootItem[] drops;
     [SerializeField][Tooltip("Used for Break Effect")] protected Color[] colors = { Color.white, Color.white };
     [SerializeField] protected AudioClip[] breakingAudio;
     [SerializeField] protected ToolType tool;
     [SerializeField] protected ItemMaterial minMaterial;
     public float Hardness => hardness;
-    public DropItem[] Drops => drops;
+    public LootItem[] Drops => drops;
     public Color[] Colors => colors;
     public AudioClip[] BreakingAudio => breakingAudio;
     public ToolType Tool => tool;

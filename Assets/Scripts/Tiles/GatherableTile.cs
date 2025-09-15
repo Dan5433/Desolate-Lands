@@ -9,10 +9,10 @@ public class GatherableTile : Tile
 {
     [SerializeField] GatherableTileSprite[] sprites;
     [SerializeField] float regenerateTime;
-    [SerializeField] DropItem[] drops;
+    [SerializeField] LootItem[] drops;
 
     public GatherableTileSprite[] Sprites => sprites;
-    public DropItem[] Drops => drops;
+    public LootItem[] Drops => drops;
 
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
     {

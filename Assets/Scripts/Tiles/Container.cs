@@ -40,7 +40,7 @@ public class Container : InventoryBase, IBreakable
                 randomWeight -= item.weight;
                 if (randomWeight < 0)
                 {
-                    inventory[i] = item.Roll();
+                    inventory[i] = item.loot.Roll();
                     break;
                 }
             }
