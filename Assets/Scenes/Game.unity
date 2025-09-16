@@ -5068,7 +5068,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ef482adf1caa79488039b0a162a41fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldName: structures
+  worldName: test [Editor]
   worldCanvas: {fileID: 786146380}
   player: {fileID: 2136044628}
   cursors:

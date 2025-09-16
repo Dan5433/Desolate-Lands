@@ -48,7 +48,13 @@ namespace CustomClasses
 
             return InventoryItemFactory.Create(item, count);
         }
+    }
 
+    [Serializable]
+    public struct GuranteedLootPool
+    {
+        public int rolls;
+        public WeightedItem[] loot;
     }
 
     [Serializable]
