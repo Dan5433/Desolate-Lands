@@ -101,7 +101,7 @@ MonoBehaviour:
   guranteedLootTable:
   - rolls: 1
     loot:
-    - weight: 2
+    - weight: 4
       item:
         item: {fileID: 11400000, guid: 79c7ffa20e57f7c4f86071d44b8bae0f, type: 2}
         minMax: {x: 1, y: 3}
@@ -168,7 +168,7 @@ MonoBehaviour:
           m_RotationOrder: 4
   - rolls: 1
     loot:
-    - weight: 5
+    - weight: 2
       item:
         item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
         minMax: {x: 1, y: 4}
@@ -223,7 +223,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-    - weight: 3
+    - weight: 1
       item:
         item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
         minMax: {x: 1, y: 2}
@@ -261,7 +261,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
   lootTable:
-  - weight: 2
+  - weight: 4
     loot:
     - weight: 1
       item:
@@ -291,9 +291,9 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 0
-  - weight: 1
+  - weight: 2
     loot:
-    - weight: 20
+    - weight: 2
       item:
         item: {fileID: 11400000, guid: b10fd14634bc8d74ab836265fd739652, type: 2}
         minMax: {x: 2, y: 4}
@@ -348,7 +348,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-    - weight: 12
+    - weight: 1
       item:
         item: {fileID: 11400000, guid: ca9f81ffc69dbeb4090bee0eb42d63dd, type: 2}
         minMax: {x: 2, y: 4}
@@ -385,7 +385,9 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-    - weight: 2
+  - weight: 1
+    loot:
+    - weight: 6
       item:
         item: {fileID: 11400000, guid: 79c7ffa20e57f7c4f86071d44b8bae0f, type: 2}
         minMax: {x: 1, y: 3}
