@@ -1,7 +1,6 @@
 using CustomClasses;
 using System;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 [Serializable]
 [CreateAssetMenu(menuName = "2D/Tiles/Breakable Tile")]

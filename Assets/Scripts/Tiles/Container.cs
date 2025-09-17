@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class Container : InventoryBase, IBreakable
 {
+    [SerializeField] int guranteedEmptySlots;
     [SerializeField] GuranteedLootPool[] guranteedLootTable;
     [SerializeField] WeightedLootPool[] lootTable;
 
@@ -22,6 +23,7 @@ public class Container : InventoryBase, IBreakable
             tilemap.WorldToCell(transform.position)
         );
 
+        guranteedEmptySlots = container.GuranteedEmptySlots;
         lootTable = container.LootTable;
         guranteedLootTable = container.GuranteedLootTable;
     }
@@ -73,11 +75,14 @@ public class Container : InventoryBase, IBreakable
         foreach (var pool in lootTable)
             totalPoolWeight += pool.weight;
 
-        while (availableSlots.Count > 0)
+        while (availableSlots.Count > guranteedEmptySlots)
         {
             InvItem item = WeightedUtils.RollItem(lootTable, totalPoolWeight);
             AddItemToRandomSlot(availableSlots, item);
         }
+
+        foreach (int slot in availableSlots)
+            inventory[slot] = ItemManager.Instance.InvItemAir;
     }
 
     void AddItemToRandomSlot(HashSet<int> availableSlots, InvItem itemToAdd)
