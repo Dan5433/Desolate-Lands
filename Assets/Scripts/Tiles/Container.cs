@@ -6,8 +6,8 @@ using UnityEngine.Tilemaps;
 
 public class Container : InventoryBase, IBreakable
 {
-    [SerializeField] int guranteedEmptySlots;
-    [SerializeField] GuranteedLootPool[] guranteedLootTable;
+    [SerializeField] int guaranteedEmptySlots;
+    [SerializeField] GuaranteedLootPool[] guaranteedLootTable;
     [SerializeField] WeightedLootPool[] lootTable;
 
     private void Awake()
@@ -23,9 +23,9 @@ public class Container : InventoryBase, IBreakable
             tilemap.WorldToCell(transform.position)
         );
 
-        guranteedEmptySlots = container.GuranteedEmptySlots;
+        guaranteedEmptySlots = container.GuaranteedEmptySlots;
         lootTable = container.LootTable;
-        guranteedLootTable = container.GuranteedLootTable;
+        guaranteedLootTable = container.GuaranteedLootTable;
     }
 
     protected override string GetSaveKey()
@@ -38,7 +38,7 @@ public class Container : InventoryBase, IBreakable
         if (IsInventorySaved())
             return;
 
-        if (lootTable.Length > 0 || guranteedLootTable.Length > 0)
+        if (lootTable.Length > 0 || guaranteedLootTable.Length > 0)
             GenerateLoot();
 
         SaveInventory();
@@ -50,13 +50,13 @@ public class Container : InventoryBase, IBreakable
         for (int i = 0; i < inventory.Length; i++)
             availableSlots.Add(i);
 
-        foreach (var pool in guranteedLootTable)
+        foreach (var pool in guaranteedLootTable)
         {
             for (int i = 0; i < pool.rolls; i++)
             {
                 if (availableSlots.Count == 0)
                 {
-                    Debug.LogWarning("More guranteed loot than available inventory space!");
+                    Debug.LogWarning("More guaranteed loot than available inventory space!");
                     break;
                 }
 
@@ -75,7 +75,7 @@ public class Container : InventoryBase, IBreakable
         foreach (var pool in lootTable)
             totalPoolWeight += pool.weight;
 
-        while (availableSlots.Count > guranteedEmptySlots)
+        while (availableSlots.Count > guaranteedEmptySlots)
         {
             InvItem item = WeightedUtils.RollItem(lootTable, totalPoolWeight);
             AddItemToRandomSlot(availableSlots, item);

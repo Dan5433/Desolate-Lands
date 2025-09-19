@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace CustomClasses
 {
@@ -37,7 +36,7 @@ namespace CustomClasses
             if (item == ItemManager.Instance.Air)
                 return ItemManager.Instance.InvItemAir;
 
-            if (minMax.y > item.MaxCount) 
+            if (minMax.y > item.MaxCount)
                 minMax.y = item.MaxCount;
 
             float weightedValue = quantityDistribution.Evaluate(GameRandom.Value);
@@ -51,7 +50,7 @@ namespace CustomClasses
     }
 
     [Serializable]
-    public struct GuranteedLootPool
+    public struct GuaranteedLootPool
     {
         public int rolls;
         public WeightedItem[] loot;
@@ -98,7 +97,7 @@ namespace CustomClasses
 
         public virtual InvItem Clone()
         {
-            return new InvItem(item,name,count);
+            return new InvItem(item, name, count);
         }
     }
 
@@ -118,7 +117,7 @@ namespace CustomClasses
             durability = reader.ReadInt32();
         }
 
-        public InvTool(Tool tool, string name, int count) : base(tool, name, count) 
+        public InvTool(Tool tool, string name, int count) : base(tool, name, count)
         {
             durability = tool.Durability;
         }
@@ -128,7 +127,7 @@ namespace CustomClasses
         }
         public override InvItem Clone()
         {
-            return new InvTool(item as Tool, name, count,durability);
+            return new InvTool(item as Tool, name, count, durability);
         }
     }
 

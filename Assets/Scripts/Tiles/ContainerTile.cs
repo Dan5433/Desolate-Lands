@@ -6,11 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "2D/Tiles/Container Tile")]
 public class ContainerTile : BreakableTile
 {
-    [SerializeField] int guranteedEmptySlots;
-    [SerializeField] GuranteedLootPool[] guranteedLootTable;
+    [SerializeField] int guaranteedEmptySlots;
+    [SerializeField] GuaranteedLootPool[] guaranteedLootTable;
     [SerializeField] WeightedLootPool[] lootTable;
 
-    public int GuranteedEmptySlots => guranteedEmptySlots;
-    public GuranteedLootPool[] GuranteedLootTable => guranteedLootTable;
+    public int GuaranteedEmptySlots => guaranteedEmptySlots;
+    public GuaranteedLootPool[] GuaranteedLootTable => guaranteedLootTable;
     public WeightedLootPool[] LootTable => lootTable;
 }

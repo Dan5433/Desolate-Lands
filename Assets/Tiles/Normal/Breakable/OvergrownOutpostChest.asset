@@ -98,7 +98,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 964c34ef9a21aca4e8b4f421f515fb56, type: 3}
   tool: 1
   minMaterial: 3
-  guranteedLootTable:
+  guaranteedLootTable:
   - rolls: 1
     loot:
     - weight: 4
