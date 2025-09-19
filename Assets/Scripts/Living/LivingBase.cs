@@ -8,7 +8,7 @@ public class LivingBase : MonoBehaviour, IDamageable
     [SerializeField] protected float health;
     [SerializeField] protected float maxHealth = 100f;
     [SerializeField] protected float spawnProtectionTime = 1f;
-    bool invulnerable = false;
+    [SerializeField] bool invulnerable = false;
     static string dataDirPath;
 
     private void Awake()
@@ -39,7 +39,7 @@ public class LivingBase : MonoBehaviour, IDamageable
 
         health -= damageAmount;
 
-        if(health <= 0) 
+        if (health <= 0)
             OnDeath();
 
         return true;
@@ -48,7 +48,7 @@ public class LivingBase : MonoBehaviour, IDamageable
     [Button("Heal", 30)]
     public virtual bool Heal(float healAmount)
     {
-        if (health == maxHealth) 
+        if (health == maxHealth)
             return false;
 
         health = Mathf.Clamp(health + healAmount, 0, maxHealth);
