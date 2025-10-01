@@ -98,10 +98,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 964c34ef9a21aca4e8b4f421f515fb56, type: 3}
   tool: 1
   minMaterial: 3
+  guaranteedEmptySlots: 2
   guaranteedLootTable:
-  - rolls: 1
+  - rolls: 2
     loot:
-    - weight: 4
+    - weight: 1
       item:
         item: {fileID: 11400000, guid: 79c7ffa20e57f7c4f86071d44b8bae0f, type: 2}
         minMax: {x: 1, y: 3}
@@ -134,34 +135,6 @@ MonoBehaviour:
             tangentMode: 34
             weightedMode: 0
             inWeight: 0.33333334
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-    - weight: 1
-      item:
-        item: {fileID: 11400000, guid: dcf350a4453a35e489105e52a694480a, type: 2}
-        minMax: {x: 1, y: 1}
-        quantityDistribution:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
@@ -261,7 +234,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
   lootTable:
-  - weight: 4
+  - weight: 6
     loot:
     - weight: 1
       item:
@@ -291,7 +264,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 0
-  - weight: 2
+  - weight: 3
     loot:
     - weight: 2
       item:

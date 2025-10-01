@@ -4541,6 +4541,7 @@ MonoBehaviour:
   health: 0
   maxHealth: 75
   spawnProtectionTime: 1
+  invulnerable: 0
   state: 0
   baseDamage: 3
   speed: 4.6
@@ -18540,6 +18541,7 @@ MonoBehaviour:
   health: 20
   maxHealth: 100
   spawnProtectionTime: 1
+  invulnerable: 0
   healthBar: {fileID: 748177996}
   healthText: {fileID: 2027034078}
   barImage: {fileID: 243693081}

@@ -98,6 +98,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 964c34ef9a21aca4e8b4f421f515fb56, type: 3}
   tool: 1
   minMaterial: 3
+  guaranteedEmptySlots: 4
   guaranteedLootTable:
   - rolls: 1
     loot:
@@ -194,7 +195,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
   lootTable:
-  - weight: 7
+  - weight: 5
     loot:
     - weight: 1
       item:
