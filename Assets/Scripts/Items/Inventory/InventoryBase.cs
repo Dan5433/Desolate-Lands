@@ -124,6 +124,7 @@ public class InventoryBase : MonoBehaviour
         inventory[index] = item;
     }
 
+    [Button(buttonHeight: 36)]
     public virtual void UpdateUI()
     {
         ui.GetComponent<InventoryRef>().Inventory = this;
