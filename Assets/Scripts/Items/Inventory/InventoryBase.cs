@@ -96,6 +96,7 @@ public class InventoryBase : MonoBehaviour
         });
     }
 
+    [Button(buttonHeight: 36)]
     protected async void DeleteInventory()
     {
         var fullPath = Path.Combine(dataDirPath, GetSaveKey());
