@@ -1,4 +1,5 @@
 using CustomClasses;
+using EditorAttributes;
 using UnityEngine.Tilemaps;
 
 public class Container : InventoryBase, IBreakable
@@ -13,9 +14,10 @@ public class Container : InventoryBase, IBreakable
         return base.GetSaveKey() + transform.position;
     }
 
+    [Button(buttonHeight: 36)]
     public void GenInventory()
     {
-        if (IsInventorySaved()) 
+        if (IsInventorySaved())
             return;
 
         var tilemap = GetComponentInParent<Tilemap>();
@@ -29,7 +31,7 @@ public class Container : InventoryBase, IBreakable
     protected void GenLoot(WeightedItem[] lootTable)
     {
         int totalWeight = 0;
-        foreach (var item in lootTable) 
+        foreach (var item in lootTable)
             totalWeight += item.weight;
 
         for (int i = 0; i < inventory.Length; i++)
@@ -60,7 +62,7 @@ public class Container : InventoryBase, IBreakable
             var dropItem = InventoryItemFactory.Create(
                 item.ItemObj, item.Name, item.Count);
 
-            ItemManager.SpawnGroundItem(dropItem, transform.position, new(0.5f,0.5f));
+            ItemManager.SpawnGroundItem(dropItem, transform.position, new(0.5f, 0.5f));
         }
 
         DeleteInventory();
