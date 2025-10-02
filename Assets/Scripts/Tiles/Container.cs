@@ -1,12 +1,32 @@
 using CustomClasses;
 using EditorAttributes;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Container : InventoryBase, IBreakable
 {
+    [SerializeField] int guaranteedEmptySlots;
+    [SerializeField] GuaranteedLootPool[] guaranteedLootTable;
+    [SerializeField] WeightedLootPool[] lootTable;
+
     private void Awake()
     {
         ui = ItemManager.Instance.ContainerUI.transform;
+    }
+
+    private void Start()
+    {
+        var tilemap = GetComponentInParent<Tilemap>();
+
+        var container = tilemap.GetTile<ContainerTile>(
+            tilemap.WorldToCell(transform.position)
+        );
+
+        guaranteedEmptySlots = container.GuaranteedEmptySlots;
+        lootTable = container.LootTable;
+        guaranteedLootTable = container.GuaranteedLootTable;
     }
 
     protected override string GetSaveKey()
@@ -15,47 +35,71 @@ public class Container : InventoryBase, IBreakable
     }
 
     [Button(buttonHeight: 36)]
-    public void GenInventory()
+    public void GenerateInventory()
     {
         if (IsInventorySaved())
             return;
 
-        var tilemap = GetComponentInParent<Tilemap>();
-
-        GenLoot(tilemap.GetTile<ContainerTile>(
-            tilemap.WorldToCell(transform.position)).LootPool);
+        if (lootTable.Length > 0 || guaranteedLootTable.Length > 0)
+            GenerateLoot();
 
         SaveInventory();
     }
 
-    protected void GenLoot(WeightedItem[] lootTable)
+    protected void GenerateLoot()
     {
-        int totalWeight = 0;
-        foreach (var item in lootTable)
-            totalWeight += item.weight;
-
+        HashSet<int> availableSlots = new(inventory.Length);
         for (int i = 0; i < inventory.Length; i++)
+            availableSlots.Add(i);
+
+        foreach (var pool in guaranteedLootTable)
         {
-            int randomWeight = GameRandom.Range(0, totalWeight);
-            foreach (var item in lootTable)
+            for (int i = 0; i < pool.rolls; i++)
             {
-                randomWeight -= item.weight;
-                if (randomWeight < 0)
+                if (availableSlots.Count == 0)
                 {
-                    inventory[i] = item.Roll();
+                    Debug.LogWarning("More guaranteed loot than available inventory space!");
                     break;
                 }
+
+                InvItem item = WeightedUtils.RollItem(pool.loot);
+                AddItemToRandomSlot(availableSlots, item);
             }
         }
+
+        if (availableSlots.Count == 0)
+        {
+            Debug.LogWarning("No available inventory space for remaining loot table!");
+            return;
+        }
+
+        int totalPoolWeight = 0;
+        foreach (var pool in lootTable)
+            totalPoolWeight += pool.weight;
+
+        while (availableSlots.Count > guaranteedEmptySlots)
+        {
+            InvItem item = WeightedUtils.RollItem(lootTable, totalPoolWeight);
+            AddItemToRandomSlot(availableSlots, item);
+        }
+
+        foreach (int slot in availableSlots)
+            inventory[slot] = ItemManager.Instance.InvItemAir;
+    }
+
+    void AddItemToRandomSlot(HashSet<int> availableSlots, InvItem itemToAdd)
+    {
+        int random = GameRandom.Range(0, availableSlots.Count);
+        int slot = availableSlots.ToArray()[random];
+
+        inventory[slot] = itemToAdd;
+        availableSlots.Remove(slot);
     }
 
     public void OnBreak()
     {
-        var tilemap = GetComponentInParent<Tilemap>();
-
         if (!IsInventorySaved())
-            GenLoot(tilemap.GetTile<ContainerTile>(
-            tilemap.WorldToCell(transform.position)).LootPool);
+            GenerateLoot();
 
         foreach (var item in inventory)
         {

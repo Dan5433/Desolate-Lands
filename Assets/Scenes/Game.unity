@@ -4541,6 +4541,7 @@ MonoBehaviour:
   health: 0
   maxHealth: 75
   spawnProtectionTime: 1
+  invulnerable: 0
   state: 0
   baseDamage: 3
   speed: 4.6
@@ -5068,7 +5069,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ef482adf1caa79488039b0a162a41fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldName: structures
+  worldName: test [Editor]
   worldCanvas: {fileID: 786146380}
   player: {fileID: 2136044628}
   cursors:
@@ -18540,6 +18541,7 @@ MonoBehaviour:
   health: 20
   maxHealth: 100
   spawnProtectionTime: 1
+  invulnerable: 0
   healthBar: {fileID: 748177996}
   healthText: {fileID: 2027034078}
   barImage: {fileID: 243693081}

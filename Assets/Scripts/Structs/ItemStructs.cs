@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace CustomClasses
 {
@@ -27,14 +26,17 @@ namespace CustomClasses
     }
 
     [Serializable]
-    public struct DropItem
+    public struct LootItem
     {
         public Item item;
         public Vector2Int minMax;
         public AnimationCurve quantityDistribution;
         public InvItem Roll()
         {
-            if (minMax.y > item.MaxCount) 
+            if (item == ItemManager.Instance.Air)
+                return ItemManager.Instance.InvItemAir;
+
+            if (minMax.y > item.MaxCount)
                 minMax.y = item.MaxCount;
 
             float weightedValue = quantityDistribution.Evaluate(GameRandom.Value);
@@ -45,8 +47,15 @@ namespace CustomClasses
 
             return InventoryItemFactory.Create(item, count);
         }
-
     }
+
+    [Serializable]
+    public struct GuaranteedLootPool
+    {
+        public int rolls;
+        public WeightedItem[] loot;
+    }
+
     [Serializable]
     public class InvItem
     {
@@ -88,7 +97,7 @@ namespace CustomClasses
 
         public virtual InvItem Clone()
         {
-            return new InvItem(item,name,count);
+            return new InvItem(item, name, count);
         }
     }
 
@@ -108,7 +117,7 @@ namespace CustomClasses
             durability = reader.ReadInt32();
         }
 
-        public InvTool(Tool tool, string name, int count) : base(tool, name, count) 
+        public InvTool(Tool tool, string name, int count) : base(tool, name, count)
         {
             durability = tool.Durability;
         }
@@ -118,7 +127,7 @@ namespace CustomClasses
         }
         public override InvItem Clone()
         {
-            return new InvTool(item as Tool, name, count,durability);
+            return new InvTool(item as Tool, name, count, durability);
         }
     }
 

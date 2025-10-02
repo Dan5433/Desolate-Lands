@@ -7,7 +7,7 @@ public class WeightedUtils
     public static TileBase RollTile(WeightedTileById[] tiles, TileBase[] masterList)
     {
         int totalWeight = 0;
-        foreach (var tile in tiles) 
+        foreach (var tile in tiles)
             totalWeight += tile.weight;
 
         int randomWeight = GameRandom.Range(0, totalWeight);
@@ -23,7 +23,7 @@ public class WeightedUtils
     public static Tilemap RollStructure(WeightedStructure[] structures)
     {
         int totalWeight = 0;
-        foreach (var structure in structures) 
+        foreach (var structure in structures)
             totalWeight += structure.weight;
 
         int randomWeight = GameRandom.Range(0, totalWeight);
@@ -34,5 +34,46 @@ public class WeightedUtils
                 return structure.structure;
         }
         return null;
+    }
+
+    public static InvItem RollItem(WeightedLootPool[] lootTable, int totalPoolWeight)
+    {
+        WeightedLootPool chosenPool = default;
+
+        int randomWeight = GameRandom.Range(0, totalPoolWeight);
+        foreach (var pool in lootTable)
+        {
+            randomWeight -= pool.weight;
+            if (randomWeight < 0)
+            {
+                chosenPool = pool;
+                break;
+            }
+        }
+
+        if (chosenPool.loot.Length == 0)
+        {
+            Debug.LogWarning("Empty loot pool");
+            return ItemManager.Instance.InvItemAir;
+        }
+
+        return RollItem(chosenPool.loot);
+    }
+
+    public static InvItem RollItem(WeightedItem[] loot)
+    {
+        int totalItemWeight = 0;
+        foreach (var item in loot)
+            totalItemWeight += item.weight;
+
+        int randomWeight = GameRandom.Range(0, totalItemWeight);
+        foreach (var weightedItem in loot)
+        {
+            randomWeight -= weightedItem.weight;
+            if (randomWeight < 0)
+                return weightedItem.item.Roll();
+        }
+
+        return ItemManager.Instance.InvItemAir;
     }
 }
