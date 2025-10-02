@@ -28,19 +28,19 @@ public class InventoryBase : MonoBehaviour
 
         LoadInventory();
 
-        if (updateUIOnStart) 
+        if (updateUIOnStart)
             UpdateUI();
 
         InitInventory();
     }
 
     [Button("Add To Inventory", 30)]
-    public void AdminAdd(int itemIndex, int count)
+    public void AddItemTesting(int itemIndex, int count)
     {
         var item = ItemManager.Instance.Items[itemIndex];
-        AddToInventory(InventoryItemFactory.Create(item,count));
+        AddToInventory(InventoryItemFactory.Create(item, count));
     }
-    
+
     public virtual int AddToInventory(InvItem item)
     {
         if (item.ItemObj == ItemManager.Instance.Air)
@@ -68,7 +68,7 @@ public class InventoryBase : MonoBehaviour
         }
 
         ItemManager.SpawnGroundItem(
-            InventoryItemFactory.Create(item.ItemObj,excess), 
+            InventoryItemFactory.Create(item.ItemObj, excess),
             gameObject.transform.position);
 
         return excess;
@@ -91,11 +91,12 @@ public class InventoryBase : MonoBehaviour
 
         dataHandler.LoadData(reader =>
         {
-            for(int i = 0; i < inventory.Length; i++)
+            for (int i = 0; i < inventory.Length; i++)
                 inventory[i] = InventoryItemFactory.Create(reader);
         });
     }
 
+    [Button(buttonHeight: 36)]
     protected async void DeleteInventory()
     {
         var fullPath = Path.Combine(dataDirPath, GetSaveKey());
@@ -111,7 +112,7 @@ public class InventoryBase : MonoBehaviour
 
         dataHandler.SaveData(writer =>
         {
-            foreach (var item in inventory) 
+            foreach (var item in inventory)
                 item.Save(writer);
         });
     }
@@ -123,6 +124,7 @@ public class InventoryBase : MonoBehaviour
         inventory[index] = item;
     }
 
+    [Button(buttonHeight: 36)]
     public virtual void UpdateUI()
     {
         ui.GetComponent<InventoryRef>().Inventory = this;
@@ -138,7 +140,7 @@ public class InventoryBase : MonoBehaviour
             var child = ui.GetChild(i);
 
             var slot = ItemManager.GetInvSlot(child);
-            if (!slot) 
+            if (!slot)
                 continue;
 
             ItemManager.UpdateItemUI(slot, inventory[slotIndex]);

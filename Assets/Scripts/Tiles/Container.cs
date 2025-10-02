@@ -1,4 +1,5 @@
 using CustomClasses;
+using EditorAttributes;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -33,6 +34,7 @@ public class Container : InventoryBase, IBreakable
         return base.GetSaveKey() + transform.position;
     }
 
+    [Button(buttonHeight: 36)]
     public void GenerateInventory()
     {
         if (IsInventorySaved())
