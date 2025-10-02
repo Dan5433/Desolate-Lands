@@ -149,7 +149,7 @@ public class Interact : MonoBehaviour
             return;
 
         container.UI.GetComponent<InventoryRef>().Inventory = container;
-        container.GenInventory();
+        container.GenerateInventory();
         container.UpdateUI();
         container.UI.gameObject.SetActive(true);
 
