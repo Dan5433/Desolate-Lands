@@ -25,11 +25,12 @@ public class CreateWorld : MonoBehaviour
     void CreateStatsFile(string worldName)
     {
         var date = DateTime.Now;
-        WorldStats stats = new(){ 
-            creationDate = new(date.Year, date.Month, date.Day) 
+        WorldStats stats = new()
+        {
+            creationDate = new(date.Year, date.Month, date.Day)
         };
 
-        var worldPath = Path.Combine(MainMenuManager.SavesDirPath,worldName);
+        var worldPath = Path.Combine(MainMenuManager.SavesDirPath, worldName);
 
         BinaryDataHandler handler = new(worldPath, MainMenuManager.StatsFileName);
         handler.SaveData(writer => stats.Write(writer));
@@ -37,8 +38,9 @@ public class CreateWorld : MonoBehaviour
 
     string ParseName()
     {
-        string name = !string.IsNullOrWhiteSpace(worldNameInput.text) 
-            ? worldNameInput.text : "New World";
+        string name = !string.IsNullOrWhiteSpace(worldNameInput.text)
+            ? worldNameInput.text
+            : "New World";
 
         string modifiedName = name;
         int existingCounter = 0;
@@ -46,7 +48,7 @@ public class CreateWorld : MonoBehaviour
         var existingWorlds = Directory.GetDirectories(MainMenuManager.SavesDirPath)
                               .Select(Path.GetFileName)
                               .ToHashSet();
-        
+
         while (existingWorlds.Contains(modifiedName))
         {
             existingCounter++;
@@ -62,7 +64,7 @@ public class CreateWorld : MonoBehaviour
     {
         RandomStateWrapper randomStateWrapper;
 
-        if (worldSeedInput.text != string.Empty)
+        if (!string.IsNullOrWhiteSpace(worldSeedInput.text))
         {
             Debug.Log("Seed succesfully parsed for world: " + worldName);
 
@@ -74,7 +76,7 @@ public class CreateWorld : MonoBehaviour
             Debug.Log("Initializing new seed for world: " + worldName);
 
             randomStateWrapper = new(
-                Random.Range(int.MinValue,int.MaxValue), Random.Range(int.MinValue, int.MaxValue),
+                Random.Range(int.MinValue, int.MaxValue), Random.Range(int.MinValue, int.MaxValue),
                 Random.Range(int.MinValue, int.MaxValue), Random.Range(int.MinValue, int.MaxValue));
         }
 
