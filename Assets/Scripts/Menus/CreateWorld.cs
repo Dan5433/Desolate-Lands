@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -62,23 +63,36 @@ public class CreateWorld : MonoBehaviour
 
     void ParseSeed(string worldName)
     {
-        RandomStateWrapper randomStateWrapper;
+        string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{};':\",.<>?/\\|`~";
+
+        Hash128 hash;
 
         if (!string.IsNullOrWhiteSpace(worldSeedInput.text))
         {
             Debug.Log("Seed succesfully parsed for world: " + worldName);
 
-            var hash = Hash128.Compute(worldSeedInput.text);
-            randomStateWrapper = new(hash);
+            Debug.Log("Seed: " + worldSeedInput.text);
+            hash = Hash128.Compute(worldSeedInput.text);
         }
         else
         {
-            Debug.Log("Initializing new seed for world: " + worldName);
+            Debug.Log("Initializing random seed for world: " + worldName);
 
-            randomStateWrapper = new(
-                Random.Range(int.MinValue, int.MaxValue), Random.Range(int.MinValue, int.MaxValue),
-                Random.Range(int.MinValue, int.MaxValue), Random.Range(int.MinValue, int.MaxValue));
+            int length = Random.Range(1, worldSeedInput.characterLimit + 1 /* account for exclusive max */ );
+
+            StringBuilder seed = new(length);
+
+            for (int i = 0; i < length; i++)
+            {
+                int charIndex = Random.Range(0, chars.Length);
+                seed.Append(chars[charIndex]);
+            }
+
+            Debug.Log("Seed: " + seed.ToString());
+            hash = Hash128.Compute(seed.ToString());
         }
+
+        RandomStateWrapper randomStateWrapper = new(hash);
 
         GameRandom.Init(randomStateWrapper);
     }
