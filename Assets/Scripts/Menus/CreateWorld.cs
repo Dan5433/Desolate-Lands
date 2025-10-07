@@ -15,20 +15,22 @@ public class CreateWorld : MonoBehaviour
     public void Create()
     {
         string name = ParseName();
-        ParseSeed(name);
+        string seed = ParseSeed(name);
 
-        CreateStatsFile(name);
+        CreateStatsFile(name, seed);
 
         GameManager.PendingWorldName = name;
+        GameManager.PendingSeed = "Seed: " + seed;
         SceneManager.LoadScene("Game");
     }
 
-    void CreateStatsFile(string worldName)
+    void CreateStatsFile(string worldName, string seed)
     {
         var date = DateTime.Now;
         WorldStats stats = new()
         {
-            creationDate = new(date.Year, date.Month, date.Day)
+            creationDate = new(date.Year, date.Month, date.Day),
+            seed = seed,
         };
 
         var worldPath = Path.Combine(MainMenuManager.SavesDirPath, worldName);
@@ -61,18 +63,17 @@ public class CreateWorld : MonoBehaviour
         return modifiedName;
     }
 
-    void ParseSeed(string worldName)
+    string ParseSeed(string worldName)
     {
         string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{};':\",.<>?/\\|`~";
 
-        Hash128 hash;
+        string seed;
 
         if (!string.IsNullOrWhiteSpace(worldSeedInput.text))
         {
             Debug.Log("Seed succesfully parsed for world: " + worldName);
 
-            Debug.Log("Seed: " + worldSeedInput.text);
-            hash = Hash128.Compute(worldSeedInput.text);
+            seed = worldSeedInput.text;
         }
         else
         {
@@ -80,20 +81,22 @@ public class CreateWorld : MonoBehaviour
 
             int length = Random.Range(1, worldSeedInput.characterLimit + 1 /* account for exclusive max */ );
 
-            StringBuilder seed = new(length);
-
+            StringBuilder seedBuilder = new(length);
             for (int i = 0; i < length; i++)
             {
                 int charIndex = Random.Range(0, chars.Length);
-                seed.Append(chars[charIndex]);
+                seedBuilder.Append(chars[charIndex]);
             }
 
-            Debug.Log("Seed: " + seed.ToString());
-            hash = Hash128.Compute(seed.ToString());
+            seed = seedBuilder.ToString();
         }
 
+        Hash128 hash = Hash128.Compute(worldSeedInput.text);
         RandomStateWrapper randomStateWrapper = new(hash);
 
         GameRandom.Init(randomStateWrapper);
+
+        Debug.Log("Seed: " + seed);
+        return seed;
     }
 }

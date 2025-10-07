@@ -15,10 +15,10 @@ public class LoadWorld : MonoBehaviour
 
     private void Awake()
     {
-        foreach(var dir in Directory.GetDirectories(MainMenuManager.SavesDirPath))
+        foreach (var dir in Directory.GetDirectories(MainMenuManager.SavesDirPath))
         {
             WorldStats stats = new();
-            BinaryDataHandler handler = new(dir,MainMenuManager.StatsFileName);
+            BinaryDataHandler handler = new(dir, MainMenuManager.StatsFileName);
             handler.LoadData(reader => stats = new(reader));
 
             Transform worldSelect = Instantiate(worldSelectPrefab, scrollContent);
@@ -27,13 +27,19 @@ public class LoadWorld : MonoBehaviour
 
             var statsContainer = worldSelect.Find("Stats");
             statsContainer.Find("Playtime").GetComponent<TMP_Text>().text =
-                "Playtime: "+ stats.playtime;
+                "Playtime: " + stats.playtime;
 
-            statsContainer.Find("Creation Date").GetComponent<TMP_Text>().text = 
-                "Creation Date: "+ stats.creationDate.ToShortDateString();
+            statsContainer.Find("Creation Date").GetComponent<TMP_Text>().text =
+                "Creation Date: " + stats.creationDate.ToShortDateString();
 
-            statsContainer.Find("Deaths").GetComponent<TMP_Text>().text = 
+            statsContainer.Find("Deaths").GetComponent<TMP_Text>().text =
                 "Deaths: " + stats.deaths;
+
+            if (stats.seed != null)
+            {
+                statsContainer.Find("Seed").GetComponent<TMP_Text>().text =
+                    "Seed: " + stats.seed;
+            }
         }
     }
 
@@ -49,7 +55,7 @@ public class LoadWorld : MonoBehaviour
         }
 
         if (EventSystem.current.currentSelectedGameObject.transform.parent == scrollContent)
-            selectedWorld = EventSystem.current.currentSelectedGameObject;     
+            selectedWorld = EventSystem.current.currentSelectedGameObject;
     }
 
     public void EnableWorldOptions()
@@ -73,10 +79,14 @@ public class LoadWorld : MonoBehaviour
     {
         string worldName = selectedWorld.GetComponentInChildren<TMP_Text>().text;
 
+        var statsContainer = selectedWorld.transform.Find("Stats");
+        string seed = statsContainer.Find("Seed").GetComponent<TMP_Text>().text;
+
         string randomStateJson = PlayerPrefs.GetString(worldName);
         GameRandom.Init(JsonUtility.FromJson<RandomStateWrapper>(randomStateJson));
 
         GameManager.PendingWorldName = worldName;
+        GameManager.PendingSeed = seed;
         SceneManager.LoadScene("Game");
     }
 
@@ -86,7 +96,7 @@ public class LoadWorld : MonoBehaviour
 
         string worldDirPath = Path.Combine(MainMenuManager.SavesDirPath, worldName);
         PlayerPrefs.DeleteKey(worldName);
-        Directory.Delete(worldDirPath,true);
+        Directory.Delete(worldDirPath, true);
 
         Destroy(selectedWorld);
         selectedWorld = null;
@@ -99,6 +109,7 @@ public struct WorldStats
     public Playtime playtime;
     public DateTime creationDate;
     public int deaths;
+    public string seed;
 
     public readonly void Write(BinaryWriter writer)
     {
@@ -109,6 +120,7 @@ public struct WorldStats
         writer.Write(creationDate.Month);
         writer.Write(creationDate.Day);
         writer.Write(deaths);
+        writer.Write(seed);
     }
 
     public WorldStats(BinaryReader reader)
@@ -116,6 +128,7 @@ public struct WorldStats
         playtime = new(reader);
         creationDate = new(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
         deaths = reader.ReadInt32();
+        seed = reader.ReadString();
     }
 }
 
