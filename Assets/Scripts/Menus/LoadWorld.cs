@@ -21,6 +21,13 @@ public class LoadWorld : MonoBehaviour
             BinaryDataHandler handler = new(dir, MainMenuManager.StatsFileName);
             handler.LoadData(reader => stats = new(reader));
 
+            //seed update for versions 1.1.0-alpha+
+            if (stats.seed == null)
+            {
+                stats.seed = string.Empty;
+                handler.SaveData(writer => stats.Write(writer));
+            }
+
             Transform worldSelect = Instantiate(worldSelectPrefab, scrollContent);
             worldSelect.GetComponent<Button>().onClick.AddListener(EnableWorldOptions);
             worldSelect.GetComponentInChildren<TMP_Text>().text = Path.GetFileName(dir);
