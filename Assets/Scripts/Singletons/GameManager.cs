@@ -54,8 +54,7 @@ public class GameManager : MonoBehaviour
             if (pendingWorldName != null)
                 worldName = pendingWorldName;
 
-            if (pendingSeed != null)
-                seedText.text = pendingSeed;
+            seedText.text = pendingSeed;
 
             Debug.Log("Loaded world: " + worldName);
 

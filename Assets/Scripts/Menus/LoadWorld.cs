@@ -35,11 +35,10 @@ public class LoadWorld : MonoBehaviour
             statsContainer.Find("Deaths").GetComponent<TMP_Text>().text =
                 "Deaths: " + stats.deaths;
 
-            if (stats.seed != null)
-            {
-                statsContainer.Find("Seed").GetComponent<TMP_Text>().text =
-                    "Seed: " + stats.seed;
-            }
+            statsContainer.Find("Seed").GetComponent<TMP_Text>().text =
+                !string.IsNullOrEmpty(stats.seed)
+                ? "Seed: " + stats.seed
+                : string.Empty;
         }
     }
 
