@@ -89,7 +89,7 @@ public class Container : InventoryBase, IBreakable
 
     void AddItemToRandomSlot(HashSet<int> availableSlots, InvItem itemToAdd)
     {
-        int random = GameRandom.Range(0, availableSlots.Count);
+        int random = SeededRandom.Range(0, availableSlots.Count);
         int slot = availableSlots.ToArray()[random];
 
         inventory[slot] = itemToAdd;

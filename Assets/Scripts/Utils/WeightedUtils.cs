@@ -10,7 +10,7 @@ public class WeightedUtils
         foreach (var tile in tiles)
             totalWeight += tile.weight;
 
-        int randomWeight = GameRandom.Range(0, totalWeight);
+        int randomWeight = SeededRandom.Range(0, totalWeight);
         foreach (var tile in tiles)
         {
             randomWeight -= tile.weight;
@@ -26,7 +26,7 @@ public class WeightedUtils
         foreach (var structure in structures)
             totalWeight += structure.weight;
 
-        int randomWeight = GameRandom.Range(0, totalWeight);
+        int randomWeight = SeededRandom.Range(0, totalWeight);
         foreach (var structure in structures)
         {
             randomWeight -= structure.weight;
@@ -40,7 +40,7 @@ public class WeightedUtils
     {
         WeightedLootPool chosenPool = default;
 
-        int randomWeight = GameRandom.Range(0, totalPoolWeight);
+        int randomWeight = SeededRandom.Range(0, totalPoolWeight);
         foreach (var pool in lootTable)
         {
             randomWeight -= pool.weight;
@@ -66,7 +66,7 @@ public class WeightedUtils
         foreach (var item in loot)
             totalItemWeight += item.weight;
 
-        int randomWeight = GameRandom.Range(0, totalItemWeight);
+        int randomWeight = SeededRandom.Range(0, totalItemWeight);
         foreach (var weightedItem in loot)
         {
             randomWeight -= weightedItem.weight;

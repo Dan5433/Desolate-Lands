@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
 
     void SaveRandomState()
     {
-        RandomStateWrapper wrapper = new(GameRandom.State);
+        RandomStateWrapper wrapper = new(SeededRandom.State);
         string json = JsonUtility.ToJson(wrapper);
         PlayerPrefs.SetString(worldName, json);
     }

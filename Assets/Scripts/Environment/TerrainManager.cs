@@ -260,8 +260,8 @@ public class TerrainManager : MonoBehaviour
                     continue;
 
                 Vector3Int spawnPosition = new(
-                    GameRandom.Range(startPos.x, endPos.x),
-                    GameRandom.Range(startPos.y, endPos.y));
+                    SeededRandom.Range(startPos.x, endPos.x),
+                    SeededRandom.Range(startPos.y, endPos.y));
 
                 var bounds = structure.cellBounds;
                 bounds.position = spawnPosition;
@@ -324,8 +324,8 @@ public class TerrainManager : MonoBehaviour
             for (int y = startPos.y; y < endPos.y; y += distance)
             {
                 Vector3Int position = new(
-                    Mathf.Clamp(GameRandom.Range(x, x + distance),startPos.x,endPos.x-1),
-                    Mathf.Clamp(GameRandom.Range(y, y + distance), startPos.y, endPos.y-1));
+                    Mathf.Clamp(SeededRandom.Range(x, x + distance),startPos.x,endPos.x-1),
+                    Mathf.Clamp(SeededRandom.Range(y, y + distance), startPos.y, endPos.y-1));
 
                 positions[index] = position;
                 tiles[index] = WeightedUtils.RollTile(tilePool, masterTiles);

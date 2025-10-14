@@ -39,7 +39,7 @@ namespace CustomClasses
             if (minMax.y > item.MaxCount)
                 minMax.y = item.MaxCount;
 
-            float weightedValue = quantityDistribution.Evaluate(GameRandom.Value);
+            float weightedValue = quantityDistribution.Evaluate(SeededRandom.Value);
             int count = (int)Mathf.Lerp(minMax.x, minMax.y, weightedValue);
 
             if (count < 1)
