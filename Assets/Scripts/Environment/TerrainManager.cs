@@ -1,7 +1,6 @@
 using CustomClasses;
 using CustomExtensions;
 using EditorAttributes;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,7 +41,7 @@ public class TerrainManager : MonoBehaviour
     static readonly string dataDirName = "regions";
 
     public TileBase[] MasterTiles => masterTiles;
-    public Dictionary<TileBase,int> TileLookup => tileLookup;
+    public Dictionary<TileBase, int> TileLookup => tileLookup;
     public static Vector2Int ChunkSize => chunkSize;
     public static Vector2Int RegionSize => regionSize;
     public static string DataDirName => dataDirName;
@@ -69,7 +68,7 @@ public class TerrainManager : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.IsGamePaused) 
+        if (GameManager.IsGamePaused)
             return;
 
         //IDEA: alpha 1.0.1 disable tilemaps while generating and enable at the end;
@@ -83,7 +82,7 @@ public class TerrainManager : MonoBehaviour
 
         foreach (var chunk in renderedChunks.ToArray())
         {
-            if (chunksInRender.Contains(chunk)) 
+            if (chunksInRender.Contains(chunk))
                 continue;
 
             //unload chunk if not in render distance but is loaded
@@ -94,12 +93,12 @@ public class TerrainManager : MonoBehaviour
             shrunkTilemap = true;
         }
 
-        Dictionary<Vector2Int, 
+        Dictionary<Vector2Int,
             Dictionary<Vector2Int, TilemapChunkNodesData>> parsedRegions = new();
 
         foreach (var chunk in chunksInRender)
         {
-            if (!renderedChunks.Add(chunk) || !ChunkInsideWorldBorder(chunk)) 
+            if (!renderedChunks.Add(chunk) || !ChunkInsideWorldBorder(chunk))
                 continue;
 
             //load chunk if in render distance and not loaded already
@@ -123,7 +122,7 @@ public class TerrainManager : MonoBehaviour
         }
 
         savedChunks.AddRange(chunksInRender);
-        
+
         //avoid compressing multiple times
         if (shrunkTilemap)
             CompressTilemaps(currentChunk, ground, top, solid, BreakingManager.Instance.Tilemap);
@@ -191,10 +190,10 @@ public class TerrainManager : MonoBehaviour
     bool HasRoomToPlace(Tilemap tilemap, BoundsInt bounds)
     {
         bounds.position -= (Vector3Int)structureMargin;
-        bounds.size += (Vector3Int)structureMargin*2;
+        bounds.size += (Vector3Int)structureMargin * 2;
         foreach (var tile in tilemap.GetTilesBlock(bounds))
         {
-            if(tile == null)
+            if (tile == null)
                 continue;
 
             return false;
@@ -215,7 +214,7 @@ public class TerrainManager : MonoBehaviour
         saveTerrain.SaveTiles(region, chunkIndex, ground, top, solid);
     }
 
-    [Button("Place Structure",36)]
+    [Button("Place Structure", 36)]
     void PlaceStructure(Vector3Int spawn, int group, int index)
     {
         Vector2Int renderEnd = (currentChunk + new Vector2Int(renderRadius, renderRadius) * 2) * chunkSize;
@@ -250,23 +249,24 @@ public class TerrainManager : MonoBehaviour
 
         Vector2Int endPos = startPos + chunkSize;
 
-        foreach(var structureGroup in structures)
+        SeededRandom generator = RNGManager.Instance.Generators.worldgen;
+        foreach (var structureGroup in structures)
         {
             for (int i = 0; i < structureGroup.rollsPerChunk; i++)
             {
                 var structure = WeightedUtils.RollStructure(structureGroup.structures);
 
-                if (!structure) 
+                if (!structure)
                     continue;
 
                 Vector3Int spawnPosition = new(
-                    SeededRandom.Range(startPos.x, endPos.x),
-                    SeededRandom.Range(startPos.y, endPos.y));
+                    generator.Range(startPos.x, endPos.x),
+                    generator.Range(startPos.y, endPos.y));
 
                 var bounds = structure.cellBounds;
                 bounds.position = spawnPosition;
 
-                if (!HasRoomToPlace(tilemap, bounds)) 
+                if (!HasRoomToPlace(tilemap, bounds))
                     continue;
 
                 if (IsOverlappingWithSavedChunks(chunk, spawnPosition + bounds.size))
@@ -277,7 +277,7 @@ public class TerrainManager : MonoBehaviour
 
                 //Stop structures outside of render from being generated
                 CheckForStructureLeaks(chunk, bounds, renderEnd, spawnPosition, default, structureGroup, structure);
-                
+
 
                 tilemap.SetTilesBlock(bounds, structure.GetAllTiles());
             }
@@ -317,6 +317,8 @@ public class TerrainManager : MonoBehaviour
         Vector3Int[] positions = new Vector3Int[gridSize.x * gridSize.y];
         TileBase[] tiles = new TileBase[positions.Length];
 
+        SeededRandom generator = RNGManager.Instance.Generators.worldgen;
+
         //split chunk into cells based on distance
         int index = 0;
         for (int x = startPos.x; x < endPos.x; x += distance)
@@ -324,8 +326,8 @@ public class TerrainManager : MonoBehaviour
             for (int y = startPos.y; y < endPos.y; y += distance)
             {
                 Vector3Int position = new(
-                    Mathf.Clamp(SeededRandom.Range(x, x + distance),startPos.x,endPos.x-1),
-                    Mathf.Clamp(SeededRandom.Range(y, y + distance), startPos.y, endPos.y-1));
+                    Mathf.Clamp(generator.Range(x, x + distance), startPos.x, endPos.x - 1),
+                    Mathf.Clamp(generator.Range(y, y + distance), startPos.y, endPos.y - 1));
 
                 positions[index] = position;
                 tiles[index] = WeightedUtils.RollTile(tilePool, masterTiles);
@@ -356,7 +358,7 @@ public class TerrainManager : MonoBehaviour
             Vector3Int adjustedOffset = new(trimOffset.x, 0);
             Vector3Int size = new(bounds.size.x - trimOffset.x, bounds.size.y, 1);
 
-            AddDeferredStructure(chunk + new Vector2Int(1, 0), 
+            AddDeferredStructure(chunk + new Vector2Int(1, 0),
                 new(groupIndex, index, adjustedPosition, size, adjustedOffset + currentTrimOffset));
         }
 
@@ -400,7 +402,7 @@ public class TerrainManager : MonoBehaviour
 
     bool IsOverlappingWithSavedChunks(Vector2Int chunk, Vector3Int endPos)
     {
-        HashSet<Vector2Int> coveredChunks = new(){chunk};
+        HashSet<Vector2Int> coveredChunks = new() { chunk };
         Vector3 positionOffset = endPos - (Vector3Int)(chunk * chunkSize);
         float xOverlap = positionOffset.x / chunkSize.x;
         float yOverlap = positionOffset.y / chunkSize.y;
@@ -430,7 +432,7 @@ public class TerrainManager : MonoBehaviour
 
         if (chunk.x < 0)
             region.x -= 1;
-        if(chunk.y < 0)
+        if (chunk.y < 0)
             region.y -= 1;
 
         return region;

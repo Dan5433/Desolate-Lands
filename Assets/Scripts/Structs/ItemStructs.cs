@@ -39,7 +39,8 @@ namespace CustomClasses
             if (minMax.y > item.MaxCount)
                 minMax.y = item.MaxCount;
 
-            float weightedValue = quantityDistribution.Evaluate(SeededRandom.Value);
+            SeededRandom generator = RNGManager.Instance.Generators.loot;
+            float weightedValue = quantityDistribution.Evaluate(generator.Value);
             int count = (int)Mathf.Lerp(minMax.x, minMax.y, weightedValue);
 
             if (count < 1)
