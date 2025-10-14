@@ -1,7 +1,7 @@
-using EditorAttributes;
 using System;
 using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] string worldName;
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
+    [SerializeField] TMP_Text seedText;
     [SerializeField] CursorTexture[] cursors;
     int deaths;
 
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
     static string worldDirPath;
     static string playerDataDirPath;
     static string pendingWorldName = null;
+    static string pendingSeed;
     static bool isGamePaused = false;
 
     public static bool IsGamePaused => isGamePaused;
@@ -28,15 +30,17 @@ public class GameManager : MonoBehaviour
     public static string DataDirPath => worldDirPath;
     public static string PlayerDataDirPath => playerDataDirPath;
     public static string PendingWorldName { get { return pendingWorldName; } set { pendingWorldName = value; } }
-    
-    public static CursorState CursorState {  
-        get { return cursorState; } 
-        set 
+    public static string PendingSeed { get { return pendingSeed; } set { pendingSeed = value; } }
+
+    public static CursorState CursorState
+    {
+        get { return cursorState; }
+        set
         {
             cursorState = value;
             Cursor.SetCursor(Instance.cursors.First(t => t.state == cursorState).texture,
-                new(16f,16f), CursorMode.ForceSoftware);
-        } 
+                new(16f, 16f), CursorMode.ForceSoftware);
+        }
     }
 
     void Awake()
@@ -47,8 +51,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if(pendingWorldName != null)
+            if (pendingWorldName != null)
                 worldName = pendingWorldName;
+
+            seedText.text = pendingSeed;
 
             Debug.Log("Loaded world: " + worldName);
 
@@ -95,7 +101,7 @@ public class GameManager : MonoBehaviour
 
     void UpdatePlaytime()
     {
-        BinaryDataHandler handler = new(worldDirPath,MainMenuManager.StatsFileName);
+        BinaryDataHandler handler = new(worldDirPath, MainMenuManager.StatsFileName);
 
         WorldStats stats = new();
         handler.LoadData(reader => stats = new(reader));

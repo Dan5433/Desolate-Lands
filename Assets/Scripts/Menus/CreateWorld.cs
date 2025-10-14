@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,22 +15,25 @@ public class CreateWorld : MonoBehaviour
     public void Create()
     {
         string name = ParseName();
-        ParseSeed(name);
+        string seed = ParseSeed(name);
 
-        CreateStatsFile(name);
+        CreateStatsFile(name, seed);
 
         GameManager.PendingWorldName = name;
+        GameManager.PendingSeed = "Seed: " + seed;
         SceneManager.LoadScene("Game");
     }
 
-    void CreateStatsFile(string worldName)
+    void CreateStatsFile(string worldName, string seed)
     {
         var date = DateTime.Now;
-        WorldStats stats = new(){ 
-            creationDate = new(date.Year, date.Month, date.Day) 
+        WorldStats stats = new()
+        {
+            creationDate = new(date.Year, date.Month, date.Day),
+            seed = seed,
         };
 
-        var worldPath = Path.Combine(MainMenuManager.SavesDirPath,worldName);
+        var worldPath = Path.Combine(MainMenuManager.SavesDirPath, worldName);
 
         BinaryDataHandler handler = new(worldPath, MainMenuManager.StatsFileName);
         handler.SaveData(writer => stats.Write(writer));
@@ -37,8 +41,9 @@ public class CreateWorld : MonoBehaviour
 
     string ParseName()
     {
-        string name = !string.IsNullOrWhiteSpace(worldNameInput.text) 
-            ? worldNameInput.text : "New World";
+        string name = !string.IsNullOrWhiteSpace(worldNameInput.text)
+            ? worldNameInput.text
+            : "New World";
 
         string modifiedName = name;
         int existingCounter = 0;
@@ -46,7 +51,7 @@ public class CreateWorld : MonoBehaviour
         var existingWorlds = Directory.GetDirectories(MainMenuManager.SavesDirPath)
                               .Select(Path.GetFileName)
                               .ToHashSet();
-        
+
         while (existingWorlds.Contains(modifiedName))
         {
             existingCounter++;
@@ -58,26 +63,40 @@ public class CreateWorld : MonoBehaviour
         return modifiedName;
     }
 
-    void ParseSeed(string worldName)
+    string ParseSeed(string worldName)
     {
-        RandomStateWrapper randomStateWrapper;
+        string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{};':\",.<>?/\\|`~";
 
-        if (worldSeedInput.text != string.Empty)
+        string seed;
+
+        if (!string.IsNullOrWhiteSpace(worldSeedInput.text))
         {
             Debug.Log("Seed succesfully parsed for world: " + worldName);
 
-            var hash = Hash128.Compute(worldSeedInput.text);
-            randomStateWrapper = new(hash);
+            seed = worldSeedInput.text;
         }
         else
         {
-            Debug.Log("Initializing new seed for world: " + worldName);
+            Debug.Log("Initializing random seed for world: " + worldName);
 
-            randomStateWrapper = new(
-                Random.Range(int.MinValue,int.MaxValue), Random.Range(int.MinValue, int.MaxValue),
-                Random.Range(int.MinValue, int.MaxValue), Random.Range(int.MinValue, int.MaxValue));
+            int length = Random.Range(1, worldSeedInput.characterLimit + 1 /* account for exclusive max */ );
+
+            StringBuilder seedBuilder = new(length);
+            for (int i = 0; i < length; i++)
+            {
+                int charIndex = Random.Range(0, chars.Length);
+                seedBuilder.Append(chars[charIndex]);
+            }
+
+            seed = seedBuilder.ToString();
         }
 
+        Hash128 hash = Hash128.Compute(worldSeedInput.text);
+        RandomStateWrapper randomStateWrapper = new(hash);
+
         GameRandom.Init(randomStateWrapper);
+
+        Debug.Log("Seed: " + seed);
+        return seed;
     }
 }
