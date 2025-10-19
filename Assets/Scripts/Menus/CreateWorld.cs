@@ -47,6 +47,9 @@ public class CreateWorld : MonoBehaviour
             : "New World";
 
         string modifiedName = name;
+        if (Application.isEditor)
+            modifiedName += editorWorldSuffix;
+
         int existingCounter = 0;
 
         var existingWorlds = Directory.GetDirectories(MainMenuManager.SavesDirPath)
@@ -57,12 +60,11 @@ public class CreateWorld : MonoBehaviour
         {
             existingCounter++;
             modifiedName = $"{name} ({existingCounter})";
+            if (Application.isEditor)
+                modifiedName += editorWorldSuffix;
         }
 
         Debug.Log($"Found {existingCounter} existing worlds with same name");
-
-        if (Application.isEditor)
-            modifiedName += editorWorldSuffix;
 
         return modifiedName;
     }
