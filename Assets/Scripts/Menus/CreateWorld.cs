@@ -43,7 +43,7 @@ public class CreateWorld : MonoBehaviour
     string ParseName()
     {
         string name = !string.IsNullOrWhiteSpace(worldNameInput.text)
-            ? worldNameInput.text
+            ? worldNameInput.text.Trim()
             : "New World";
 
         string modifiedName = name;
