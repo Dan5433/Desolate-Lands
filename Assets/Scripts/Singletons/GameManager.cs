@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public static bool IsGamePaused => isGamePaused;
     public GameObject WorldCanvas => worldCanvas;
     public GameObject Player => player;
+    public string WorldName => worldName;
     public static string DataDirPath => worldDirPath;
     public static string PlayerDataDirPath => playerDataDirPath;
     public static string PendingWorldName { get { return pendingWorldName; } set { pendingWorldName = value; } }
@@ -72,15 +73,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        SaveRandomState();
         UpdatePlaytime();
-    }
-
-    void SaveRandomState()
-    {
-        RandomStateWrapper wrapper = new(SeededRandom.State);
-        string json = JsonUtility.ToJson(wrapper);
-        PlayerPrefs.SetString(worldName, json);
     }
 
     public static void TogglePauseState()

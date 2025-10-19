@@ -1,10 +1,14 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 //Class for deterministic random game generation 
+[Serializable]
 public class SeededRandom
 {
-    Random.State state;
-    bool isInitialized = false;
+    [SerializeField] Random.State state;
+
+    [SerializeField] bool isInitialized = false;
     public Random.State State => state;
     public float Value
     {
