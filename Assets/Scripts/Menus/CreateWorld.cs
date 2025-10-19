@@ -11,6 +11,7 @@ public class CreateWorld : MonoBehaviour
 {
     [SerializeField] TMP_InputField worldNameInput;
     [SerializeField] TMP_InputField worldSeedInput;
+    static string editorWorldSuffix = " [editor]";
 
     public void Create()
     {
@@ -59,6 +60,9 @@ public class CreateWorld : MonoBehaviour
         }
 
         Debug.Log($"Found {existingCounter} existing worlds with same name");
+
+        if (Application.isEditor)
+            modifiedName += editorWorldSuffix;
 
         return modifiedName;
     }
