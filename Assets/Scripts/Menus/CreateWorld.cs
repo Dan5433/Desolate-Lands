@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ public class CreateWorld : MonoBehaviour
 {
     [SerializeField] TMP_InputField worldNameInput;
     [SerializeField] TMP_InputField worldSeedInput;
+    static string editorWorldSuffix = " [editor]";
 
     public void Create()
     {
@@ -42,20 +44,28 @@ public class CreateWorld : MonoBehaviour
     string ParseName()
     {
         string name = !string.IsNullOrWhiteSpace(worldNameInput.text)
-            ? worldNameInput.text
+            ? worldNameInput.text.Trim()
             : "New World";
 
         string modifiedName = name;
+        if (Application.isEditor)
+            modifiedName += editorWorldSuffix;
+
         int existingCounter = 0;
 
-        var existingWorlds = Directory.GetDirectories(MainMenuManager.SavesDirPath)
-                              .Select(Path.GetFileName)
-                              .ToHashSet();
+        HashSet<string> existingWorlds = new(
+            Directory.GetDirectories(MainMenuManager.SavesDirPath)
+                .Select(Path.GetFileName)
+                .ToHashSet(),
+            StringComparer.InvariantCultureIgnoreCase
+        );
 
         while (existingWorlds.Contains(modifiedName))
         {
             existingCounter++;
             modifiedName = $"{name} ({existingCounter})";
+            if (Application.isEditor)
+                modifiedName += editorWorldSuffix;
         }
 
         Debug.Log($"Found {existingCounter} existing worlds with same name");
