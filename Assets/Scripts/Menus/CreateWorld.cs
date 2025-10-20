@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -52,9 +53,12 @@ public class CreateWorld : MonoBehaviour
 
         int existingCounter = 0;
 
-        var existingWorlds = Directory.GetDirectories(MainMenuManager.SavesDirPath)
-                              .Select(Path.GetFileName)
-                              .ToHashSet();
+        HashSet<string> existingWorlds = new(
+            Directory.GetDirectories(MainMenuManager.SavesDirPath)
+                .Select(Path.GetFileName)
+                .ToHashSet(),
+            StringComparer.InvariantCultureIgnoreCase
+        );
 
         while (existingWorlds.Contains(modifiedName))
         {
