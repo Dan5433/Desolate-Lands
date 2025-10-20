@@ -88,9 +88,6 @@ public class LoadWorld : MonoBehaviour
         var statsContainer = selectedWorld.transform.Find("Stats");
         string seed = statsContainer.Find("Seed").GetComponent<TMP_Text>().text;
 
-        string randomStateJson = PlayerPrefs.GetString(worldName);
-        GameRandom.Init(JsonUtility.FromJson<RandomStateWrapper>(randomStateJson));
-
         GameManager.PendingWorldName = worldName;
         GameManager.PendingSeed = seed;
         SceneManager.LoadScene("Game");

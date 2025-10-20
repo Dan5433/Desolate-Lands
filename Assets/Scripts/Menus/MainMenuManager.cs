@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using TMPro;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class MainMenuManager : MonoBehaviour
 {

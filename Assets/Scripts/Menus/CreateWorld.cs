@@ -94,7 +94,8 @@ public class CreateWorld : MonoBehaviour
         Hash128 hash = Hash128.Compute(worldSeedInput.text);
         RandomStateWrapper randomStateWrapper = new(hash);
 
-        GameRandom.Init(randomStateWrapper);
+        string randomStateJson = JsonUtility.ToJson(randomStateWrapper);
+        PlayerPrefs.SetString(worldName, randomStateJson);
 
         Debug.Log("Seed: " + seed);
         return seed;

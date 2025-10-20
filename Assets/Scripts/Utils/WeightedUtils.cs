@@ -6,11 +6,13 @@ public class WeightedUtils
 {
     public static TileBase RollTile(WeightedTileById[] tiles, TileBase[] masterList)
     {
+        SeededRandom random = RNGManager.Instance.Generators.worldgen;
+
         int totalWeight = 0;
         foreach (var tile in tiles)
             totalWeight += tile.weight;
 
-        int randomWeight = GameRandom.Range(0, totalWeight);
+        int randomWeight = random.Range(0, totalWeight);
         foreach (var tile in tiles)
         {
             randomWeight -= tile.weight;
@@ -22,11 +24,13 @@ public class WeightedUtils
 
     public static Tilemap RollStructure(WeightedStructure[] structures)
     {
+        SeededRandom random = RNGManager.Instance.Generators.worldgen;
+
         int totalWeight = 0;
         foreach (var structure in structures)
             totalWeight += structure.weight;
 
-        int randomWeight = GameRandom.Range(0, totalWeight);
+        int randomWeight = random.Range(0, totalWeight);
         foreach (var structure in structures)
         {
             randomWeight -= structure.weight;
@@ -38,9 +42,11 @@ public class WeightedUtils
 
     public static InvItem RollItem(WeightedLootPool[] lootTable, int totalPoolWeight)
     {
+        SeededRandom random = RNGManager.Instance.Generators.loot;
+
         WeightedLootPool chosenPool = default;
 
-        int randomWeight = GameRandom.Range(0, totalPoolWeight);
+        int randomWeight = random.Range(0, totalPoolWeight);
         foreach (var pool in lootTable)
         {
             randomWeight -= pool.weight;
@@ -62,11 +68,13 @@ public class WeightedUtils
 
     public static InvItem RollItem(WeightedItem[] loot)
     {
+        SeededRandom random = RNGManager.Instance.Generators.loot;
+
         int totalItemWeight = 0;
         foreach (var item in loot)
             totalItemWeight += item.weight;
 
-        int randomWeight = GameRandom.Range(0, totalItemWeight);
+        int randomWeight = random.Range(0, totalItemWeight);
         foreach (var weightedItem in loot)
         {
             randomWeight -= weightedItem.weight;

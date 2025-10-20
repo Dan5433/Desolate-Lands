@@ -21,12 +21,13 @@ public class Landmine : MonoBehaviour
 
     void Explode()
     {
-        float damage = Random.Range(tileReference.DamageRange.x, tileReference.DamageRange.y);
+        SeededRandom generator = RNGManager.Instance.Generators.damage;
+        float damage = generator.Range(tileReference.DamageRange.x, tileReference.DamageRange.y);
 
-        foreach (var applyDamage in 
+        foreach (var applyDamage in
             Physics2D.OverlapCircleAll(transform.position, tileReference.ExplosionRadius))
         {
-            if (!applyDamage.TryGetComponent<IDamageable>(out var damageable)) 
+            if (!applyDamage.TryGetComponent<IDamageable>(out var damageable))
                 continue;
 
             var direction = applyDamage.transform.position - transform.position;
@@ -34,13 +35,13 @@ public class Landmine : MonoBehaviour
             float distanceTo = Vector2.Distance(transform.position, applyDamage.transform.position);
 
             RaycastHit2D matching = default;
-            foreach(var hit in Physics2D.RaycastAll(transform.position, direction, distanceTo, mask))
+            foreach (var hit in Physics2D.RaycastAll(transform.position, direction, distanceTo, mask))
             {
                 matching = hit;
                 if (matching.collider.gameObject.layer == applyDamage.gameObject.layer)
                     break;
             }
-            
+
             if (!matching || matching.collider != applyDamage)
                 continue;
 
@@ -48,7 +49,7 @@ public class Landmine : MonoBehaviour
             float damageMagnitude = 1f - Mathf.Pow(distance / tileReference.ExplosionRadius, 2);
 
             float lerpedDamage = Mathf.Lerp(0, damage, damageMagnitude);
-            if(lerpedDamage > 0)
+            if (lerpedDamage > 0)
                 damageable.Damage(lerpedDamage);
         }
 
