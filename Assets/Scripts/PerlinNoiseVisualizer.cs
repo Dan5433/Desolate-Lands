@@ -31,5 +31,7 @@ public class PerlinNoiseVisualizer : MonoBehaviour
 
         noiseTex.SetPixels(pix);
         noiseTex.Apply();
+
+        GetComponent<RectTransform>().sizeDelta = new(pixWidth, pixHeight);
     }
 }
