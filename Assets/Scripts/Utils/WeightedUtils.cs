@@ -22,6 +22,26 @@ public class WeightedUtils
         return null;
     }
 
+    public static TileBase RollPerlinNoiseTile(PerlinNoiseTerrainTiles tiles, TileBase[] masterList, Vector2 start, Vector2 tilePosition)
+    {
+        int totalWeight = 0;
+        foreach (var tile in tiles.tiles)
+            totalWeight += tile.weight;
+
+        float xCoord = start.x + tilePosition.x / TerrainManager.ChunkSize.x * tiles.scale;
+        float yCoord = start.y + tilePosition.y / TerrainManager.ChunkSize.y * tiles.scale;
+        float sample = Mathf.PerlinNoise(xCoord, yCoord);
+
+        float randomWeight = Mathf.Clamp01(sample) * totalWeight;
+        foreach (var tile in tiles.tiles)
+        {
+            randomWeight -= tile.weight;
+            if (randomWeight < 0)
+                return masterList[tile.tileId];
+        }
+        return null;
+    }
+
     public static Tilemap RollStructure(WeightedStructure[] structures)
     {
         SeededRandom random = RNGManager.Instance.Generators.worldgen;

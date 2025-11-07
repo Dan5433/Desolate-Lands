@@ -480,10 +480,18 @@ public struct TerrainGenTiles
 }
 
 [Serializable]
+public struct PerlinNoiseTerrainTiles
+{
+    [HelpBox("Tile order matters! First tiles are placed closer to 0 while last tiles are placed closer to 1")]
+    public WeightedTileById[] tiles;
+    public float scale;
+}
+
+[Serializable]
 public struct StructureGroup
 {
-    [SerializeField] public WeightedStructure[] structures;
-    [SerializeField] public int rollsPerChunk;
+    public WeightedStructure[] structures;
+    public int rollsPerChunk;
 }
 
 public struct StructurePlaceData
