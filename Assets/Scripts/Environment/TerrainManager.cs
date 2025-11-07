@@ -17,6 +17,7 @@ public class TerrainManager : MonoBehaviour
     [SerializeField] TileBase[] masterTiles;
     [SerializeField] Tilemap ground, top, solid;
     [SerializeField] StructureGroup[] structures;
+    [SerializeField] PerlinNoiseTerrainTiles groundTiles;
     [SerializeField] WeightedTileById[] grTiles;
     [SerializeField] TerrainGenTiles[] topTiles;
     [SerializeField] Transform player;
@@ -203,7 +204,7 @@ public class TerrainManager : MonoBehaviour
 
     void GenChunk(Vector2Int startTile, Vector2Int chunkIndex, Vector2Int region)
     {
-        GenBoxTiles(ground, grTiles, startTile);
+        GenBoxPerlinNoiseTiles(ground, groundTiles, startTile);
         foreach (var genTiles in topTiles)
         {
             GenGriddedTiles(top, genTiles.Tiles, genTiles.GenGap, startTile);
@@ -306,6 +307,29 @@ public class TerrainManager : MonoBehaviour
 
         tilemap.SetTiles(positions, tiles);
     }
+    void GenBoxPerlinNoiseTiles(Tilemap tilemap, PerlinNoiseTerrainTiles tilePool, Vector2Int startPos)
+    {
+        Vector2Int endPos = startPos + chunkSize;
+        Vector3Int[] positions = new Vector3Int[chunkSize.x * chunkSize.y];
+        TileBase[] tiles = new TileBase[positions.Length];
+
+        int index = 0;
+
+        for (int x = startPos.x; x < endPos.x; x++)
+        {
+            for (int y = startPos.y; y < endPos.y; y++)
+            {
+                positions[index] = new Vector3Int(x, y);
+
+                tiles[index] = WeightedUtils.RollPerlinNoiseTile(tilePool, masterTiles, startPos, new(x, y));
+
+                index++;
+            }
+        }
+
+        tilemap.SetTiles(positions, tiles);
+    }
+
 
     void GenGriddedTiles(Tilemap tilemap, WeightedTileById[] tilePool, int distance, Vector2Int startPos)
     {
