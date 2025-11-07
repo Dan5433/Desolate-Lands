@@ -4,10 +4,11 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class PerlinNoiseVisualizer : MonoBehaviour
 {
+    [Title("Uses transform position for noise origin")]
+    [SerializeField] Color minColor = Color.black;
+    [SerializeField] Color maxColor = Color.white;
     [SerializeField] int pixWidth = 32;
     [SerializeField] int pixHeight = 32;
-    [SerializeField] float xOrg;
-    [SerializeField] float yOrg;
     [SerializeField] float scale = 1f;
 
     [Button(buttonHeight: 36)]
@@ -21,10 +22,10 @@ public class PerlinNoiseVisualizer : MonoBehaviour
         {
             for (int x = 0; x < pixWidth; x++)
             {
-                float xCoord = xOrg + (float)x / pixWidth * scale;
-                float yCoord = yOrg + (float)y / pixHeight * scale;
+                float xCoord = transform.position.x + (float)x / pixWidth * scale;
+                float yCoord = transform.position.y + (float)y / pixHeight * scale;
                 float sample = Mathf.PerlinNoise(xCoord, yCoord);
-                pix[y * pixWidth + x] = new Color(sample, sample, sample);
+                pix[y * pixWidth + x] = Color.Lerp(minColor, maxColor, sample);
             }
         }
 
