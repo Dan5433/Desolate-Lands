@@ -22,14 +22,14 @@ public class WeightedUtils
         return null;
     }
 
-    public static TileBase RollPerlinNoiseTile(PerlinNoiseTerrainTiles tiles, TileBase[] masterList, Vector2 start, Vector2 tilePosition)
+    public static TileBase RollPerlinNoiseTile(PerlinNoiseTerrainTiles tiles, TileBase[] masterList, Vector2 position)
     {
         int totalWeight = 0;
         foreach (var tile in tiles.tiles)
             totalWeight += tile.weight;
 
-        float xCoord = start.x + tilePosition.x / TerrainManager.ChunkSize.x * tiles.scale;
-        float yCoord = start.y + tilePosition.y / TerrainManager.ChunkSize.y * tiles.scale;
+        float xCoord = position.x * tiles.scale;
+        float yCoord = position.y * tiles.scale;
         float sample = Mathf.PerlinNoise(xCoord, yCoord);
 
         float randomWeight = Mathf.Clamp01(sample) * totalWeight;

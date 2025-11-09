@@ -314,14 +314,13 @@ public class TerrainManager : MonoBehaviour
         TileBase[] tiles = new TileBase[positions.Length];
 
         int index = 0;
-
         for (int x = startPos.x; x < endPos.x; x++)
         {
             for (int y = startPos.y; y < endPos.y; y++)
             {
                 positions[index] = new Vector3Int(x, y);
 
-                tiles[index] = WeightedUtils.RollPerlinNoiseTile(tilePool, masterTiles, startPos, new(x, y));
+                tiles[index] = WeightedUtils.RollPerlinNoiseTile(tilePool, masterTiles, new Vector2(x, y) / chunkSize);
 
                 index++;
             }
@@ -452,7 +451,7 @@ public class TerrainManager : MonoBehaviour
 
     public static Vector2Int GetRegionIndex(Vector2Int chunk)
     {
-        Vector2Int region = new(chunk.x / RegionSize.x, chunk.y / RegionSize.y);
+        Vector2Int region = new(chunk.x / regionSize.x, chunk.y / regionSize.y);
 
         if (chunk.x < 0)
             region.x -= 1;
@@ -477,7 +476,7 @@ public class TerrainManager : MonoBehaviour
 
     public static Vector2Int GetChunkIndex(Vector3Int position)
     {
-        Vector2Int chunk = new(position.x / RegionSize.x, position.y / RegionSize.y);
+        Vector2Int chunk = new(position.x / chunkSize.x, position.y / chunkSize.y);
 
         if (position.x < 0)
             chunk.x -= 1;
