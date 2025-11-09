@@ -320,7 +320,7 @@ public class TerrainManager : MonoBehaviour
             {
                 positions[index] = new Vector3Int(x, y);
 
-                tiles[index] = WeightedUtils.RollPerlinNoiseTile(tilePool, masterTiles, new Vector2(x, y) / chunkSize);
+                tiles[index] = WeightedUtils.RollPerlinNoiseTile(tilePool, masterTiles, new(x, y));
 
                 index++;
             }
