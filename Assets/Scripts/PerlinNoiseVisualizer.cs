@@ -24,7 +24,7 @@ public class PerlinNoiseVisualizer : MonoBehaviour
             {
                 Vector2 coordinates = position + new Vector2(x, y) / size * scale;
 
-                float sample = noise.cnoise(coordinates);
+                float sample = noise.snoise(coordinates);
                 pix[y * size.x + x] = Color.Lerp(minColor, maxColor, sample);
             }
         }
