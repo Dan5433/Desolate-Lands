@@ -21,9 +21,9 @@ public class TerrainManager : MonoBehaviour
     [SerializeField] WeightedTileById[] grTiles;
     [SerializeField] TerrainGenTiles[] topTiles;
     [SerializeField] Transform player;
-    [SerializeField] Vector2Int worldSize;
+    [SerializeField][Tooltip("Radius in chunks")] Vector2Int worldSize;
     [SerializeField] Vector2Int structureMargin;
-    [SerializeField][Tooltip("In Chunks")] int renderRadius;
+    [SerializeField][Tooltip("In chunks")] int renderRadius;
 
     Vector2Int currentChunk;
 
@@ -53,7 +53,9 @@ public class TerrainManager : MonoBehaviour
         loadTerrain = GetComponent<LoadTerrain>();
         saveTerrain = GetComponent<SaveTerrain>();
         borderManager = GetComponent<WorldBorderManager>();
-        tileLookup = masterTiles.Select((tile, index) => new { tile, index }).ToDictionary(x => x.tile, x => x.index);
+        tileLookup = masterTiles
+            .Select((tile, index) => new { tile, index })
+            .ToDictionary(x => x.tile, x => x.index);
     }
 
     private void Start()

@@ -1,4 +1,5 @@
 using CustomClasses;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -28,9 +29,8 @@ public class WeightedUtils
         foreach (var tile in tiles.tiles)
             totalWeight += tile.weight;
 
-        float xCoord = tilePosition.x / TerrainManager.ChunkSize.x * tiles.scale;
-        float yCoord = tilePosition.y / TerrainManager.ChunkSize.y * tiles.scale;
-        float sample = Mathf.PerlinNoise(xCoord, yCoord);
+        Vector2 coordinates = tilePosition / TerrainManager.ChunkSize * tiles.scale;
+        float sample = noise.cnoise(coordinates);
 
         float randomWeight = Mathf.Clamp01(sample) * totalWeight;
         foreach (var tile in tiles.tiles)
