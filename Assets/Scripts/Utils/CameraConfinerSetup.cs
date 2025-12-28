@@ -13,12 +13,12 @@ public class CameraConfinerSetup : MonoBehaviour
         var chunkSize = TerrainManager.ChunkSize;
 
         Vector2[] points = {
-            new Vector2(worldSize.x * chunkSize.x, worldSize.y * chunkSize.y),
-            new Vector2(-worldSize.x * chunkSize.x, worldSize.y * chunkSize.y),
-            new Vector2(-worldSize.x * chunkSize.x, -worldSize.y * chunkSize.y),
-            new Vector2(worldSize.x * chunkSize.x, -worldSize.y * chunkSize.y)};
-        
-        collider.SetPath(0,points);
+            new(worldSize.x * chunkSize.x, worldSize.y * chunkSize.y),
+            new(-worldSize.x * chunkSize.x, worldSize.y * chunkSize.y),
+            new(-worldSize.x * chunkSize.x, -worldSize.y * chunkSize.y),
+            new(worldSize.x * chunkSize.x, -worldSize.y * chunkSize.y)};
+
+        collider.SetPath(0, points);
 
         confiner.InvalidatePathCache();
     }

@@ -8972,7 +8972,7 @@ MonoBehaviour:
       tileId: 7
     genGap: 25
   player: {fileID: 2136044632}
-  worldSize: {x: 2048, y: 2048}
+  worldSize: {x: 3125, y: 3125}
   structureMargin: {x: 1, y: 1}
   renderRadius: 1
 --- !u!114 &1354565117
@@ -9214,6 +9214,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 413549948806f5540a3ad14d78716db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  generators:
+    worldgen:
+      state:
+        s0: 0
+        s1: 0
+        s2: 0
+        s3: 0
+      isInitialized: 0
+    loot:
+      state:
+        s0: 0
+        s1: 0
+        s2: 0
+        s3: 0
+      isInitialized: 0
+    damage:
+      state:
+        s0: 0
+        s1: 0
+        s2: 0
+        s3: 0
+      isInitialized: 0
 --- !u!4 &1389104743
 Transform:
   m_ObjectHideFlags: 0
