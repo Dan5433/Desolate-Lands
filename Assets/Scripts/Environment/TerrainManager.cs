@@ -509,7 +509,7 @@ public struct PerlinNoiseTerrainTiles
 {
     [HelpBox("Tile order matters! First tiles are placed closer to 0 while last tiles are placed closer to 1")]
     public WeightedTileById[] tiles;
-    public float scale;
+    [HelpBox("To keep noise precision, DO NOT set above 15", MessageMode.Warning)] public float scale;
 }
 
 [Serializable]

@@ -29,7 +29,10 @@ public class WeightedUtils
         foreach (var tile in tiles.tiles)
             totalWeight += tile.weight;
 
-        Vector2 coordinates = tilePosition / TerrainManager.ChunkSize * tiles.scale;
+        Vector2 coordinates =
+            (tilePosition + GameManager.Instance.SplitSeedHash)
+            / TerrainManager.ChunkSize * tiles.scale;
+
         float sample = noise.snoise(coordinates);
 
         float randomWeight = Mathf.Clamp01(sample) * totalWeight;

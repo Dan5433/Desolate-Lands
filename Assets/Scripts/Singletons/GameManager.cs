@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text seedText;
     [SerializeField] CursorTexture[] cursors;
     int deaths;
+    Vector2 splitSeedHash;
 
     static CursorState cursorState;
     static string worldDirPath;
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     public GameObject WorldCanvas => worldCanvas;
     public GameObject Player => player;
     public string WorldName => worldName;
+    public Vector2 SplitSeedHash => splitSeedHash; //used for noise offsets
     public static string DataDirPath => worldDirPath;
     public static string PlayerDataDirPath => playerDataDirPath;
     public static string PendingWorldName { get { return pendingWorldName; } set { pendingWorldName = value; } }
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
             if (pendingWorldName != null)
                 worldName = pendingWorldName;
 
+            GenerateSplitSeedHash(pendingSeed);
             seedText.text = pendingSeed;
 
             Debug.Log("Loaded world: " + worldName);
@@ -64,6 +67,20 @@ public class GameManager : MonoBehaviour
 
             Instance = this;
         }
+    }
+
+    void GenerateSplitSeedHash(string seed)
+    {
+        //leaves around 15k leeway from 1 million for worldgen noise
+        const float NOISE_RANGE = 2_000_000f;
+
+        ulong hash = HashingFunctions.Fnv1a64(seed);
+
+        uint seedX = (uint)(hash & 0xFFFFFFFFUL);
+        uint seedY = (uint)(hash >> 32);
+
+        splitSeedHash.x = seedX / (float)uint.MaxValue * NOISE_RANGE; //normalize and force range
+        splitSeedHash.y = seedY / (float)uint.MaxValue * NOISE_RANGE; //normalize and force range
     }
 
     private void Start()
