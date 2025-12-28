@@ -1,4 +1,5 @@
 using CustomClasses;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,6 +15,28 @@ public class WeightedUtils
 
         int randomWeight = random.Range(0, totalWeight);
         foreach (var tile in tiles)
+        {
+            randomWeight -= tile.weight;
+            if (randomWeight < 0)
+                return masterList[tile.tileId];
+        }
+        return null;
+    }
+
+    public static TileBase RollPerlinNoiseTile(PerlinNoiseTerrainTiles tiles, TileBase[] masterList, Vector2 tilePosition)
+    {
+        int totalWeight = 0;
+        foreach (var tile in tiles.tiles)
+            totalWeight += tile.weight;
+
+        Vector2 coordinates =
+            (tilePosition + GameManager.Instance.SplitSeedHash)
+            / TerrainManager.ChunkSize * tiles.scale;
+
+        float sample = noise.snoise(coordinates);
+
+        float randomWeight = Mathf.Clamp01(sample) * totalWeight;
+        foreach (var tile in tiles.tiles)
         {
             randomWeight -= tile.weight;
             if (randomWeight < 0)

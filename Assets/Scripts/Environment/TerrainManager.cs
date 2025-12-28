@@ -17,12 +17,13 @@ public class TerrainManager : MonoBehaviour
     [SerializeField] TileBase[] masterTiles;
     [SerializeField] Tilemap ground, top, solid;
     [SerializeField] StructureGroup[] structures;
+    [SerializeField] PerlinNoiseTerrainTiles groundTiles;
     [SerializeField] WeightedTileById[] grTiles;
     [SerializeField] TerrainGenTiles[] topTiles;
     [SerializeField] Transform player;
-    [SerializeField] Vector2Int worldSize;
+    [SerializeField][Tooltip("Radius in chunks")] Vector2Int worldSize;
     [SerializeField] Vector2Int structureMargin;
-    [SerializeField][Tooltip("In Chunks")] int renderRadius;
+    [SerializeField][Tooltip("In chunks")] int renderRadius;
 
     Vector2Int currentChunk;
 
@@ -52,7 +53,9 @@ public class TerrainManager : MonoBehaviour
         loadTerrain = GetComponent<LoadTerrain>();
         saveTerrain = GetComponent<SaveTerrain>();
         borderManager = GetComponent<WorldBorderManager>();
-        tileLookup = masterTiles.Select((tile, index) => new { tile, index }).ToDictionary(x => x.tile, x => x.index);
+        tileLookup = masterTiles
+            .Select((tile, index) => new { tile, index })
+            .ToDictionary(x => x.tile, x => x.index);
     }
 
     private void Start()
@@ -203,7 +206,7 @@ public class TerrainManager : MonoBehaviour
 
     void GenChunk(Vector2Int startTile, Vector2Int chunkIndex, Vector2Int region)
     {
-        GenBoxTiles(ground, grTiles, startTile);
+        GenBoxPerlinNoiseTiles(ground, groundTiles, startTile);
         foreach (var genTiles in topTiles)
         {
             GenGriddedTiles(top, genTiles.Tiles, genTiles.GenGap, startTile);
@@ -306,6 +309,28 @@ public class TerrainManager : MonoBehaviour
 
         tilemap.SetTiles(positions, tiles);
     }
+    void GenBoxPerlinNoiseTiles(Tilemap tilemap, PerlinNoiseTerrainTiles tilePool, Vector2Int startPos)
+    {
+        Vector2Int endPos = startPos + chunkSize;
+        Vector3Int[] positions = new Vector3Int[chunkSize.x * chunkSize.y];
+        TileBase[] tiles = new TileBase[positions.Length];
+
+        int index = 0;
+        for (int x = startPos.x; x < endPos.x; x++)
+        {
+            for (int y = startPos.y; y < endPos.y; y++)
+            {
+                positions[index] = new Vector3Int(x, y);
+
+                tiles[index] = WeightedUtils.RollPerlinNoiseTile(tilePool, masterTiles, new(x, y));
+
+                index++;
+            }
+        }
+
+        tilemap.SetTiles(positions, tiles);
+    }
+
 
     void GenGriddedTiles(Tilemap tilemap, WeightedTileById[] tilePool, int distance, Vector2Int startPos)
     {
@@ -428,7 +453,7 @@ public class TerrainManager : MonoBehaviour
 
     public static Vector2Int GetRegionIndex(Vector2Int chunk)
     {
-        Vector2Int region = new(chunk.x / RegionSize.x, chunk.y / RegionSize.y);
+        Vector2Int region = new(chunk.x / regionSize.x, chunk.y / regionSize.y);
 
         if (chunk.x < 0)
             region.x -= 1;
@@ -453,7 +478,7 @@ public class TerrainManager : MonoBehaviour
 
     public static Vector2Int GetChunkIndex(Vector3Int position)
     {
-        Vector2Int chunk = new(position.x / RegionSize.x, position.y / RegionSize.y);
+        Vector2Int chunk = new(position.x / chunkSize.x, position.y / chunkSize.y);
 
         if (position.x < 0)
             chunk.x -= 1;
@@ -480,10 +505,18 @@ public struct TerrainGenTiles
 }
 
 [Serializable]
+public struct PerlinNoiseTerrainTiles
+{
+    [HelpBox("Tile order matters! First tiles are placed closer to 0 while last tiles are placed closer to 1")]
+    public WeightedTileById[] tiles;
+    [HelpBox("To keep noise precision, DO NOT set above 15", MessageMode.Warning)] public float scale;
+}
+
+[Serializable]
 public struct StructureGroup
 {
-    [SerializeField] public WeightedStructure[] structures;
-    [SerializeField] public int rollsPerChunk;
+    public WeightedStructure[] structures;
+    public int rollsPerChunk;
 }
 
 public struct StructurePlaceData
