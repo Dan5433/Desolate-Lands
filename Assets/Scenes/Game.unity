@@ -9239,7 +9239,7 @@ MonoBehaviour:
       tileId: 7
     genGap: 25
   player: {fileID: 2136044632}
-  worldSize: {x: 2048, y: 2048}
+  worldSize: {x: 3125, y: 3125}
   structureMargin: {x: 1, y: 1}
   renderRadius: 1
 --- !u!114 &1354565117
