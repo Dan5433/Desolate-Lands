@@ -21,8 +21,7 @@ public class CreateWorld : MonoBehaviour
 
         CreateStatsFile(name, seed);
 
-        GameManager.PendingWorldName = name;
-        GameManager.PendingSeed = "Seed: " + seed;
+        GameManager.InitializeWorld(name, seed);
         SceneManager.LoadScene("Game");
     }
 

@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     static string worldDirPath;
     static string playerDataDirPath;
     static string pendingWorldName = null;
-    static string pendingSeed;
+    static string pendingSeed = null;
     static bool isGamePaused = false;
 
     public static bool IsGamePaused => isGamePaused;
@@ -32,8 +32,6 @@ public class GameManager : MonoBehaviour
     public Vector2 SplitSeedHash => splitSeedHash; //used for noise offsets
     public static string DataDirPath => worldDirPath;
     public static string PlayerDataDirPath => playerDataDirPath;
-    public static string PendingWorldName { get { return pendingWorldName; } set { pendingWorldName = value; } }
-    public static string PendingSeed { get { return pendingSeed; } set { pendingSeed = value; } }
 
     public static CursorState CursorState
     {
@@ -44,6 +42,12 @@ public class GameManager : MonoBehaviour
             Cursor.SetCursor(Instance.cursors.First(t => t.state == cursorState).texture,
                 new(16f, 16f), CursorMode.ForceSoftware);
         }
+    }
+
+    public static void InitializeWorld(string name, string seed)
+    {
+        pendingWorldName = name;
+        pendingSeed = seed;
     }
 
     void Awake()

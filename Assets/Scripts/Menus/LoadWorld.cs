@@ -88,8 +88,7 @@ public class LoadWorld : MonoBehaviour
         var statsContainer = selectedWorld.transform.Find("Stats");
         string seed = statsContainer.Find("Seed").GetComponent<TMP_Text>().text;
 
-        GameManager.PendingWorldName = worldName;
-        GameManager.PendingSeed = seed;
+        GameManager.InitializeWorld(worldName, seed);
         SceneManager.LoadScene("Game");
     }
 
