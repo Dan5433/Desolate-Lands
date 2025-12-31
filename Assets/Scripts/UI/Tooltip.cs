@@ -14,6 +14,7 @@ public class Tooltip : MonoBehaviour
     public void ShowMessage(string message)
     {
         main.text = message;
+        extra.text = string.Empty;
         gameObject.SetActive(true);
     }
 
