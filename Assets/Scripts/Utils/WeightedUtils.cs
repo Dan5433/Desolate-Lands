@@ -23,7 +23,7 @@ public class WeightedUtils
         return null;
     }
 
-    public static TileBase RollPerlinNoiseTile(PerlinNoiseTerrainTiles tiles, TileBase[] masterList, Vector2 tilePosition)
+    public static TileBase RollPerlinNoiseTile(WeightedPerlinNoiseTerrainTiles tiles, TileBase[] masterList, Vector2 tilePosition)
     {
         int totalWeight = 0;
         foreach (var tile in tiles.tiles)

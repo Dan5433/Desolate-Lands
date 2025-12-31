@@ -17,9 +17,8 @@ public class TerrainManager : MonoBehaviour
     [SerializeField] TileBase[] masterTiles;
     [SerializeField] Tilemap ground, top, solid;
     [SerializeField] StructureGroup[] structures;
-    [SerializeField] PerlinNoiseTerrainTiles groundTiles;
-    [SerializeField] WeightedTileById[] grTiles;
-    [SerializeField] TerrainGenTiles[] topTiles;
+    [SerializeField] WeightedPerlinNoiseTerrainTiles groundTiles;
+    [SerializeField] WeightedGridSpreadTerrainTiles[] topTiles;
     [SerializeField] Transform player;
     [SerializeField][Tooltip("Radius in chunks")] Vector2Int worldSize;
     [SerializeField] Vector2Int structureMargin;
@@ -309,7 +308,7 @@ public class TerrainManager : MonoBehaviour
 
         tilemap.SetTiles(positions, tiles);
     }
-    void GenBoxPerlinNoiseTiles(Tilemap tilemap, PerlinNoiseTerrainTiles tilePool, Vector2Int startPos)
+    void GenBoxPerlinNoiseTiles(Tilemap tilemap, WeightedPerlinNoiseTerrainTiles tilePool, Vector2Int startPos)
     {
         Vector2Int endPos = startPos + chunkSize;
         Vector3Int[] positions = new Vector3Int[chunkSize.x * chunkSize.y];
@@ -495,7 +494,7 @@ public class TerrainManager : MonoBehaviour
 }
 
 [Serializable]
-public struct TerrainGenTiles
+public struct WeightedGridSpreadTerrainTiles
 {
     [SerializeField] WeightedTileById[] tiles;
     [SerializeField] int genGap;
@@ -505,11 +504,13 @@ public struct TerrainGenTiles
 }
 
 [Serializable]
-public struct PerlinNoiseTerrainTiles
+public struct WeightedPerlinNoiseTerrainTiles
 {
     [HelpBox("Tile order matters! First tiles are placed closer to 0 while last tiles are placed closer to 1")]
+
     public WeightedTileById[] tiles;
-    [HelpBox("To keep noise precision, DO NOT set above 15", MessageMode.Warning)] public float scale;
+    [HelpBox("To keep noise precision, DO NOT set above 15", MessageMode.Warning)]
+    public float scale;
 }
 
 [Serializable]
