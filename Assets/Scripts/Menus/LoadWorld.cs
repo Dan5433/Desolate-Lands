@@ -87,6 +87,8 @@ public class LoadWorld : MonoBehaviour
 
         var statsContainer = selectedWorld.transform.Find("Stats");
         string seed = statsContainer.Find("Seed").GetComponent<TMP_Text>().text;
+        if (seed != string.Empty)
+            seed = seed["Seed: ".Length..];
 
         GameManager.InitializeWorld(worldName, seed);
         SceneManager.LoadScene("Game");

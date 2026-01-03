@@ -37,8 +37,8 @@ MonoBehaviour:
     m_SuperscriptSize: 0.5
     m_SubscriptOffset: -3
     m_SubscriptSize: 0.5
-    m_UnderlineOffset: -2.390625
-    m_UnderlineThickness: 0.796875
+    m_UnderlineOffset: -1.25
+    m_UnderlineThickness: 1.5
     m_StrikethroughOffset: 2
     m_StrikethroughThickness: 0.796875
     m_TabWidth: 5
