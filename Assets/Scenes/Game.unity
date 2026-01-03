@@ -723,6 +723,8 @@ GameObject:
   - component: {fileID: 187119154}
   - component: {fileID: 187119156}
   - component: {fileID: 187119155}
+  - component: {fileID: 187119157}
+  - component: {fileID: 187119158}
   m_Layer: 5
   m_Name: Seed
   m_TagString: Untagged
@@ -748,7 +750,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &187119155
 MonoBehaviour:
@@ -769,7 +771,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -836,7 +838,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.19999999, g: 0.5494251, b: 1, a: 0.5019608}
-  m_Text: 124
+  m_Text: Har Har HaHar Har HaHar HaHar HaHar
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 1
@@ -856,6 +858,45 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187119153}
   m_CullTransparentMesh: 1
+--- !u!114 &187119157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187119153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 353a1b09285e52343a3aad602cb766bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &187119158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187119153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: febc8d77b85a5b64f8fd1b460cc177f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 187119157}
+        m_TargetAssemblyTypeName: CopyToClipboard, Assembly-CSharp
+        m_MethodName: ShowCopyTooltip
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &202685689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,7 +1067,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0.01, y: 11.95}
+  m_SizeDelta: {x: 0, y: 11.95}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &203354799
 MonoBehaviour:
@@ -1048,7 +1089,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "124\u200B"
+  m_text: "Har Har HaHar Har HaHar HaHar HaHar\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4da92a2565986da40bf8b7ef1070df51, type: 2}
   m_sharedMaterial: {fileID: 5883703097612374614, guid: 4da92a2565986da40bf8b7ef1070df51, type: 2}
@@ -1360,7 +1401,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 46.1629}
+  m_SizeDelta: {x: 0, y: 75}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &267329451
 MonoBehaviour:
@@ -1375,16 +1416,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 10
+    m_Left: 15
     m_Right: 0
     m_Top: 0
-    m_Bottom: 5
-  m_ChildAlignment: 3
+    m_Bottom: 10
+  m_ChildAlignment: 6
   m_Spacing: 4
   m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
-  m_ChildControlHeight: 1
+  m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -3683,11 +3724,11 @@ RectTransform:
   - {fileID: 1399322443}
   - {fileID: 55746268}
   - {fileID: 858321413}
-  - {fileID: 202685690}
   - {fileID: 778598944}
   - {fileID: 1116516738}
   - {fileID: 398005007}
   - {fileID: 600528256}
+  - {fileID: 202685690}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7066,7 +7107,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 45}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1002490493
 MonoBehaviour:
