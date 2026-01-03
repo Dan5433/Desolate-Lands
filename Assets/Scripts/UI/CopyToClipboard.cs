@@ -28,6 +28,6 @@ public class CopyToClipboard : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void ShowCopyTooltip()
     {
-        ItemManager.Instance.Tooltip.ShowMessage("Click to Copy", "You can also select manually");
+        GameManager.Instance.Tooltip.ShowMessage("Click to Copy", "You can also select manually");
     }
 }

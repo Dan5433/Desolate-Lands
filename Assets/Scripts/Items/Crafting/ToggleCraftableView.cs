@@ -27,6 +27,6 @@ public class ToggleCraftableView : MonoBehaviour
     public void UpdateTooltip()
     {
         string message = onlyShowCraftable ? "Show All" : "Show Only Craftable";
-        ItemManager.Instance.Tooltip.ShowMessage(message);
+        GameManager.Instance.Tooltip.ShowMessage(message);
     }
 }

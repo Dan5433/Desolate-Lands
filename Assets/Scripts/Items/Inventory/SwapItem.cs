@@ -13,12 +13,14 @@ public class SwapItem : MonoBehaviour, IPointerDownHandler
     [SerializeField] UnityEvent onClick;
 
     public Sprite Placeholder => placeholderImage;
-    public bool Locked {  get { return locked; } 
-        set 
-        {  
-            locked = value; 
+    public bool Locked
+    {
+        get { return locked; }
+        set
+        {
+            locked = value;
             transform.Find("Locked").gameObject.SetActive(value);
-        } 
+        }
     }
 
     private void Awake()
@@ -41,12 +43,12 @@ public class SwapItem : MonoBehaviour, IPointerDownHandler
 
         if (slotItem.ItemObj == ItemManager.Instance.Air)
         {
-            ItemManager.Instance.Tooltip.Hide();
+            GameManager.Instance.Tooltip.Hide();
             return;
         }
 
-        ItemManager.Instance.Tooltip.ShowMessage(
-            $"{slotItem.Name} (x{slotItem.Count})", 
+        GameManager.Instance.Tooltip.ShowMessage(
+            $"{slotItem.Name} (x{slotItem.Count})",
             slotItem.ExtraInfo());
     }
 }
