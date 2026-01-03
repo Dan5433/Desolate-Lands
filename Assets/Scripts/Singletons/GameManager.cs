@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] string worldName;
     [SerializeField] GameObject worldCanvas;
     [SerializeField] GameObject player;
-    [SerializeField] TMP_Text seedText;
+    [SerializeField] Transform seedText;
     [SerializeField] CursorTexture[] cursors;
     int deaths;
     Vector2 splitSeedHash;
@@ -21,8 +21,8 @@ public class GameManager : MonoBehaviour
     static CursorState cursorState;
     static string worldDirPath;
     static string playerDataDirPath;
-    static string pendingWorldName = null;
-    static string pendingSeed = null;
+    static string pendingWorldName;
+    static string pendingSeed;
     static bool isGamePaused = false;
 
     public static bool IsGamePaused => isGamePaused;
@@ -58,11 +58,15 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (pendingWorldName != null)
-                worldName = pendingWorldName;
+            worldName = pendingWorldName;
+
+            if (pendingSeed != string.Empty)
+            {
+                seedText.GetComponentInChildren<TMP_Text>().text = "Seed:";
+                seedText.GetComponentInChildren<TMP_InputField>().text = pendingSeed;
+            }
 
             GenerateSplitSeedHash(pendingSeed);
-            seedText.text = pendingSeed;
 
             Debug.Log("Loaded world: " + worldName);
 
