@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] Transform seedText;
     [SerializeField] CursorTexture[] cursors;
+    [SerializeField] Tooltip tooltip;
     int deaths;
     Vector2 splitSeedHash;
 
@@ -29,6 +30,8 @@ public class GameManager : MonoBehaviour
     public GameObject WorldCanvas => worldCanvas;
     public GameObject Player => player;
     public string WorldName => worldName;
+    public Tooltip Tooltip => tooltip;
+    public bool IsTooltipActive => tooltip.gameObject.activeSelf;
     public Vector2 SplitSeedHash => splitSeedHash; //used for noise offsets
     public static string DataDirPath => worldDirPath;
     public static string PlayerDataDirPath => playerDataDirPath;

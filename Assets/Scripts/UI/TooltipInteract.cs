@@ -12,16 +12,16 @@ public class TooltipInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        ItemManager.Instance.Tooltip.Hide();
+        GameManager.Instance.Tooltip.Hide();
     }
 
     private void OnDisable()
     {
-        ItemManager.Instance.Tooltip.Hide();
+        GameManager.Instance.Tooltip.Hide();
     }
 
     public void OnPointerMove(PointerEventData eventData)
     {
-        ItemManager.Instance.Tooltip.UpdatePosition();
+        GameManager.Instance.Tooltip.UpdatePosition();
     }
 }

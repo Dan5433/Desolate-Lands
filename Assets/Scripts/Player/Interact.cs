@@ -1,4 +1,3 @@
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -22,7 +21,7 @@ public class Interact : MonoBehaviour
 
     public void DisableUI()
     {
-        if (activeUI != null) 
+        if (activeUI != null)
             activeUI.SetActive(false);
 
         activeUI = null;
@@ -49,8 +48,8 @@ public class Interact : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                if (!hit.collider.TryGetComponent<IDamageable>(out var damageable) 
-                    || ItemManager.Instance.IsHoldingItem || ItemManager.Instance.IsTooltipActive 
+                if (!hit.collider.TryGetComponent<IDamageable>(out var damageable)
+                    || ItemManager.Instance.IsHoldingItem || GameManager.Instance.IsTooltipActive
                     || activeUI)
                     continue;
 
@@ -68,7 +67,7 @@ public class Interact : MonoBehaviour
             }
         }
 
-        if(!Input.GetMouseButton(0) || hits.Length == 0)
+        if (!Input.GetMouseButton(0) || hits.Length == 0)
             damageScript.ResetCooldown();
 
         var colliderAtPosition = Physics2D.OverlapPoint(transform.position, interactMask);
@@ -167,7 +166,7 @@ public class Interact : MonoBehaviour
         if (Vector2.Distance(transform.position, activeTile.transform.position) > reach * 2)
             return true;
 
-        if (!ItemManager.Instance.IsTooltipActive && !ItemManager.Instance.IsHoldingItem &&
+        if (!GameManager.Instance.IsTooltipActive && !ItemManager.Instance.IsHoldingItem &&
             Input.GetMouseButtonDown(1))
             return true;
 
@@ -188,7 +187,7 @@ public class Interact : MonoBehaviour
         var tilePosition = solidTilemap.WorldToCell(hit.collider.transform.position);
 
         var hitTile = solidTilemap.GetTile(tilePosition);
-        var tileBelow = solidTilemap.GetTile(new(tilePosition.x,tilePosition.y - 1));
+        var tileBelow = solidTilemap.GetTile(new(tilePosition.x, tilePosition.y - 1));
 
         if (!tileBelow)
             return false;

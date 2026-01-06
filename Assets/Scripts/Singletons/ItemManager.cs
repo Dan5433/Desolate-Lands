@@ -1,5 +1,4 @@
 using CustomClasses;
-using System.Drawing;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +10,6 @@ public class ItemManager : MonoBehaviour
     [SerializeField] GameObject groundItemPrefab;
     [SerializeField] GameObject invSlotPrefab;
     [SerializeField] GameObject containerUI;
-    [SerializeField] Tooltip tooltip;
     [SerializeField] ItemRef heldItem;
     [SerializeField] Item air;
     InvItem invItemAir;
@@ -20,10 +18,8 @@ public class ItemManager : MonoBehaviour
     public Item Air => air;
     public InvItem InvItemAir => invItemAir;
     public GameObject ContainerUI => containerUI;
-    public Tooltip Tooltip => tooltip;
     public GameObject InvSlot => invSlotPrefab;
     public bool IsHoldingItem => heldItem.Item.ItemObj != Air;
-    public bool IsTooltipActive => tooltip.gameObject.activeSelf;
 
     void Awake()
     {
@@ -41,7 +37,7 @@ public class ItemManager : MonoBehaviour
 
     public static bool DropHeldItem(Vector3 position, Vector3 direction, float distance)
     {
-        if (!Instance.IsHoldingItem) 
+        if (!Instance.IsHoldingItem)
             return false;
 
         GameManager.CursorState = CursorState.Default;
@@ -51,7 +47,7 @@ public class ItemManager : MonoBehaviour
         int mask = LayerMask.GetMask("Solid");
         var hit = Physics2D.Raycast(position, direction, distance, mask);
 
-        if (hit) 
+        if (hit)
             spawnPos = hit.point;
 
         SpawnGroundItem(Instance.heldItem.Item.Clone(), spawnPos);
@@ -72,19 +68,19 @@ public class ItemManager : MonoBehaviour
 
     public static bool IsHeldItemUsable()
     {
-        if (Instance.heldItem.Item.ItemObj is UsableItem) 
+        if (Instance.heldItem.Item.ItemObj is UsableItem)
             return true;
         return false;
     }
 
     public static void UseHeldItem(GameObject user)
     {
-        if (!IsHeldItemUsable()) 
+        if (!IsHeldItemUsable())
             return;
 
         var item = Instance.heldItem.Item.ItemObj as UsableItem;
 
-        foreach(var effect in item.Effects)
+        foreach (var effect in item.Effects)
             effect.Use(user);
 
         if (Instance.heldItem.Item.Count > 1)
@@ -93,7 +89,7 @@ public class ItemManager : MonoBehaviour
             Instance.heldItem.Item = Instance.InvItemAir;
 
         UpdateItemUI(Instance.heldItem.gameObject.transform, Instance.heldItem.Item);
-        if(!Instance.IsHoldingItem) 
+        if (!Instance.IsHoldingItem)
             GameManager.CursorState = CursorState.Default;
     }
 
@@ -165,7 +161,7 @@ public class ItemManager : MonoBehaviour
 
         slotItem.Count -= half;
 
-        if(slotItem.Count <= 0)
+        if (slotItem.Count <= 0)
             slotItem = Instance.InvItemAir;
     }
 
@@ -191,11 +187,11 @@ public class ItemManager : MonoBehaviour
 
     static bool SwapSlots(ref InvItem slotItem, InvItem selectedItem, bool allowDeposit, bool allowWithdraw)
     {
-        if (slotItem.ItemObj == Instance.Air && selectedItem.ItemObj == Instance.Air) 
+        if (slotItem.ItemObj == Instance.Air && selectedItem.ItemObj == Instance.Air)
             return false;
-        if (!allowDeposit && slotItem.ItemObj == Instance.Air) 
+        if (!allowDeposit && slotItem.ItemObj == Instance.Air)
             return false;
-        if (!allowWithdraw && selectedItem.ItemObj == Instance.Air) 
+        if (!allowWithdraw && selectedItem.ItemObj == Instance.Air)
             return false;
 
         Instance.heldItem.Item = slotItem.Clone();
@@ -208,7 +204,7 @@ public class ItemManager : MonoBehaviour
         int index = 0;
 
         Transform inventoryContainer = slot.parent;
-        while(inventoryContainer.GetComponent<InventoryRef>() == null)
+        while (inventoryContainer.GetComponent<InventoryRef>() == null)
             inventoryContainer = inventoryContainer.parent;
 
         foreach (Transform child in inventoryContainer)
@@ -236,26 +232,26 @@ public class ItemManager : MonoBehaviour
         var slotItem = slotInventory.Inventory[index];
         var selectedItem = Instance.heldItem.Item.Clone();
 
-        if (selectedItem.ItemObj != Instance.Air 
-            && slotType != SlotType.Any && selectedItem.ItemObj.Slot != slotType) 
+        if (selectedItem.ItemObj != Instance.Air
+            && slotType != SlotType.Any && selectedItem.ItemObj.Slot != slotType)
             return;
 
-        if (slotType != SlotType.Any) 
+        if (slotType != SlotType.Any)
             SpecialItemActions(slotItem.ItemObj, selectedItem.ItemObj, GameManager.Instance.Player);
 
         if (mouseButton == 0)
         {
-            if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air 
+            if (slotItem.ItemObj == selectedItem.ItemObj && slotItem.ItemObj != Instance.Air
                 && slotItem.Count < slotItem.ItemObj.MaxCount && selectedItem.Count < selectedItem.ItemObj.MaxCount)
             {
-                if (allowDeposit) 
+                if (allowDeposit)
                     DepositItem(slotItem, selectedItem);
-                else 
+                else
                     return;
             }
             else
             {
-                if (!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw)) 
+                if (!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw))
                     return;
             }
         }
@@ -264,23 +260,23 @@ public class ItemManager : MonoBehaviour
         {
             if (selectedItem.ItemObj == Instance.Air && slotItem.ItemObj != Instance.Air)
             {
-                if (allowWithdraw) 
+                if (allowWithdraw)
                     SplitSlot(ref slotItem);
-                else 
+                else
                     return;
             }
-            else if (slotItem.ItemObj == Instance.Air || 
+            else if (slotItem.ItemObj == Instance.Air ||
                 (slotItem.ItemObj == selectedItem.ItemObj && slotItem.Count < slotItem.ItemObj.MaxCount))
             {
-                if (allowDeposit) 
+                if (allowDeposit)
                     IncrementSlot(ref slotItem, selectedItem);
-                else 
+                else
                     return;
             }
 
             else
             {
-                if(!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw)) 
+                if (!SwapSlots(ref slotItem, selectedItem, allowDeposit, allowWithdraw))
                     return;
             }
         }

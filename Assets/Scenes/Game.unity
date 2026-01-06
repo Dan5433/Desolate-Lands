@@ -5237,6 +5237,7 @@ MonoBehaviour:
     texture: {fileID: 2800000, guid: 62fa4305ecce7194a9c1703aed75f07a, type: 3}
   - state: 2
     texture: {fileID: 2800000, guid: b39448d888d6caf498afb72434d62d94, type: 3}
+  tooltip: {fileID: 202685695}
 --- !u!4 &697510278
 Transform:
   m_ObjectHideFlags: 0
@@ -6652,7 +6653,6 @@ MonoBehaviour:
   groundItemPrefab: {fileID: 6878080030059824705, guid: 3ce4a123b18cf7b409324ae1a602281d, type: 3}
   invSlotPrefab: {fileID: 1326875235087318632, guid: 898440210c87bc44399dbaa20dbbfdc4, type: 3}
   containerUI: {fileID: 1098368535}
-  tooltip: {fileID: 202685695}
   heldItem: {fileID: 858321410}
   air: {fileID: 11400000, guid: 1bf2836710c82f240a3f909f96733269, type: 2}
   items:
