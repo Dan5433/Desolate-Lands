@@ -11,13 +11,17 @@ public class Container : InventoryBase, IBreakable
     [SerializeField] GuaranteedLootPool[] guaranteedLootTable;
     [SerializeField] WeightedLootPool[] lootTable;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         ui = ItemManager.Instance.ContainerUI.transform;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         var tilemap = GetComponentInParent<Tilemap>();
 
         var container = tilemap.GetTile<ContainerTile>(

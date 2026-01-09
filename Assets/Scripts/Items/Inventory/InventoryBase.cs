@@ -14,12 +14,12 @@ public class InventoryBase : MonoBehaviour
     public Transform UI => ui;
     public InvItem[] Inventory => inventory;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         dataDirPath = Path.Combine(GameManager.DataDirPath, "storage");
     }
 
-    void Start()
+    protected virtual void Start()
     {
         for (int i = 0; i < inventory.Length; i++)
         {
