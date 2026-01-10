@@ -1,5 +1,4 @@
 using EditorAttributes;
-using System.IO;
 using System;
 using UnityEngine;
 
@@ -16,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float sidewaysColliderResize;
     [SerializeField] Transform interactPointer;
     [SerializeField] float pointerOffset;
+    [SerializeField] MinimapPointerSprites minimapPointer;
     Vector2 pointerOrigin;
     float feetWidth, bodyWidth;
     Direction facing;
@@ -55,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
         {
             UpdateHitbox();
             UpdatePointerOffset();
+            minimapPointer.UpdateSprite(facing);
         }
     }
 
@@ -68,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
     {
         SavePosition();
     }
-    
+
     bool UpdateFacingDirection()
     {
         if (gfx.sprite == sprites.north)
@@ -115,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
 
     void UpdateHitbox()
     {
-        if(facing == Direction.Up || facing == Direction.Down)
+        if (facing == Direction.Up || facing == Direction.Down)
         {
             feetCollider.size = new(feetWidth, feetCollider.size.y);
             bodyCollider.size = new(bodyWidth, bodyCollider.size.y);
@@ -138,6 +139,7 @@ public class PlayerMovement : MonoBehaviour
             _ => pointerOrigin
         };
     }
+
     void SavePosition()
     {
         var handler = new BinaryDataHandler(GameManager.PlayerDataDirPath, saveString);
