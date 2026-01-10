@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MinimapPointerSprites : MonoBehaviour
 {
@@ -6,11 +7,11 @@ public class MinimapPointerSprites : MonoBehaviour
     [SerializeField] Sprite down;
     [SerializeField] Sprite left;
     [SerializeField] Sprite right;
-    [SerializeField] SpriteRenderer spriteRender;
+    [SerializeField] Image image;
 
     public void UpdateSprite(Direction direction)
     {
-        spriteRender.sprite = direction switch
+        image.sprite = direction switch
         {
             Direction.Up => up,
             Direction.Right => right,
