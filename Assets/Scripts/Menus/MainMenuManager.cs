@@ -9,6 +9,7 @@ public class MainMenuManager : MonoBehaviour
     public static MainMenuManager Instance { get; private set; }
 
     [SerializeField] TMP_Text versionText;
+    [SerializeField] GameObject titleScreen;
     static string statsFileName = "stats.bin";
     static string savesDirPath;
 
@@ -24,6 +25,9 @@ public class MainMenuManager : MonoBehaviour
         versionText.text = "v" + Application.version;
 
         Random.InitState((int)DateTime.Now.Ticks);
+
+        titleScreen.SetActive(false);
+        titleScreen.SetActive(true);
     }
 
     public void Quit()
