@@ -122,6 +122,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &8358865
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8358866}
+  - component: {fileID: 8358867}
+  m_Layer: 3
+  m_Name: InteractOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8358866
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8358865}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2136044632}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8358867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8358865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1755fb79c546b054eb4b98c5a0ed52c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movement: {fileID: 2136044630}
+  fieldOfReach: 160
 --- !u!1 &47922483
 GameObject:
   m_ObjectHideFlags: 0
@@ -8692,7 +8738,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1274047093}
   - component: {fileID: 1274047094}
-  - component: {fileID: 1274047095}
   m_Layer: 9
   m_Name: MinimapPointer
   m_TagString: Untagged
@@ -8709,7 +8754,7 @@ Transform:
   m_GameObject: {fileID: 1274047092}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -8767,20 +8812,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1274047095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1274047092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1755fb79c546b054eb4b98c5a0ed52c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movement: {fileID: 2136044630}
-  fieldOfReach: 160
 --- !u!1 &1276825296
 GameObject:
   m_ObjectHideFlags: 0
@@ -13702,8 +13733,9 @@ MonoBehaviour:
   feetCollider: {fileID: 418775056}
   bodyCollider: {fileID: 2136044644}
   sidewaysColliderResize: 0.25
-  interactPointer: {fileID: 1274047093}
+  interactPointer: {fileID: 8358866}
   pointerOffset: 0.2
+  minimapPointer: {fileID: 0}
 --- !u!4 &2136044632
 Transform:
   m_ObjectHideFlags: 0
@@ -13718,6 +13750,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 133462163}
+  - {fileID: 8358866}
   - {fileID: 1274047093}
   - {fileID: 1021015151}
   - {fileID: 418775054}
@@ -13845,7 +13878,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reach: 1.1
-  origin: {fileID: 1274047093}
+  origin: {fileID: 8358866}
   inventory: {fileID: 2136044635}
   crafting: {fileID: 2136044642}
 --- !u!95 &2136044638
