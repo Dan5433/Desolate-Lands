@@ -17,14 +17,14 @@ public class PauseMenu : MonoBehaviour
 
     void Pause()
     {
-        GameManager.TogglePauseState();
+        GameManager.TogglePauseState(true);
 
         gameObject.SetActive(true);
     }
 
     public void Unpause()
     {
-        GameManager.TogglePauseState();
+        GameManager.TogglePauseState(false);
 
         gameObject.SetActive(false);
     }

@@ -5,14 +5,17 @@ public class DeathMenu : MonoBehaviour
     static bool isDead = false;
 
     public static bool IsDead => isDead;
-    
 
-    public void Death()
+    public void Death(bool animate)
     {
         isDead = true;
-        GameManager.TogglePauseState();
+        GameManager.TogglePauseState(true);
 
-        deathMenu.SetActive(true);
+        var animator = GetComponent<Animator>();
+        if (animate)
+            animator.enabled = true;
+        else
+            animator.enabled = false;
 
         gameObject.SetActive(true);
     }
@@ -20,7 +23,7 @@ public class DeathMenu : MonoBehaviour
     public void Respawn()
     {
         isDead = false;
-        GameManager.TogglePauseState();
+        GameManager.TogglePauseState(false);
 
         gameObject.SetActive(false);
     }

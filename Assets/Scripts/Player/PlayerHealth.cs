@@ -21,11 +21,20 @@ public class PlayerHealth : LivingBase
 
         normalColor = barImage.color;
 
-        //respawn after loading if exited without respawning
+        //display death menu when relogging with negative or 0 health
         if (health <= 0f)
-            Respawn();
+        {
+            DisplayZeroHealth();
+            StartCoroutine(EnableDeathNextFrame());
+        }
+        else
+            Reset();
+    }
 
-        Reset();
+    IEnumerator EnableDeathNextFrame()
+    {
+        yield return null;
+        deathMenu.Death(false);
     }
 
     public override bool Damage(float damageAmount)
@@ -106,7 +115,7 @@ public class PlayerHealth : LivingBase
         DisplayZeroHealth();
         DropAllInventories();
 
-        deathMenu.Death();
+        deathMenu.Death(true);
         GameManager.IncrementDeaths();
     }
 
