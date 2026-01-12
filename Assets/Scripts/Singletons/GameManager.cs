@@ -104,9 +104,9 @@ public class GameManager : MonoBehaviour
         UpdatePlaytime();
     }
 
-    public static void TogglePauseState()
+    public static void TogglePauseState(bool state)
     {
-        isGamePaused = !isGamePaused;
+        isGamePaused = state;
 
         if (isGamePaused)
         {
@@ -167,8 +167,7 @@ public class GameManager : MonoBehaviour
 
     public static void ExitToMain()
     {
-        if (isGamePaused)
-            TogglePauseState();
+        TogglePauseState(false);
 
         SceneManager.LoadScene(0);
     }

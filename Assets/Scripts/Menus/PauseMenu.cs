@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
-    [SerializeField] GameObject pauseMenu;
     [SerializeField] Interact interact;
 
     private void Update()
-    {   
+    {
         if (!Input.GetKeyDown(KeyCode.Escape) || DeathMenu.IsDead || interact.IsUIActive)
             return;
 
@@ -18,15 +17,15 @@ public class PauseMenu : MonoBehaviour
 
     void Pause()
     {
-        GameManager.TogglePauseState();
+        GameManager.TogglePauseState(true);
 
-        pauseMenu.SetActive(true);
+        gameObject.SetActive(true);
     }
 
     public void Unpause()
     {
-        GameManager.TogglePauseState();
+        GameManager.TogglePauseState(false);
 
-        pauseMenu.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

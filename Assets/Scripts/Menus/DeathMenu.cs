@@ -1,28 +1,31 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DeathMenu : MonoBehaviour
 {
-    [SerializeField] GameObject deathMenu;
     static bool isDead = false;
 
     public static bool IsDead => isDead;
-    
 
-    public void Death()
+    public void Death(bool animate)
     {
         isDead = true;
-        GameManager.TogglePauseState();
+        GameManager.TogglePauseState(true);
 
-        deathMenu.SetActive(true);
+        var animator = GetComponent<Animator>();
+        if (animate)
+            animator.enabled = true;
+        else
+            animator.enabled = false;
+
+        gameObject.SetActive(true);
     }
 
     public void Respawn()
     {
         isDead = false;
-        GameManager.TogglePauseState();
+        GameManager.TogglePauseState(false);
 
-        deathMenu.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     public void ExitToMain()
