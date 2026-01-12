@@ -33,7 +33,7 @@ public class PlayerHealth : LivingBase
         if (!base.Damage(damageAmount))
             return false;
 
-        if (health <= 0) 
+        if (health <= 0)
             return false;
 
         StopAllCoroutines();
@@ -47,7 +47,7 @@ public class PlayerHealth : LivingBase
 
     public override bool Heal(float healAmount)
     {
-        if (!base.Heal(healAmount)) 
+        if (!base.Heal(healAmount))
             return false;
 
         StopAllCoroutines();
@@ -72,7 +72,8 @@ public class PlayerHealth : LivingBase
             time += Time.deltaTime * healthLerpSpeed;
             healthBar.value = Mathf.Lerp(healthBar.value, targetHealth, time);
             yield return null;
-        };
+        }
+        ;
     }
 
     IEnumerator LerpBarColor(Color targetColor)
@@ -84,7 +85,8 @@ public class PlayerHealth : LivingBase
             barImage.color = Color.Lerp(normalColor, targetColor, time);
             yield return null;
 
-        };
+        }
+        ;
 
         time = 0;
         while (barImage.color != normalColor)
@@ -93,15 +95,29 @@ public class PlayerHealth : LivingBase
             barImage.color = Color.Lerp(barImage.color, normalColor, time);
             yield return null;
 
-        };
+        }
+        ;
     }
 
     protected override void OnDeath()
     {
         base.OnDeath();
+
+        DisplayZeroHealth();
+        DropAllInventories();
+
+        deathMenu.Death();
+        GameManager.IncrementDeaths();
+    }
+
+    void DisplayZeroHealth()
+    {
         healthBar.value = 0;
         healthText.text = "0";
+    }
 
+    void DropAllInventories()
+    {
         foreach (var item in GetComponent<PlayerInventory>().Inventory)
             ItemManager.SpawnGroundItem(item.Clone(), transform.position, new(3f, 3f));
 
@@ -110,9 +126,6 @@ public class PlayerHealth : LivingBase
 
         GetComponent<PlayerInventory>().ClearInventory();
         GetComponent<SpecialPlayerInventory>().ClearInventory();
-
-        deathMenu.Death();
-        GameManager.IncrementDeaths();
     }
 
     public void Respawn()
