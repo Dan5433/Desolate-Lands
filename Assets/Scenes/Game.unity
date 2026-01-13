@@ -251,7 +251,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 398005011}
+      - m_Target: {fileID: 416771455}
         m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
         m_MethodName: Unpause
         m_Mode: 1
@@ -3498,7 +3498,6 @@ GameObject:
   - component: {fileID: 398005009}
   - component: {fileID: 398005008}
   - component: {fileID: 398005010}
-  - component: {fileID: 398005011}
   m_Layer: 5
   m_Name: Pause Menu
   m_TagString: Untagged
@@ -3593,19 +3592,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &398005011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 398005006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd4ec926b2263904abc6bbf7b088bea1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interact: {fileID: 2136044637}
 --- !u!1 &411866584
 GameObject:
   m_ObjectHideFlags: 0
@@ -3693,6 +3679,7 @@ GameObject:
   - component: {fileID: 416771453}
   - component: {fileID: 416771452}
   - component: {fileID: 416771451}
+  - component: {fileID: 416771455}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3794,6 +3781,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &416771455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416771450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd4ec926b2263904abc6bbf7b088bea1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseMenu: {fileID: 398005006}
+  interact: {fileID: 2136044637}
 --- !u!1 &418775053
 GameObject:
   m_ObjectHideFlags: 0

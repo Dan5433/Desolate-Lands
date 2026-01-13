@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
+    [SerializeField] GameObject pauseMenu;
     [SerializeField] Interact interact;
 
     private void Update()
@@ -19,13 +20,13 @@ public class PauseMenu : MonoBehaviour
     {
         GameManager.TogglePauseState(true);
 
-        gameObject.SetActive(true);
+        pauseMenu.SetActive(true);
     }
 
     public void Unpause()
     {
         GameManager.TogglePauseState(false);
 
-        gameObject.SetActive(false);
+        pauseMenu.SetActive(false);
     }
 }
